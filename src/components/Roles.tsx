@@ -10,7 +10,7 @@ export default function Roles(props: RoleProps) {
   const { phaseNumber } = props;
 
   return (
-    <div className="container roles">
+    <div className="container text-3xl flex-1 flex items-center">
       <ul className="list-unstyled">
         {
             AllRoles.map(
