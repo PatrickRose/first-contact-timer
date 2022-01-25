@@ -13,6 +13,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
+    "@tailwindcss/forms": "^0.4.0",
     "fp-ts": "^2.11.7",
     "io-ts": "^2.2.16",
     "mongodb": "^4.3.1",
