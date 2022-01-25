@@ -1,6 +1,6 @@
 import {ApiResponse, Phase, Turn} from "../types/types";
 
-const SECONDS_IN_PHASE = process.env.SECONDS_IN_PHASE ? Number.parseInt(process.env.SECONDS_IN_PHASE) : 15;
+const SECONDS_IN_PHASE = process.env.SECONDS_IN_PHASE ? Number.parseInt(process.env.SECONDS_IN_PHASE, 10) : 15;
 export function nextDate() {
     const date = new Date();
     date.setMilliseconds(0);
