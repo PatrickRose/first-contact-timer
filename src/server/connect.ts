@@ -1,6 +1,6 @@
 import {MongoClient} from "mongodb";
 import {Turn} from "../types/types";
-import {backAPhase, backATurn, nextDate, pauseResume, tickTurn} from "./turn";
+import {backAPhase, backATurn, nextDate, pauseResume, tickTurn, toApiResponse} from "./turn";
 
 type DBProps = {
     protocol?: string,
@@ -86,6 +86,7 @@ export default class MongoRepo {
                     breakingNews: null,
                     frozenTurn: null,
                 };
+                defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);
                 await turnCollection.insertOne(defaultTurn);
 
                 return defaultTurn;
