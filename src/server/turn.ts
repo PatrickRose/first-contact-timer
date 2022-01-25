@@ -83,7 +83,7 @@ export function pauseResume(turn: Turn, active: boolean): Turn {
         newTurn.active = true;
     } else {
         newTurn.active = false;
-        newTurn.frozenTurn = toApiResponse(turn, true);
+        newTurn.frozenTurn = toApiResponse(newTurn, true);
     }
 
     return newTurn;
