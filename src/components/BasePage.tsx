@@ -91,8 +91,6 @@ export default abstract class BaseApp extends React.Component<{}, BaseAppState> 
                 (res: Response): void => {
                     res.json().then(
                         (body) => {
-                            console.log(body);
-
                             const result = ApiResponseDecode.decode(body);
 
                             if (isRight(result)) {
