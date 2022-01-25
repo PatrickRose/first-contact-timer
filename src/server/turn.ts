@@ -20,7 +20,7 @@ export function toApiResponse(turn: Turn, forceRefresh: boolean = false): ApiRes
     let secondsLeft;
 
     if (phaseEnd > now) {
-        secondsLeft = phaseEnd.getTime() - now.getTime();
+        secondsLeft = Math.ceil((phaseEnd.getTime() - now.getTime()) / 1000);
     } else {
         secondsLeft = 0;
     }
