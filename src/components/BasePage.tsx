@@ -65,6 +65,13 @@ export default abstract class BaseApp extends React.Component<{}, BaseAppState> 
         this.fetchFromAPI();
     }
 
+    componentWillUnmount() {
+        if (this.timeout)
+        {
+            clearInterval(this.timeout)
+        }
+    }
+
     protected pauseRefresh(pause: boolean) {
         this.setState({
             pauseRefresh: pause

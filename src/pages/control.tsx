@@ -2,6 +2,12 @@ import * as React from 'react';
 
 import BaseApp from "../components/BasePage";
 import {ApiResponse, ControlAPI} from "../types/types";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
+import {faBackward} from "@fortawesome/free-solid-svg-icons/faBackward";
+import {faPause} from "@fortawesome/free-solid-svg-icons/faPause";
+import {faFastBackward} from "@fortawesome/free-solid-svg-icons/faFastBackward";
+import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
 
 
 type ControlButtonProps = {
@@ -27,15 +33,15 @@ abstract class ControlButton extends React.Component<ControlButtonProps, Control
 
     protected abstract title(): string;
 
-    protected abstract fontAwesomeIcon(): string;
+    protected abstract fontAwesomeIcon(): IconDefinition;
 
     public abstract appearForState(apiResponse: ApiResponse): boolean
 
     protected handleOnClick() {
         const endPoint = '/api/control';
-        const { pauseRefresh } = this.props;
+        const {pauseRefresh} = this.props;
 
-        this.setState({ buttonPressed: true });
+        this.setState({buttonPressed: true});
 
         const apiReqBody = this.getApiBody();
         const fetchPromise = fetch(endPoint, {
@@ -50,22 +56,23 @@ abstract class ControlButton extends React.Component<ControlButtonProps, Control
 
         fetchPromise.then(
             () => {
-                const { triggerFetch } = this.props;
+                const {triggerFetch} = this.props;
+                pauseRefresh(false);
                 triggerFetch();
             }
         );
 
         fetchPromise.finally(
             () => {
-                this.setState({ buttonPressed: false });
+                this.setState({buttonPressed: false});
                 pauseRefresh(false);
             }
         );
     }
 
     render() {
-        const { buttonPressed } = this.state;
-        const { apiResponse } = this.props;
+        const {buttonPressed} = this.state;
+        const {apiResponse} = this.props;
 
         const title = this.title();
 
@@ -75,13 +82,14 @@ abstract class ControlButton extends React.Component<ControlButtonProps, Control
         return (
             <button
                 type="button"
-                className={`btn btn-outline-dark fa ${this.fontAwesomeIcon()}`}
+                className="outline rounded p-2 px-4 disabled:opacity-75"
                 key={this.constructor.name}
                 onClick={() => this.handleOnClick()}
                 title={title}
                 disabled={buttonPressed}
             >
-          <span className="sr-only">
+                <FontAwesomeIcon icon={this.fontAwesomeIcon()} size="lg"/>
+                <span className="sr-only">
             {title}
           </span>
             </button>
@@ -90,31 +98,31 @@ abstract class ControlButton extends React.Component<ControlButtonProps, Control
 }
 
 class PauseButton extends ControlButton {
-    protected fontAwesomeIcon = (): string => 'fa-pause';
+    protected fontAwesomeIcon = (): IconDefinition => faPause;
 
     protected title = (): string => 'Pause the game';
 
     public appearForState = (apiResponse: ApiResponse): boolean => apiResponse.active;
 
-    protected getApiBody = (): ControlAPI => ({ action: 'pause' });
+    protected getApiBody = (): ControlAPI => ({action: 'pause'});
 }
 
 class PlayButton extends ControlButton {
     public appearForState = (apiResponse: ApiResponse): boolean => !apiResponse.active;
 
-    protected fontAwesomeIcon = (): string => 'fa-play';
+    protected fontAwesomeIcon = (): IconDefinition => faPlay;
 
     protected title = (): string => 'Continue the game from this state';
 
-    protected getApiBody = (): ControlAPI => ({ action: 'play' });
+    protected getApiBody = (): ControlAPI => ({action: 'play'});
 }
 
 class BackATurn extends ControlButton {
     appearForState = (): boolean => true;
 
-    protected fontAwesomeIcon = (): string => 'fa-fast-backward';
+    protected fontAwesomeIcon = (): IconDefinition => faFastBackward;
 
-    protected getApiBody = (): ControlAPI => ({ action: 'back-turn' });
+    protected getApiBody = (): ControlAPI => ({action: 'back-turn'});
 
     protected title = (): string => 'Go back a turn';
 }
@@ -122,9 +130,9 @@ class BackATurn extends ControlButton {
 class BackAPhase extends ControlButton {
     appearForState = (): boolean => true;
 
-    protected fontAwesomeIcon = (): string => 'fa-backward';
+    protected fontAwesomeIcon = (): IconDefinition => faBackward;
 
-    protected getApiBody = (): ControlAPI => ({ action: 'back-phase' });
+    protected getApiBody = (): ControlAPI => ({action: 'back-phase'});
 
     protected title = (): string => 'Go back a phase';
 }
@@ -135,11 +143,11 @@ export default class ControlApp extends BaseApp {
         const pauseRefresh = (pause: boolean) => this.pauseRefresh(pause);
 
         return (
-            <div className="btn-group control-buttons">
-                <BackATurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch} />
-                <BackAPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch} />
-                <PlayButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch} />
-                <PauseButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch} />
+            <div className="flex w-full p-4 justify-around">
+                <BackATurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
+                <BackAPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
+                <PlayButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
+                <PauseButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
             </div>
         );
     }

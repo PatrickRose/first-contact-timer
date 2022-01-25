@@ -1,16 +1,20 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type {NextApiRequest, NextApiResponse} from 'next'
 import {ApiResponse} from "../../types/types";
+import MongoRepo from "../../server/connect";
+import {hasFinished, toApiResponse} from "../../server/turn";
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ApiResponse>
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse<ApiResponse>
 ) {
-  res.status(200).json({
-    turnNumber: 1,
-    phase: 1,
-    breakingNews: "Here is some breaking news!",
-    active: true,
-    phaseEnd: 10
-  })
+    const mongo = MongoRepo.MakeInstance();
+
+    let turn = await mongo.getCurrentTurn();
+
+    if (hasFinished(turn)) {
+        turn = await mongo.nextTurn()
+    }
+
+    res.status(200).json(toApiResponse(turn));
 }

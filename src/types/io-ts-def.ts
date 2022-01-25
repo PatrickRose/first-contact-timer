@@ -29,3 +29,13 @@ export const ControlAPIDecode = t.type({
     t.literal('back-phase')
   ])
 });
+
+export const TurnDecode = t.type({
+  _id: t.string,
+  turnNumber: t.number,
+  phase: PhaseDecode,
+  phaseEnd: t.string,
+  breakingNews: t.union([t.string, t.null]),
+  active: t.boolean,
+  frozenTurn: t.union([t.null, ApiResponseDecode])
+});
