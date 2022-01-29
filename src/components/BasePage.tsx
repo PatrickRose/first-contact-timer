@@ -5,6 +5,7 @@ import TurnCounter from './TurnCounter';
 import BreakingNews from './BreakingNews';
 import {ApiResponse} from "../types/types";
 import {ApiResponseDecode} from "../types/io-ts-def";
+import Head from "next/head";
 
 
 type BaseAppState = {
@@ -185,6 +186,9 @@ export default abstract class BaseApp extends React.Component<{}, BaseAppState> 
 
         return (
             <React.Fragment>
+                <Head>
+                    <title>First Contact - {this.title()}</title>
+                </Head>
                 <main role="main" className="container flex-1 text-center h-full flex flex-col justify-center justify-items-stretch items-center">
                     <div className="flex flex-col justify-center items-center flex-1">
                         <TurnCounter
@@ -201,4 +205,6 @@ export default abstract class BaseApp extends React.Component<{}, BaseAppState> 
             </React.Fragment>
         );
     }
+
+    protected abstract title(): string;
 }

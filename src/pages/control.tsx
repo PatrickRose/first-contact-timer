@@ -151,4 +151,8 @@ export default class ControlApp extends BaseApp {
             </div>
         );
     }
+
+    protected title(): string {
+        return "Control commands";
+    }
 }

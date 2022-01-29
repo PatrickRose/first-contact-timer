@@ -112,4 +112,8 @@ export default class PressApp extends BaseApp {
             <PressForm triggerFetch={() => this.fetchFromAPI()} />
         );
     }
+
+    protected title(): string {
+        return "Press";
+    }
 }

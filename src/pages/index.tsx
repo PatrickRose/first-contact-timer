@@ -14,6 +14,10 @@ class PlayerApp extends BaseApp {
         <Roles phaseNumber={phase} />
     );
   }
+
+  protected title(): string {
+    return "Player";
+  }
 }
 
 
