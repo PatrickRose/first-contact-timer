@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Phase} from "../types/types";
+import {ALL_PHASES, PHASE_LISTS} from "../server/turn";
 
 interface TurnCounterProps {
     turn: number,
@@ -40,6 +41,13 @@ const TurnTimer = function TurnTimer(props: { timestamp: number, active: boolean
   );
 };
 
+export function PhaseCount({phase, length, active}: {phase: Phase, length: number, active: boolean}) {
+    return <div className={`flex flex-col border border-first-contact p-3 transition duration-500 ${active ? 'bg-first-contact text-white delay-250' : 'bg-white text-black'}`}>
+        <p className="text-3xl">{phase}</p>
+        <p>{length} minutes</p>
+    </div>
+}
+
 export default function TurnCounter(props: TurnCounterProps) {
   const {
     turn, phase, timestamp, active
@@ -47,11 +55,16 @@ export default function TurnCounter(props: TurnCounterProps) {
 
   const text = `You're in turn ${turn}, phase ${phase}`;
 
+
+
   return (
     <React.Fragment>
       <h1 className="text-5xl">
         {text}
       </h1>
+        <div className="flex mt-4 border border-first-contact">
+            {PHASE_LISTS.map((val) => <PhaseCount phase={val} length={ALL_PHASES[val]} active={phase==val} key={val} />)}
+        </div>
       <TurnTimer timestamp={timestamp} active={active} />
     </React.Fragment>
   );

@@ -16,5 +16,9 @@ export default async function handler(
         turn = await mongo.nextTurn()
     }
 
+    // if (turn.frozenTurn) {
+    //     turn.frozenTurn.phase = 2;
+    // }
+
     res.status(200).json(toApiResponse(turn));
 }
