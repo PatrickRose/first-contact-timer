@@ -10,6 +10,8 @@ const actions: { [key in ControlAPI["action"]]: (mongo: MongoRepo) => Promise<Tu
     play: mongo => mongo.pauseResume(true),
     "back-phase": mongo => mongo.backPhase(),
     "back-turn": mongo => mongo.backTurn(),
+    "forward-phase": mongo => mongo.forwardPhase(),
+    "forward-turn": mongo => mongo.forwardTurn(),
 }
 
 export default async function handler(

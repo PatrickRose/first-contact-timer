@@ -256,4 +256,73 @@ export default class MongoRepo {
             await this.mongo.close();
         }
     }
+
+    async forwardPhase(): Promise<Turn> {
+        let lock = null;
+        let lockResult = null;
+
+        try {
+            const turn = await this.getCurrentTurn();
+            const collection = await this.getCollection();
+
+            const database = this.mongo.db();
+
+            lock = database.collection<Lock>("lock");
+
+            lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
+
+            if (lockResult.matchedCount != 1) {
+                return turn;
+            }
+
+            const newTurn = tickTurn(turn);
+
+            await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
+
+            return newTurn;
+        } finally {
+            if (lockResult?.matchedCount == 1) {
+                await lock?.updateOne({_id: STATIC_ID, active: true}, {$set: {active: false}});
+            }
+
+            await this.mongo.close();
+        }
+    }
+
+    async forwardTurn(): Promise<Turn> {
+        let lock = null;
+        let lockResult = null;
+
+        try {
+            const turn = await this.getCurrentTurn();
+            const collection = await this.getCollection();
+            const turnNumber = turn.turnNumber;
+
+            const database = this.mongo.db();
+
+            lock = database.collection<Lock>("lock");
+
+            lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
+
+            if (lockResult.matchedCount != 1) {
+                return turn;
+            }
+
+            let newTurn = tickTurn(turn);
+
+            while (newTurn.turnNumber == turnNumber) {
+                newTurn = tickTurn(newTurn);
+            }
+
+            await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
+
+            return newTurn;
+        } finally {
+            if (lockResult?.matchedCount == 1) {
+                await lock?.updateOne({_id: STATIC_ID, active: true}, {$set: {active: false}});
+            }
+
+            await this.mongo.close();
+        }
+    }
 }

@@ -8,6 +8,8 @@ import {faBackward} from "@fortawesome/free-solid-svg-icons/faBackward";
 import {faPause} from "@fortawesome/free-solid-svg-icons/faPause";
 import {faFastBackward} from "@fortawesome/free-solid-svg-icons/faFastBackward";
 import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
+import {faForward} from "@fortawesome/free-solid-svg-icons/faForward";
+import {faFastForward} from "@fortawesome/free-solid-svg-icons/faFastForward";
 
 
 type ControlButtonProps = {
@@ -137,6 +139,26 @@ class BackAPhase extends ControlButton {
     protected title = (): string => 'Go back a phase';
 }
 
+class ForwardPhase extends ControlButton {
+    appearForState = (): boolean => true;
+
+    protected fontAwesomeIcon = (): IconDefinition => faForward;
+
+    protected getApiBody = (): ControlAPI => ({action: 'forward-phase'});
+
+    protected title = (): string => 'Go forward a phase';
+}
+
+class ForwardTurn extends ControlButton {
+    appearForState = (apiResponse: ApiResponse): boolean => apiResponse.phase != 5;
+
+    protected fontAwesomeIcon = (): IconDefinition => faFastForward;
+
+    protected getApiBody = (): ControlAPI => ({action: 'forward-turn'});
+
+    protected title = (): string => 'Go forward a turn';
+}
+
 export default class ControlApp extends BaseApp {
     protected mainComponents(apiResponse: ApiResponse): JSX.Element {
         const triggerFetch = () => this.fetchFromAPI();
@@ -148,6 +170,8 @@ export default class ControlApp extends BaseApp {
                 <BackAPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
                 <PlayButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
                 <PauseButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
+                <ForwardPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
+                <ForwardTurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
             </div>
         );
     }

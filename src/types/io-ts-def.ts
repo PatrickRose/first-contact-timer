@@ -26,7 +26,9 @@ export const ControlAPIDecode = t.type({
     t.literal('pause'),
     t.literal('play'),
     t.literal('back-turn'),
-    t.literal('back-phase')
+    t.literal('back-phase'),
+    t.literal('forward-phase'),
+    t.literal('forward-turn'),
   ])
 });
 
