@@ -10,12 +10,13 @@ export const ALL_PHASES: {[key in Phase]: number} = {
     5: 5,
 };
 
-const SECONDS_IN_PHASE = process.env.SECONDS_IN_PHASE ? Number.parseInt(process.env.SECONDS_IN_PHASE, 10) : 15;
-export function nextDate() {
+export function nextDate(phase: Phase) {
     const date = new Date();
     date.setMilliseconds(0);
-    date.setSeconds(date.getSeconds() + SECONDS_IN_PHASE);
-
+    console.log([ALL_PHASES[phase], date.getMinutes()]);
+    console.log(date.getMinutes() + ALL_PHASES[phase])
+    date.setMinutes(date.getMinutes() + ALL_PHASES[phase]);
+console.log(date);
     return date;
 }
 
@@ -71,7 +72,7 @@ export function tickTurn(turn: Turn): Turn {
 
     return {
         ...turn,
-        phaseEnd: nextDate().toString(),
+        phaseEnd: nextDate(newPhase).toString(),
         phase: newPhase,
         turnNumber: newTurn,
         active: true
@@ -126,7 +127,7 @@ export function backAPhase(turn: Turn): Turn {
             newTurn.phase = 4;
     }
 
-    newTurn.phaseEnd = nextDate().toString();
+    newTurn.phaseEnd = nextDate(newTurn.phase).toString();
 
     if (newTurn.frozenTurn) {
         newTurn.frozenTurn = toApiResponse(newTurn, true);
@@ -138,7 +139,7 @@ export function backATurn(turn: Turn): Turn {
     const newTurn = {...turn};
     newTurn.turnNumber = Math.max(1, newTurn.turnNumber - 1);
     newTurn.phase = 1;
-    newTurn.phaseEnd = nextDate().toString();
+    newTurn.phaseEnd = nextDate(1).toString();
 
     if (newTurn.frozenTurn) {
         newTurn.frozenTurn = toApiResponse(newTurn, true);

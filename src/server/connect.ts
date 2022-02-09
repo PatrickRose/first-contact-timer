@@ -82,7 +82,7 @@ export default class MongoRepo {
                     active: false,
                     phase: 1,
                     turnNumber: 1,
-                    phaseEnd: nextDate().toString(),
+                    phaseEnd: nextDate(1).toString(),
                     breakingNews: null,
                     frozenTurn: null,
                 };
