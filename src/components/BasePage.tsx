@@ -102,7 +102,12 @@ export default abstract class BaseApp extends React.Component<{}, BaseAppState> 
                             if (isRight(result)) {
                                 const currentResponse = this.state.apiResponse;
                                 const newResponse = result.right;
-                                if (currentResponse?.phase != newResponse.phase || currentResponse?.active != newResponse.active) {
+                                if (currentResponse !== undefined
+                                    && (
+                                        currentResponse.phase != newResponse.phase
+                                        || currentResponse.active != newResponse.active
+                                    )
+                                ) {
                                     this.audio?.play()
                                         .catch(e => console.log(e));
                                 }
