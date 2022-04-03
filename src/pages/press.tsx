@@ -94,7 +94,7 @@ class PressForm extends React.Component<FormProps, FormState> {
                 return null;
             }
 
-            return <div className="flex my-2">
+            return <div className="flex my-2" key={key}>
                 <hr/>
                 <p className="flex-1 [word-break:break-word] text-left">
                     {currentBreakingNews[key]}
@@ -116,7 +116,7 @@ class PressForm extends React.Component<FormProps, FormState> {
 
             const breakingNews = this.state[`breakingNews.${key}`];
 
-            return <form onSubmit={e => this.submitForm(e, key)} className="mt-2">
+            return <form onSubmit={e => this.submitForm(e, key)} className="mt-2" key={key}>
                 <hr/>
                 <label id="breaking-news" htmlFor={id}>
                     Enter breaking news headline {key} here:
