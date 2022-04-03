@@ -21,16 +21,20 @@ export default async function handler(
 
     if (!SetBreakingNewsDecode.is(body)) {
         res.status(400).json({
-            message: 'Turn not active - please wait'
+            message: 'Request body was invalid',
+            data: SetBreakingNewsDecode.decode(body)
         });
 
         return;
     }
 
     if (turn.active) {
-        turn = await mongo.setBreakingNews(body.breakingNews);
+        turn = await mongo.setBreakingNews(body.breakingNews, body.number);
+        res.status(200).json(toApiResponse(turn));
+    } else {
+        res.status(400).json({
+            message: 'Turn not active - please wait'
+        });
     }
 
-
-    res.status(200).json(toApiResponse(turn));
 }

@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer components {
+
     body {
         @apply flex flex-col min-h-screen;
     }
@@ -21,5 +22,17 @@
 
     .container {
         @apply w-full px-2 mx-auto;
+    }
+
+    .marquee-1 {
+        @apply animate-marquee-1 lg:[animation-duration:15s] xl:[animation-duration:20s]
+    }
+
+    .marquee-2 {
+        @apply animate-marquee-2 lg:[animation-duration:30s] xl:[animation-duration:40s]
+    }
+
+    .marquee-3 {
+        @apply animate-marquee-3 lg:[animation-duration:45s] xl:[animation-duration:60s]
     }
 }

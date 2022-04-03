@@ -201,7 +201,7 @@ export default abstract class BaseApp extends React.Component<{}, BaseAppState> 
                     </div>
                 </main>
                 {child}
-                <BreakingNews content={breakingNews || undefined} />
+                <BreakingNews content={breakingNews} />
             </React.Fragment>
         );
     }
