@@ -1,5 +1,5 @@
 import {MongoClient} from "mongodb";
-import {Turn} from "../types/types";
+import {BreakingNewsKey, Turn} from "../types/types";
 import {backAPhase, backATurn, nextDate, pauseResume, tickTurn, toApiResponse} from "./turn";
 
 type DBProps = {
@@ -83,7 +83,11 @@ export default class MongoRepo {
                     phase: 1,
                     turnNumber: 1,
                     phaseEnd: nextDate(1).toString(),
-                    breakingNews: null,
+                    breakingNews: {
+                        1: null,
+                        2: null,
+                        3: null,
+                    },
                     frozenTurn: null,
                 };
                 defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);
@@ -93,6 +97,9 @@ export default class MongoRepo {
             }
 
             return turn;
+        } catch (e) {
+            console.log(e);
+            throw e;
         } finally {
             await this.mongo.close()
         }
@@ -106,9 +113,9 @@ export default class MongoRepo {
         return database.collection<Turn>("turns");
     }
 
-    async setBreakingNews(newBreakingNews: string): Promise<Turn> {
+    async setBreakingNews(newBreakingNews: string | null, number: BreakingNewsKey): Promise<Turn> {
         try {
-            const turn = await this.getCurrentTurn();
+            await this.getCurrentTurn();
 
             const breakingNews = newBreakingNews === ''
                 ? null
@@ -116,15 +123,18 @@ export default class MongoRepo {
 
             const collection = await this.getCollection();
 
+            const key: `${keyof Turn}.${BreakingNewsKey}` = `breakingNews.${number}`;
+            const toSet: { [k1 in typeof key]?: string | null } = {};
+            toSet[key] = breakingNews;
+
             await collection.updateOne(
                 {_id: STATIC_ID},
-                {$set: {breakingNews}}
+                {$set: toSet}
             );
 
-            return {
-                ...turn,
-                breakingNews
-            }
+            await this.mongo.close();
+
+            return this.getCurrentTurn();
         } finally {
             await this.mongo.close()
         }
