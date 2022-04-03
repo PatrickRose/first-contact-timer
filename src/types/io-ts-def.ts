@@ -8,17 +8,23 @@ export const PhaseDecode = t.union([
   t.literal(5),
 ]);
 
+export const BreakingNewsDecode = t.type({
+  1: t.union([t.string, t.null]),
+  2: t.union([t.string, t.null]),
+  3: t.union([t.string, t.null]),
+})
 
 export const ApiResponseDecode = t.type({
   turnNumber: t.number,
   phase: PhaseDecode,
-  breakingNews: t.union([t.string, t.null]),
+  breakingNews: BreakingNewsDecode,
   active: t.boolean,
   phaseEnd: t.number
 });
 
 export const SetBreakingNewsDecode = t.type({
-  breakingNews: t.string
+  breakingNews: t.string,
+  number: t.union([t.literal(1), t.literal(2), t.literal(3)])
 });
 
 export const ControlAPIDecode = t.type({
@@ -37,7 +43,7 @@ export const TurnDecode = t.type({
   turnNumber: t.number,
   phase: PhaseDecode,
   phaseEnd: t.string,
-  breakingNews: t.union([t.string, t.null]),
+  breakingNews: BreakingNewsDecode,
   active: t.boolean,
   frozenTurn: t.union([t.null, ApiResponseDecode])
 });
