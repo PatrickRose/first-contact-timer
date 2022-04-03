@@ -50,6 +50,7 @@ const getNextRefresh = function getNextRefresh(
 
 export default abstract class BaseApp extends React.Component<{}, BaseAppState> {
     private timeout: ReturnType<typeof setTimeout> | undefined;
+    private audio?: HTMLAudioElement;
 
     constructor(props: {}) {
         super(props);
@@ -60,6 +61,10 @@ export default abstract class BaseApp extends React.Component<{}, BaseAppState> 
             apiResponse: undefined,
             secondsUntilFetch: 0
         };
+
+        if (typeof window !== 'undefined') {
+            this.audio = new Audio('/turn-change.mp3')
+        }
     }
 
     componentDidMount() {
@@ -95,6 +100,14 @@ export default abstract class BaseApp extends React.Component<{}, BaseAppState> 
                             const result = ApiResponseDecode.decode(body);
 
                             if (isRight(result)) {
+                                const currentResponse = this.state.apiResponse;
+                                const newResponse = result.right;
+                                if (currentResponse?.phase != newResponse.phase || currentResponse?.active != newResponse.active) {
+                                    this.audio?.play()
+                                        .catch(e => console.log(e));
+                                }
+
+
                                 this.setState({
                                     apiResponse: body,
                                     secondsUntilFetch: getNextRefresh(body)
