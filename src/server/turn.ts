@@ -2,7 +2,7 @@ import {ApiResponse, Phase, Turn} from "../types/types";
 
 export const PHASE_LISTS: Phase[] = [1,2,3,4,5];
 
-export const ALL_PHASES: {[key in Phase]: number} = {
+const ALL_PHASES: {[key in Phase]: number} = {
     1: 20,
     2: 10,
     3: 5,
@@ -10,13 +10,30 @@ export const ALL_PHASES: {[key in Phase]: number} = {
     5: 5,
 };
 
-export function nextDate(phase: Phase) {
+export function lengthOfPhase(phase: Phase, turn: number): number {
+    let base = ALL_PHASES[phase];
+
+    if (turn == 1) {
+        if (phase == 1) {
+            base += 10;
+        } else if (phase == 3) {
+            base += 5;
+        }
+    } else if (turn == 3) {
+        if (phase == 2) {
+            base += 5;
+        } else if (phase == 4) {
+            base += 10;
+        }
+    }
+
+    return base;
+}
+
+export function nextDate(phase: Phase, turn: number) {
     const date = new Date();
     date.setMilliseconds(0);
-    console.log([ALL_PHASES[phase], date.getMinutes()]);
-    console.log(date.getMinutes() + ALL_PHASES[phase])
-    date.setMinutes(date.getMinutes() + ALL_PHASES[phase]);
-console.log(date);
+    date.setMinutes(date.getMinutes() + lengthOfPhase(phase, turn));
     return date;
 }
 
@@ -72,7 +89,7 @@ export function tickTurn(turn: Turn): Turn {
 
     return {
         ...turn,
-        phaseEnd: nextDate(newPhase).toString(),
+        phaseEnd: nextDate(newPhase, newTurn).toString(),
         phase: newPhase,
         turnNumber: newTurn,
         active: true
@@ -127,7 +144,7 @@ export function backAPhase(turn: Turn): Turn {
             newTurn.phase = 4;
     }
 
-    newTurn.phaseEnd = nextDate(newTurn.phase).toString();
+    newTurn.phaseEnd = nextDate(newTurn.phase, newTurn.turnNumber).toString();
 
     if (newTurn.frozenTurn) {
         newTurn.frozenTurn = toApiResponse(newTurn, true);
@@ -139,7 +156,7 @@ export function backATurn(turn: Turn): Turn {
     const newTurn = {...turn};
     newTurn.turnNumber = Math.max(1, newTurn.turnNumber - 1);
     newTurn.phase = 1;
-    newTurn.phaseEnd = nextDate(1).toString();
+    newTurn.phaseEnd = nextDate(1, newTurn.turnNumber).toString();
 
     if (newTurn.frozenTurn) {
         newTurn.frozenTurn = toApiResponse(newTurn, true);
