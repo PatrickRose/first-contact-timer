@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Phase} from "../types/types";
-import {ALL_PHASES, PHASE_LISTS} from "../server/turn";
+import {lengthOfPhase, PHASE_LISTS} from "../server/turn";
 
 interface TurnCounterProps {
     turn: number,
@@ -63,7 +63,7 @@ export default function TurnCounter(props: TurnCounterProps) {
         {text}
       </h1>
         <div className="flex mt-4 border border-first-contact">
-            {PHASE_LISTS.map((val) => <PhaseCount phase={val} length={ALL_PHASES[val]} active={phase==val} key={val} />)}
+            {PHASE_LISTS.map((val) => <PhaseCount phase={val} length={lengthOfPhase(val, turn)} active={phase==val} key={val} />)}
         </div>
       <TurnTimer timestamp={timestamp} active={active} />
     </React.Fragment>
