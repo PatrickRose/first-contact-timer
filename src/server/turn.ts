@@ -22,7 +22,7 @@ export function lengthOfPhase(phase: Phase, turn: number): number {
     } else if (turn == 3) {
         if (phase == 2) {
             base += 5;
-        } else if (phase == 4) {
+        } else if (phase == 5) {
             base += 10;
         }
     }
