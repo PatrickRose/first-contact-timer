@@ -28,7 +28,7 @@ export default function BreakingNews({content}: BreakingNewsProps) {
                 <div className="w-100 px-2 flex flex-col h-24 overflow-hidden">
                     <h3 className="text-2xl pb-2 uppercase">Breaking news</h3>
                     <p className={`text-xl py-2 ${animationDuration} flex`}>
-                        {values.map(([key, val]) => <span className="min-w-full" key={key}>{val}</span>)}
+                        {values.map(([key, val]) => <span className="min-w-full" key={key}>+++ BREAKING NEWS +++ {val}</span>)}
                     </p>
                 </div>
             </footer>
