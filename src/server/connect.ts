@@ -79,7 +79,7 @@ export default class MongoRepo {
             if (turn === null) {
                 const defaultTurn: Turn = {
                     _id: STATIC_ID,
-                    active: true,
+                    active: false,
                     phase: 1,
                     turnNumber: 1,
                     phaseEnd: nextDate(1, 1).toString(),
@@ -91,7 +91,6 @@ export default class MongoRepo {
                     frozenTurn: null,
                 };
                 defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);
-                defaultTurn.active = false;
                 await turnCollection.insertOne(defaultTurn);
 
                 return defaultTurn;
