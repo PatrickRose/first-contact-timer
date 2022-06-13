@@ -10,12 +10,15 @@ import {faFastBackward} from "@fortawesome/free-solid-svg-icons/faFastBackward";
 import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
 import {faForward} from "@fortawesome/free-solid-svg-icons/faForward";
 import {faFastForward} from "@fortawesome/free-solid-svg-icons/faFastForward";
+import {ApiResponseDecode} from "../types/io-ts-def";
 
 
 type ControlButtonProps = {
     triggerFetch: () => void,
     pauseRefresh: (pause: boolean) => void,
-    apiResponse: ApiResponse
+    apiResponse: ApiResponse,
+    setResponse: (response: ApiResponse) => void,
+    setErrorMessage: (msg: string | undefined) => void
 }
 
 type ControlButtonState = {
@@ -46,30 +49,57 @@ abstract class ControlButton extends React.Component<ControlButtonProps, Control
         this.setState({buttonPressed: true});
 
         const apiReqBody = this.getApiBody();
-        const fetchPromise = fetch(endPoint, {
+        pauseRefresh(true);
+
+        fetch(endPoint, {
             method: 'post',
             body: JSON.stringify(apiReqBody),
             headers: {
                 'Content-Type': 'application/json'
             }
-        });
+        })
+            .then((body) => {
+                if (body.ok) {
+                    return body.json()
+                } else {
+                    return Promise.reject(body)
+                }
+            })
+            .then((result) => {
+                    const {triggerFetch, setResponse, setErrorMessage} = this.props;
+                    pauseRefresh(false);
 
-        pauseRefresh(true);
+                    if (ApiResponseDecode.is(result)) {
+                        setResponse(result);
+                        setErrorMessage(undefined);
+                    } else {
+                        return Promise.reject(result)
+                    }
 
-        fetchPromise.then(
-            () => {
-                const {triggerFetch} = this.props;
-                pauseRefresh(false);
-                triggerFetch();
-            }
-        );
+                    triggerFetch();
+                }
+            )
+            .catch((error) => {
+                const {setErrorMessage} = this.props;
 
-        fetchPromise.finally(
-            () => {
-                this.setState({buttonPressed: false});
-                pauseRefresh(false);
-            }
-        );
+                if (error instanceof Response) {
+                    error.json().then((body) => {
+                        if (body.msg) {
+                            setErrorMessage(body.msg);
+                        }
+                    })
+                } else if (error.msg) {
+                    setErrorMessage(error.msg);
+                } else {
+                    setErrorMessage("Unknown error");
+                }
+            })
+            .finally(
+                () => {
+                    this.setState({buttonPressed: false});
+                    pauseRefresh(false);
+                }
+            );
     }
 
     render() {
@@ -163,20 +193,41 @@ export default class ControlApp extends BaseApp {
     protected mainComponents(apiResponse: ApiResponse): JSX.Element {
         const triggerFetch = () => this.fetchFromAPI();
         const pauseRefresh = (pause: boolean) => this.pauseRefresh(pause);
+        const setResponse = (response: ApiResponse) => this.setState({apiResponse: response})
+        const setErrorMessage = (msg: string | undefined) => this.setState({errorMessage: msg})
 
         return (
             <div className="flex w-full p-4 justify-around">
-                <BackATurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
-                <BackAPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
-                <PlayButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
-                <PauseButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
-                <ForwardPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
-                <ForwardTurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}/>
+                <BackATurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                           setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                <BackAPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                            setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                <PlayButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                            setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                <PauseButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                             setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                <ForwardPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                              setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                <ForwardTurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                             setResponse={setResponse} setErrorMessage={setErrorMessage}/>
             </div>
         );
     }
 
     protected title(): string {
         return "Control commands";
+    }
+
+    protected childComponents(apiResponse: ApiResponse): JSX.Element {
+        if (this.state.errorMessage !== undefined) {
+            return <div className="bg-red-600 text-white mt-4 p-4">
+                <p>
+                    There was an issue running the Control command - wait and try again. If it persists, grab Paddy.
+                </p>
+                <p>Message was: <code className="bg-black px-2">{this.state.errorMessage}</code></p>
+            </div>
+        }
+
+        return <React.Fragment/>
     }
 }
