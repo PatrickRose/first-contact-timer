@@ -140,14 +140,11 @@ export default class MongoRepo {
         }
     }
 
-    async nextTurn(): Promise<Turn> {
+    async nextTurn(current: Turn): Promise<Turn> {
         let lockResult = null;
         let lock = null;
 
         try {
-            const turn = await this.getCurrentTurn();
-            const collection = await this.getCollection();
-
             const database = this.mongo.db();
 
             lock = database.collection<Lock>("lock");
@@ -155,12 +152,27 @@ export default class MongoRepo {
             lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
 
             if (lockResult.matchedCount != 1) {
+                return current;
+            }
+
+            const turn = await this.getCurrentTurn();
+
+            if (turn.phase != current.phase || turn.turnNumber != current.turnNumber) {
+                // Then the turn has already been ticked - don't do it again
                 return turn;
             }
 
             const newTurn = tickTurn(turn);
 
-            await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
+            try {
+                // Reconnect - we'll have disconnected when we got the turn
+                await this.mongo.connect()
+                const collection = await this.getCollection();
+                await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
+            } catch (e) {
+                console.log(e);
+                throw e;
+            }
 
             return newTurn;
         } finally {
