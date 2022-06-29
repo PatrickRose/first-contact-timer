@@ -31,10 +31,10 @@ function makeClient({protocol, credentials, dbURL, dbName, options}: DBProps): M
     return new MongoClient(uri);
 }
 
-const STATIC_ID = 'watch-the-skies';
+const STATIC_ID = 'faes-anatomy';
 
 type Lock = {
-    _id: 'watch-the-skies',
+    _id: typeof STATIC_ID,
     active: boolean,
 }
 
@@ -92,6 +92,14 @@ export default class MongoRepo {
                 };
                 defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);
                 await turnCollection.insertOne(defaultTurn);
+                const database = this.mongo.db();
+
+                const lock = database.collection<Lock>("lock");
+                try {
+                    await lock.insertOne({_id: STATIC_ID, active: false});
+                } catch (e) {
+                    // ignore the lock error
+                }
 
                 return defaultTurn;
             }
