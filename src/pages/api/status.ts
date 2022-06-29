@@ -13,7 +13,7 @@ export default async function handler(
     let turn = await mongo.getCurrentTurn();
 
     if (hasFinished(turn)) {
-        turn = await mongo.nextTurn()
+        turn = await mongo.nextTurn(turn)
     }
 
     // if (turn.frozenTurn) {
