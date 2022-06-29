@@ -12,7 +12,8 @@ type BaseAppState = {
     fetchFailed: boolean,
     apiResponse?: ApiResponse,
     secondsUntilFetch: number,
-    pauseRefresh: boolean
+    pauseRefresh: boolean,
+    errorMessage?: string,
 };
 
 
@@ -59,7 +60,8 @@ export default abstract class BaseApp extends React.Component<{}, BaseAppState> 
             pauseRefresh: false,
             fetchFailed: false,
             apiResponse: undefined,
-            secondsUntilFetch: 0
+            secondsUntilFetch: 0,
+            errorMessage: undefined
         };
 
         if (typeof window !== 'undefined') {
