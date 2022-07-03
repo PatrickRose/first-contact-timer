@@ -154,10 +154,17 @@ export default class MongoRepo {
 
         try {
             const database = this.mongo.db();
+            await this.mongo.connect();
 
             lock = database.collection<Lock>("lock");
 
-            lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
+            try {
+                lockResult = await lock.updateOne({ _id: STATIC_ID, active: false }, { $set: { active: true } });
+            } catch (e) {
+                console.log('Failed to get lock');
+                console.log(e);
+                throw e;
+            }
 
             if (lockResult.matchedCount != 1) {
                 return current;
@@ -176,8 +183,9 @@ export default class MongoRepo {
                 // Reconnect - we'll have disconnected when we got the turn
                 await this.mongo.connect()
                 const collection = await this.getCollection();
-                await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
+                await collection.updateOne({ _id: STATIC_ID }, { $set: newTurn });
             } catch (e) {
+                console.log('Failed to update turn')
                 console.log(e);
                 throw e;
             }
