@@ -13,7 +13,7 @@ export default function Roles(props: RoleProps) {
     <div className="container text-3xl flex-1 flex 2items-center">
       <ul className="list-unstyled">
         {
-            AllRoles.map(
+            AllRoles[phaseNumber].map(
               role => role.render(phaseNumber)
             )
         }

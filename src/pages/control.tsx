@@ -180,7 +180,7 @@ class ForwardPhase extends ControlButton {
 }
 
 class ForwardTurn extends ControlButton {
-    appearForState = (apiResponse: ApiResponse): boolean => apiResponse.phase != 5;
+    appearForState = (apiResponse: ApiResponse): boolean => apiResponse.phase != 3;
 
     protected fontAwesomeIcon = (): IconDefinition => faFastForward;
 

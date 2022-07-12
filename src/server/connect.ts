@@ -31,10 +31,10 @@ function makeClient({protocol, credentials, dbURL, dbName, options}: DBProps): M
     return new MongoClient(uri);
 }
 
-const STATIC_ID = 'watch-the-skies';
+const STATIC_ID = 'faes-anatomy';
 
 type Lock = {
-    _id: 'watch-the-skies',
+    _id: typeof STATIC_ID,
     active: boolean,
 }
 
@@ -92,6 +92,14 @@ export default class MongoRepo {
                 };
                 defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);
                 await turnCollection.insertOne(defaultTurn);
+                const database = this.mongo.db();
+
+                const lock = database.collection<Lock>("lock");
+                try {
+                    await lock.insertOne({_id: STATIC_ID, active: false});
+                } catch (e) {
+                    // ignore the lock error
+                }
 
                 return defaultTurn;
             }
@@ -146,10 +154,17 @@ export default class MongoRepo {
 
         try {
             const database = this.mongo.db();
+            await this.mongo.connect();
 
             lock = database.collection<Lock>("lock");
 
-            lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
+            try {
+                lockResult = await lock.updateOne({ _id: STATIC_ID, active: false }, { $set: { active: true } });
+            } catch (e) {
+                console.log('Failed to get lock');
+                console.log(e);
+                throw e;
+            }
 
             if (lockResult.matchedCount != 1) {
                 return current;
@@ -168,8 +183,9 @@ export default class MongoRepo {
                 // Reconnect - we'll have disconnected when we got the turn
                 await this.mongo.connect()
                 const collection = await this.getCollection();
-                await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
+                await collection.updateOne({ _id: STATIC_ID }, { $set: newTurn });
             } catch (e) {
+                console.log('Failed to update turn')
                 console.log(e);
                 throw e;
             }
