@@ -124,8 +124,9 @@ export default class MongoRepo {
             const collection = await this.getCollection();
 
             const key: `${keyof Turn}.${BreakingNewsKey}` = `breakingNews.${number}`;
-            const toSet: { [k1 in typeof key]?: string | null } = {};
-            toSet[key] = breakingNews;
+            const toSet = {
+                [key]: breakingNews
+            };
 
             await collection.updateOne(
                 {_id: STATIC_ID},
