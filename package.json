@@ -15,7 +15,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@tailwindcss/forms": "^0.5.3",
     "fp-ts": "^2.13.1",
-    "io-ts": "^2.2.19",
+    "io-ts": "^2.2.20",
     "mongodb": "^4.11.0",
     "next": "^13.0.6",
     "react": "^18.2.0",
