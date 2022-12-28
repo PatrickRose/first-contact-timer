@@ -41,9 +41,28 @@ const TurnTimer = function TurnTimer(props: { timestamp: number, active: boolean
   );
 };
 
+const breather: React.ReactNode = <p className="text-md flex-1">Breather</p>;
+
+const PHASE_LABELS: Record<Phase, React.ReactNode> = {
+    1: <PhaseLabel title="Team Time" />,
+    2: breather,
+    3: <PhaseLabel title="2" />,
+    4: breather,
+    5: <PhaseLabel title="3" />,
+    6: breather,
+    7: <PhaseLabel title="4" />,
+    8: breather,
+    9: <PhaseLabel title="Press" />,
+    10: breather,
+}
+
+function PhaseLabel({title}: { title: string }) {
+    return <p className="flex-1 text-3xl">{title}</p>
+}
+
 export function PhaseCount({phase, length, active}: {phase: Phase, length: number, active: boolean}) {
     return <div className={`flex flex-col border border-first-contact p-3 transition duration-500 ${active ? 'bg-first-contact text-white delay-250' : 'bg-white text-black'}`}>
-        <p className="text-3xl">{phase}</p>
+        {PHASE_LABELS[phase]}
         <p>{length} minutes</p>
     </div>
 }
