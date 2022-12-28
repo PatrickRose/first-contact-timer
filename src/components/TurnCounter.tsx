@@ -41,19 +41,19 @@ const TurnTimer = function TurnTimer(props: { timestamp: number, active: boolean
   );
 };
 
-const breather: React.ReactNode = <p className="text-md flex-1">Breather</p>;
+const BUFFER: React.ReactNode = <p className="text-md flex-1">Buffer</p>;
 
 const PHASE_LABELS: Record<Phase, React.ReactNode> = {
     1: <PhaseLabel title="Team Time" />,
-    2: breather,
+    2: BUFFER,
     3: <PhaseLabel title="2" />,
-    4: breather,
+    4: BUFFER,
     5: <PhaseLabel title="3" />,
-    6: breather,
+    6: BUFFER,
     7: <PhaseLabel title="4" />,
-    8: breather,
+    8: BUFFER,
     9: <PhaseLabel title="Press" />,
-    10: breather,
+    10: BUFFER,
 }
 
 function PhaseLabel({title}: { title: string }) {
