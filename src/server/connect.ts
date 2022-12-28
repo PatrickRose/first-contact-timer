@@ -136,31 +136,15 @@ export default class MongoRepo {
     }
 
     async setBreakingNews(newBreakingNews: string | null, number: BreakingNewsKey): Promise<Turn> {
-        try {
-            await this.getCurrentTurn();
-
-            const breakingNews = newBreakingNews === ''
+        const key: `${keyof Turn}.${BreakingNewsKey}` = `breakingNews.${number}`;
+        const toSet = {
+            [key]: newBreakingNews === ''
                 ? null
                 : newBreakingNews
+        };
 
-            const collection = await this.getCollection();
-
-            const key: `${keyof Turn}.${BreakingNewsKey}` = `breakingNews.${number}`;
-            const toSet = {
-                [key]: breakingNews
-            };
-
-            await collection.updateOne(
-                {_id: STATIC_ID},
-                {$set: toSet}
-            );
-
-            await this.mongo.close();
-
-            return this.getCurrentTurn();
-        } finally {
-            await this.mongo.close()
-        }
+        return this.updateTurn(toSet)
+            .then(() => this.getCurrentTurn())
     }
 
     async nextTurn(current: Turn): Promise<Turn> {
