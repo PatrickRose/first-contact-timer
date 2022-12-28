@@ -68,6 +68,26 @@ export default class MongoRepo {
         return new MongoRepo(makeClient(dbProps));
     }
 
+    async updateTurn(fields: Partial<Turn>, upsert: boolean = false) {
+        return this.mongo.connect()
+            .then(client => {
+                return client.db().collection<Turn>('turns').updateOne(
+                    {
+                        _id: STATIC_ID
+                    },
+                    {
+                        $set: fields
+                    },
+                    {
+                        upsert
+                    }
+                )
+            })
+            .finally(
+                () => this.mongo.close()
+            )
+    }
+
     async getCurrentTurn(): Promise<Turn> {
         const collection = this.getCollection();
 
@@ -92,12 +112,9 @@ export default class MongoRepo {
                         };
                         defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);
 
-                        return collection.insertOne(defaultTurn)
-                            .then(
-                                () => this.mongo.db().collection<Lock>('lock').updateOne({_id: STATIC_ID}, {$set: {active: false}}, {upsert: true})
-                            ).then(
-                                () => defaultTurn
-                            );
+                        return this.updateTurn(defaultTurn, true)
+                            .then(() => this.#releaseLock(true))
+                            .then(() => defaultTurn);
                     }
 
                     return turn;
@@ -147,46 +164,29 @@ export default class MongoRepo {
     }
 
     async nextTurn(current: Turn): Promise<Turn> {
-        let lockResult = null;
-        let lock = null;
+        return this.#gainLock()
+            .then(result => {
+                if (!result) {
+                    return current
+                }
 
-        try {
-            const database = this.mongo.db();
+                return this.getCurrentTurn()
+                    .then(turn => {
+                        if (turn.phase != current.phase || turn.turnNumber != current.turnNumber) {
+                            return turn;
+                        }
 
-            lock = database.collection<Lock>("lock");
+                        const newTurn = tickTurn(turn);
 
-            lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
-
-            if (lockResult.matchedCount != 1) {
-                return current;
-            }
-
-            const turn = await this.getCurrentTurn();
-
-            if (turn.phase != current.phase || turn.turnNumber != current.turnNumber) {
-                // Then the turn has already been ticked - don't do it again
-                return turn;
-            }
-
-            const newTurn = tickTurn(turn);
-
-            try {
-                // Reconnect - we'll have disconnected when we got the turn
-                await this.mongo.connect()
-                const collection = await this.getCollection();
-                await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
-            } catch (e) {
+                        return this.updateTurn(newTurn)
+                            .then(() => newTurn)
+                            .finally(() => this.#releaseLock())
+                    });
+            })
+            .catch((e) => {
                 console.log(e);
                 throw e;
-            }
-
-            return newTurn;
-        } finally {
-            if (lockResult?.matchedCount == 1) {
-                await lock?.updateOne({_id: STATIC_ID, active: true}, {$set: {active: false}});
-            }
-            await this.mongo.close();
-        }
+            });
     }
 
     async pauseResume(active: boolean): ControlAction {
@@ -352,5 +352,45 @@ export default class MongoRepo {
 
             await this.mongo.close();
         }
+    }
+
+    async #gainLock(): Promise<boolean> {
+        return this.mongo.connect()
+            .then(client => {
+                return client.db()
+                    .collection<Lock>('lock')
+                    .updateOne(
+                        {_id: STATIC_ID, active: false},
+                        {
+                            $set: {
+                                active: true
+                            }
+                        }
+                    )
+            })
+            .then(result => {
+                return result.matchedCount == 1;
+            })
+            .finally(() => this.mongo.close())
+    }
+
+    async #releaseLock(upsert: boolean = false) {
+        this.mongo.connect()
+            .then(client => {
+                return client.db()
+                    .collection<Lock>('lock')
+                    .updateOne(
+                        {_id: STATIC_ID},
+                        {
+                            $set: {
+                                active: false
+                            }
+                        },
+                        {
+                            upsert
+                        }
+                    )
+            })
+            .finally(() => this.mongo.close())
     }
 }
