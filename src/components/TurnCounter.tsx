@@ -68,7 +68,7 @@ export function PhaseCount({phase, length, active}: {phase: Phase, length: numbe
 
     const visibleClass = `${visibleOnPhone ? 'flex' : 'hidden'} ${visibleOnTablet ? 'md:flex' : ''} ${!visibleOnPhone && !visibleOnTablet ? 'lg:flex' : ''}`;
 
-    return <div className={`${visibleClass} flex-col border border-first-contact p-3 transition duration-500 ${backgroundClass}`}>
+    return <div className={`${visibleClass} flex-1 flex-col border border-first-contact p-3 transition duration-500 ${backgroundClass}`}>
         {PHASE_LABELS[phase]}
         <p>{length} minutes</p>
     </div>
@@ -88,8 +88,14 @@ export default function TurnCounter(props: TurnCounterProps) {
       <h1 className="text-5xl">
         {text}
       </h1>
-        <div className="flex mt-4 border border-first-contact">
-            {PHASE_LISTS.map((val) => <PhaseCount phase={val} length={lengthOfPhase(val, turn)} active={phase} key={val} />)}
+        <div className="flex lg:flex-wrap mt-4 border border-first-contact">
+            {PHASE_LISTS.map((val) => {
+                return <>
+                    <PhaseCount phase={val} length={lengthOfPhase(val, turn)} active={phase} key={val} />
+                    {val == Math.max(...PHASE_LISTS) / 2 ? <div className="hidden lg:flex lg:basis-full" /> : null}
+                </>
+
+            })}
         </div>
       <TurnTimer timestamp={timestamp} active={active} />
     </React.Fragment>
