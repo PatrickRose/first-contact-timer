@@ -1,4 +1,4 @@
-import {MongoClient} from "mongodb";
+import {Collection, MongoClient} from "mongodb";
 import {BreakingNewsKey, ControlAction, Turn} from "../types/types";
 import {backAPhase, backATurn, nextDate, pauseResume, tickTurn, toApiResponse} from "./turn";
 
@@ -69,45 +69,50 @@ export default class MongoRepo {
     }
 
     async getCurrentTurn(): Promise<Turn> {
-        try {
-            const turnCollection = await this.getCollection();
+        const collection = this.getCollection();
 
-            const cursor = turnCollection.find({_id: STATIC_ID});
+        return this.mongo.connect()
+            .then(
+                () => collection.find({_id: STATIC_ID}).next()
+            ).then(
+                (turn) => {
+                    if (turn === null) {
+                        const defaultTurn: Turn = {
+                            _id: STATIC_ID,
+                            active: false,
+                            phase: 1,
+                            turnNumber: 1,
+                            phaseEnd: nextDate(1, 1).toString(),
+                            breakingNews: {
+                                1: null,
+                                2: null,
+                                3: null,
+                            },
+                            frozenTurn: null,
+                        };
+                        defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);
 
-            const turn = await cursor.next();
+                        return collection.insertOne(defaultTurn)
+                            .then(
+                                () => this.mongo.db().collection<Lock>('lock').updateOne({_id: STATIC_ID}, {$set: {active: false}}, {upsert: true})
+                            ).then(
+                                () => defaultTurn
+                            );
+                    }
 
-            if (turn === null) {
-                const defaultTurn: Turn = {
-                    _id: STATIC_ID,
-                    active: false,
-                    phase: 1,
-                    turnNumber: 1,
-                    phaseEnd: nextDate(1, 1).toString(),
-                    breakingNews: {
-                        1: null,
-                        2: null,
-                        3: null,
-                    },
-                    frozenTurn: null,
-                };
-                defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);
-                await turnCollection.insertOne(defaultTurn);
-
-                return defaultTurn;
-            }
-
-            return turn;
-        } catch (e) {
-            console.log(e);
-            throw e;
-        } finally {
-            await this.mongo.close()
-        }
+                    return turn;
+                }
+            )
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+            .finally(
+                () => this.mongo.close()
+            );
     }
 
-    private async getCollection() {
-        await this.mongo.connect();
-
+    private getCollection(): Collection<Turn> {
         const database = this.mongo.db();
 
         return database.collection<Turn>("turns");
