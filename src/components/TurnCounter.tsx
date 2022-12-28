@@ -63,9 +63,10 @@ function PhaseLabel({title}: { title: string }) {
 export function PhaseCount({phase, length, active}: {phase: Phase, length: number, active: Phase}) {
     const backgroundClass = phase == active ? 'bg-first-contact text-white delay-250' : 'bg-white text-black';
 
-    const visible = [active-1, active, active+1].includes(phase);
+    const visibleOnPhone = [active-1, active, active+1].includes(phase);
+    const visibleOnTablet = [active-2, active+2].includes(phase);
 
-    const visibleClass = visible ? 'flex' : 'hidden md:flex'
+    const visibleClass = `${visibleOnPhone ? 'flex' : 'hidden'} ${visibleOnTablet ? 'md:flex' : ''} ${!visibleOnPhone && !visibleOnTablet ? 'lg:flex' : ''}`;
 
     return <div className={`${visibleClass} flex-col border border-first-contact p-3 transition duration-500 ${backgroundClass}`}>
         {PHASE_LABELS[phase]}
