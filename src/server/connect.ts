@@ -111,8 +111,8 @@ export default class MongoRepo {
                             },
                             defcon: {
                                 China: 3,
-                                France: 2,
-                                Russia: 1,
+                                France: 3,
+                                Russia: 3,
                                 UnitedStates: 3,
                                 UnitedKingdom: 3,
                                 Pakistan: 3,
