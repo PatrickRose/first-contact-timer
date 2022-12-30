@@ -148,12 +148,8 @@ export default class MongoRepo {
     }
 
     async nextTurn(current: Turn): Promise<Turn> {
-        return this.#gainLock()
-            .then(result => {
-                if (!result) {
-                    return current
-                }
-
+        return this.updateTurnWithLock(
+            () => {
                 return this.getCurrentTurn()
                     .then(turn => {
                         if (turn.phase != current.phase || turn.turnNumber != current.turnNumber) {
@@ -162,15 +158,11 @@ export default class MongoRepo {
 
                         const newTurn = tickTurn(turn);
 
-                        return this.updateTurn(newTurn)
-                            .then(() => newTurn)
-                            .finally(() => this.#releaseLock())
+                        return this.updateTurn(newTurn).then(() => newTurn)
                     });
-            })
-            .catch((e) => {
-                console.log(e);
-                throw e;
-            });
+            },
+            () => Promise.resolve(current)
+        );
     }
 
     async pauseResume(active: boolean): ControlAction {
@@ -336,6 +328,22 @@ export default class MongoRepo {
 
             await this.mongo.close();
         }
+    }
+
+    async updateTurnWithLock(runWhenLocked: () => Promise<Turn>, runWhenNotLocked: () => Promise<Turn>): Promise<Turn> {
+        return this.#gainLock()
+            .then(result => {
+                if (!result) {
+                    return runWhenNotLocked()
+                }
+
+                return runWhenLocked()
+                    .finally(() => this.#releaseLock());
+            })
+            .catch(e => {
+                console.log(e);
+                throw e;
+            })
     }
 
     async #gainLock(): Promise<boolean> {
