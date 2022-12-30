@@ -167,35 +167,27 @@ export default class MongoRepo {
     }
 
     async pauseResume(active: boolean): ControlAction {
-        let lock = null;
-        let lockResult = null;
+        const current = await this.getCurrentTurn();
 
-        try {
-            const turn = await this.getCurrentTurn();
-            const collection = await this.getCollection();
+        return this.updateTurnWithLock(
+            () => {
+                return this.getCurrentTurn()
+                    .then(turn => {
+                        if (!turnMatches(current, turn)) {
+                            return {_tag: "Left", left: "Did not manage to lock"}
+                        }
 
-            const database = this.mongo.db();
+                        const newTurn = pauseResume(turn, active);
 
-            lock = database.collection<Lock>("lock");
-
-            lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
-
-            if (lockResult.matchedCount != 1) {
-                return {_tag: "Left", left: "Did not manage to lock"};
-            }
-
-            const newTurn = pauseResume(turn, active);
-
-            await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
-
-            return {_tag: "Right", right: newTurn};
-        } finally {
-            if (lockResult?.matchedCount == 1) {
-                await lock?.updateOne({_id: STATIC_ID, active: true}, {$set: {active: false}});
-            }
-
-            await this.mongo.close();
-        }
+                        return this.updateTurn(newTurn).then(
+                            () => {
+                                return {_tag: "Right", right:newTurn}
+                            }
+                        );
+                    })
+            },
+            () => Promise.resolve({_tag: "Left", left: "Did not manage to lock"})
+        );
     }
 
     async backTurn(): ControlAction {
