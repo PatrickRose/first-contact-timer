@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {Defcon, DefconStatus} from "../types/types";
+import {useState} from "react";
+import { Transition } from '@headlessui/react'
 
 interface DefconProps {
     defcon: Defcon
@@ -69,13 +71,15 @@ function DefconState({defconNumber, active}: { defconNumber: DefconStatus, activ
         background.push('delay-250');
 
         background.push(backgroundDef.background)
+    } else {
+        background.push('hidden md:block')
     }
 
 
     return <div
         className={`p-2 text-center items-center flex flex-col transition duration-500 border-4 ${background.join(' ')}`}>
-        <span>Defcon</span>
-        <span>{defconNumber}</span>
+        <div>Defcon</div>
+        <div>{defconNumber}</div>
     </div>
 }
 
@@ -84,7 +88,7 @@ export function CountryDefcon({stateName, status}: CountryDefconProps) {
         return null;
     }
 
-    return <div className="flex">
+    return <div className="flex mx-4">
         <div
             className={`flex-1 flex items-center content-center justify-center text-2xl border-4 transition duration-500 ${BACKGROUNDS[status].activeBorder}`}>
             {DEFCON_STATE_TO_HUMAN_STATE[stateName]}
@@ -95,16 +99,48 @@ export function CountryDefcon({stateName, status}: CountryDefconProps) {
     </div>
 }
 
+function DisplayDefconStatus({defcon}: DefconProps) {
+    return <div className="flex justify-center mx-1">
+        <div className="w-full xl:w-3/4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {
+                Object.entries(defcon).map(([country, status]) => {
+                    return <CountryDefcon key={country} stateName={country as keyof Defcon} status={status}/>
+                })
+            }
+        </div>
+    </div>
+}
+
 export default function DefconStatuses({defcon}: DefconProps) {
+    const [show, setShow] = useState<boolean>(false);
+
     return (
-        <div className="flex justify-center p-10">
-            <ul className="w-3/4 grid grid-cols-2 gap-4">
-                {
-                    Object.entries(defcon).map(([country, status]) => {
-                        return <CountryDefcon key={country} stateName={country as keyof Defcon} status={status}/>
-                    })
-                }
-            </ul>
+        <div className="py-4">
+            <div className="md:hidden">
+                <div className="m-10 flex justify-center">
+                    <button
+                        onClick={() => setShow((show) => !show)}
+                        className={`transition-colors border-2 rounded-full p-5 ${show ? 'bg-gray-300' : ''}`}
+                    >
+                        {show ? 'Hide' : 'Show'} defcon states
+                    </button>
+                </div>
+                <Transition
+                    show={show}
+                    enter="transition-transform duration-500"
+                    enterFrom="translate-y-full"
+                    enterTo="translate-y-0"
+                    leave="transition-transform duration-500"
+                    leaveFrom="translate-y-0"
+                    leaveTo="translate-y-full"
+                >
+                    <DisplayDefconStatus defcon={defcon} />
+                </Transition>
+            </div>
+            <div className="hidden md:block">
+                <DisplayDefconStatus defcon={defcon} />
+            </div>
         </div>
     );
 }
+

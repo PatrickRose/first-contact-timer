@@ -212,7 +212,7 @@ function DefconState({
 
     return <button onClick={onClick}
                    className={`p-2 text-center items-center flex flex-col transition duration-500 border-4 ${background.join(' ')}`}>
-        <span>Defcon</span>
+        <span className="hidden lg:block">Defcon</span>
         <span>{defconNumber}</span>
     </button>
 }
@@ -234,8 +234,8 @@ function CountryDefcon(
             .finally(() => setUpdatingTo(null))
     }
 
-    return <div className="flex justify-center items-center content-center">
-        <div className="flex-1">
+    return <div className={`flex mx-1`}>
+        <div className={`flex-1 justify-center items-center content-center border-2 transition duration-500 ${BACKGROUNDS[status].activeBorder}`}>
             {DEFCON_STATE_TO_HUMAN_STATE[stateName]}
         </div>
         {
@@ -254,13 +254,9 @@ function CountryDefcon(
     </div>
 }
 
-function ControlDefconStatus({
-                                 defcon,
-                                 pauseRefresh,
-                                 triggerFetch,
-                                 setResponse,
-                                 setErrorMessage
-                             }: { defcon: Defcon } & ControlButtonProps) {
+function ControlDefconStatus(
+    {defcon, pauseRefresh, triggerFetch, setResponse, setErrorMessage}: { defcon: Defcon } & ControlButtonProps
+) {
     const triggerUpdate: CountryDefconProps["triggerUpdate"] = async (countryName: CountryDefconProps["stateName"], status: DefconStatus): Promise<void> => {
         pauseRefresh(true);
 
@@ -319,13 +315,14 @@ function ControlDefconStatus({
     }
 
     return <div className="flex justify-center">
-        <ul className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {
                 Object.entries(defcon).map(([country, status]) => {
-                    return <CountryDefcon key={country} stateName={country as keyof Defcon} status={status} triggerUpdate={triggerUpdate}/>
+                    return <CountryDefcon key={country} stateName={country as keyof Defcon} status={status}
+                                          triggerUpdate={triggerUpdate}/>
                 })
             }
-        </ul>
+        </div>
     </div>
 }
 
