@@ -147,3 +147,7 @@ export function backATurn(turn: Turn): Turn {
 
     return newTurn;
 }
+
+export function turnMatches(first: Turn, second: Turn): boolean {
+    return first.phase == second.phase || first.turnNumber == second.turnNumber;
+}
