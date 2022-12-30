@@ -187,7 +187,11 @@ export default class MongoRepo {
                             return {_tag: "Left", left: "Did not manage to lock"}
                         }
 
-                        const newTurn = controlAction(turn);
+                        const turnAfterAction = controlAction(turn);
+
+                        const newTurn = turnAfterAction.active
+                            ? turnAfterAction
+                            : pauseResume(pauseResume(turnAfterAction, true), false);
 
                         return this.updateTurn(newTurn).then(
                             () => {
