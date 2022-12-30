@@ -166,6 +166,30 @@ export default class MongoRepo {
         );
     }
 
+    async #runControlAction(controlAction: (turn: Turn) => Turn): ControlAction {
+        const current = await this.getCurrentTurn();
+
+        return this.updateTurnWithLock(
+            () => {
+                return this.getCurrentTurn()
+                    .then(turn => {
+                        if (!turnMatches(current, turn)) {
+                            return {_tag: "Left", left: "Did not manage to lock"}
+                        }
+
+                        const newTurn = controlAction(turn);
+
+                        return this.updateTurn(controlAction(newTurn)).then(
+                            () => {
+                                return {_tag: "Right", right:newTurn}
+                            }
+                        );
+                    })
+            },
+            () => Promise.resolve({_tag: "Left", left: "Did not manage to lock"})
+        );
+    }
+
     async pauseResume(active: boolean): ControlAction {
         const current = await this.getCurrentTurn();
 
