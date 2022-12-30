@@ -6,6 +6,11 @@ export const PhaseDecode = t.union([
   t.literal(3),
   t.literal(4),
   t.literal(5),
+  t.literal(6),
+  t.literal(7),
+  t.literal(8),
+  t.literal(9),
+  t.literal(10),
 ]);
 
 export const BreakingNewsDecode = t.type({

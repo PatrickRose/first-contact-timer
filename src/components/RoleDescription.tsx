@@ -46,7 +46,12 @@ class Leader extends RoleDescription {
         2: this.phaseAction,
         3: this.phaseAction,
         4: this.phaseAction,
-        5: this.phaseAction
+        5: this.phaseAction,
+          6: this.phaseAction,
+          7: this.phaseAction,
+          8: this.phaseAction,
+          9: this.phaseAction,
+          10: this.phaseAction,
       };
     }
 }
@@ -60,7 +65,12 @@ class UnitedNations extends RoleDescription {
         2: this.phaseAction,
         3: this.phaseAction,
         4: this.phaseAction,
-        5: this.phaseAction
+        5: this.phaseAction,
+          6: this.phaseAction,
+          7: this.phaseAction,
+          8: this.phaseAction,
+          9: this.phaseAction,
+          10: this.phaseAction,
       };
     }
 }
@@ -74,7 +84,12 @@ class Military extends RoleDescription {
         2: this.phaseAction,
         3: this.phaseAction,
         4: this.phaseAction,
-        5: this.phaseAction
+        5: this.phaseAction,
+          6: this.phaseAction,
+          7: this.phaseAction,
+          8: this.phaseAction,
+          9: this.phaseAction,
+          10: this.phaseAction,
       };
     }
 }
@@ -88,7 +103,12 @@ class CorporateOps extends RoleDescription {
         2: this.phaseAction,
         3: this.phaseAction,
         4: this.phaseAction,
-        5: this.phaseAction
+        5: this.phaseAction,
+          6: this.phaseAction,
+          7: this.phaseAction,
+          8: this.phaseAction,
+          9: this.phaseAction,
+          10: this.phaseAction,
       };
     }
 }
@@ -102,7 +122,12 @@ class Scientists extends RoleDescription {
         2: this.phaseAction,
         3: this.phaseAction,
         4: this.phaseAction,
-        5: this.phaseAction
+        5: this.phaseAction,
+          6: this.phaseAction,
+          7: this.phaseAction,
+          8: this.phaseAction,
+          9: this.phaseAction,
+          10: this.phaseAction,
       };
     }
 }
@@ -116,7 +141,12 @@ class Press extends RoleDescription {
         2: this.phaseAction,
         3: this.phaseAction,
         4: this.phaseAction,
-        5: this.phaseAction
+        5: this.phaseAction,
+          6: this.phaseAction,
+          7: this.phaseAction,
+          8: this.phaseAction,
+          9: this.phaseAction,
+          10: this.phaseAction,
       };
     }
 }

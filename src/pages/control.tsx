@@ -11,6 +11,7 @@ import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
 import {faForward} from "@fortawesome/free-solid-svg-icons/faForward";
 import {faFastForward} from "@fortawesome/free-solid-svg-icons/faFastForward";
 import {ApiResponseDecode} from "../types/io-ts-def";
+import {PHASE_LISTS} from "../server/turn";
 
 
 type ControlButtonProps = {
@@ -180,7 +181,7 @@ class ForwardPhase extends ControlButton {
 }
 
 class ForwardTurn extends ControlButton {
-    appearForState = (apiResponse: ApiResponse): boolean => apiResponse.phase != 5;
+    appearForState = (apiResponse: ApiResponse): boolean => apiResponse.phase != Math.max(...PHASE_LISTS);
 
     protected fontAwesomeIcon = (): IconDefinition => faFastForward;
 

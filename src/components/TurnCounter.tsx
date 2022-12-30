@@ -41,9 +41,35 @@ const TurnTimer = function TurnTimer(props: { timestamp: number, active: boolean
   );
 };
 
-export function PhaseCount({phase, length, active}: {phase: Phase, length: number, active: boolean}) {
-    return <div className={`flex flex-col border border-first-contact p-3 transition duration-500 ${active ? 'bg-first-contact text-white delay-250' : 'bg-white text-black'}`}>
-        <p className="text-3xl">{phase}</p>
+const BUFFER: React.ReactNode = <p className="text-md flex-1">Buffer</p>;
+
+const PHASE_LABELS: Record<Phase, React.ReactNode> = {
+    1: <PhaseLabel title="Team Time" />,
+    2: BUFFER,
+    3: <PhaseLabel title="2" />,
+    4: BUFFER,
+    5: <PhaseLabel title="3" />,
+    6: BUFFER,
+    7: <PhaseLabel title="4" />,
+    8: BUFFER,
+    9: <PhaseLabel title="Press" />,
+    10: BUFFER,
+}
+
+function PhaseLabel({title}: { title: string }) {
+    return <p className="flex-1 text-3xl">{title}</p>
+}
+
+export function PhaseCount({phase, length, active}: {phase: Phase, length: number, active: Phase}) {
+    const backgroundClass = phase == active ? 'bg-first-contact text-white delay-250' : 'bg-white text-black';
+
+    const visibleOnPhone = [active-1, active, active+1, active + 2].includes(phase);
+    const visibleOnTablet = [active-2, active+3].includes(phase);
+
+    const visibleClass = `${visibleOnPhone ? 'flex' : 'hidden'} ${visibleOnTablet ? 'md:flex' : ''} ${!visibleOnPhone && !visibleOnTablet ? 'lg:flex' : ''}`;
+
+    return <div className={`${visibleClass} flex-1 flex-col border border-first-contact p-3 transition duration-500 ${backgroundClass}`}>
+        {PHASE_LABELS[phase]}
         <p>{length} minutes</p>
     </div>
 }
@@ -62,8 +88,14 @@ export default function TurnCounter(props: TurnCounterProps) {
       <h1 className="text-5xl">
         {text}
       </h1>
-        <div className="flex mt-4 border border-first-contact">
-            {PHASE_LISTS.map((val) => <PhaseCount phase={val} length={lengthOfPhase(val, turn)} active={phase==val} key={val} />)}
+        <div className="flex lg:flex-wrap mt-4 border border-first-contact">
+            {PHASE_LISTS.map((val) => {
+                return <>
+                    <PhaseCount phase={val} length={lengthOfPhase(val, turn)} active={phase} key={val} />
+                    {val == Math.max(...PHASE_LISTS) / 2 ? <div className="hidden lg:flex lg:basis-full" /> : null}
+                </>
+
+            })}
         </div>
       <TurnTimer timestamp={timestamp} active={active} />
     </React.Fragment>
