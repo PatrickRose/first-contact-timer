@@ -127,7 +127,7 @@ export default abstract class BaseApp extends React.Component<{}, BaseAppState> 
                                     );
                                 }
                             } else {
-                                console.log(PathReporter.report(result));
+                                console.error(PathReporter.report(result));
                                 this.setState({
                                     fetchFailed: true
                                 });
