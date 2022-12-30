@@ -109,6 +109,16 @@ export default class MongoRepo {
                                 2: null,
                                 3: null,
                             },
+                            defcon: {
+                                China: 3,
+                                France: 2,
+                                Russia: 1,
+                                UnitedStates: 3,
+                                UnitedKingdom: 3,
+                                Pakistan: 3,
+                                India: 3,
+                                Israel: 'hidden'
+                            },
                             frozenTurn: null,
                         };
                         defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);

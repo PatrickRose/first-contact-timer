@@ -19,12 +19,31 @@ export const BreakingNewsDecode = t.type({
   3: t.union([t.string, t.null]),
 })
 
+export const DefconStatusDecode = t.union([
+  t.literal('hidden'),
+  t.literal(3),
+  t.literal(2),
+  t.literal(1),
+])
+
+export const DefconDecode = t.type({
+  China: DefconStatusDecode,
+  France: DefconStatusDecode,
+  Russia: DefconStatusDecode,
+  UnitedStates: DefconStatusDecode,
+  UnitedKingdom: DefconStatusDecode,
+  Pakistan: DefconStatusDecode,
+  India: DefconStatusDecode,
+  Israel: DefconStatusDecode
+});
+
 export const ApiResponseDecode = t.type({
   turnNumber: t.number,
   phase: PhaseDecode,
   breakingNews: BreakingNewsDecode,
   active: t.boolean,
-  phaseEnd: t.number
+  phaseEnd: t.number,
+  defcon: DefconDecode
 });
 
 export const SetBreakingNewsDecode = t.type({
@@ -50,5 +69,6 @@ export const TurnDecode = t.type({
   phaseEnd: t.string,
   breakingNews: BreakingNewsDecode,
   active: t.boolean,
-  frozenTurn: t.union([t.null, ApiResponseDecode])
+  defcon: DefconDecode,
+  frozenTurn: t.union([t.null, ApiResponseDecode]),
 });

@@ -71,7 +71,8 @@ export function toApiResponse(turn: Turn, forceRefresh: boolean = false): ApiRes
         phase: turn.phase,
         phaseEnd: secondsLeft,
         breakingNews: turn.breakingNews || null,
-        active: turn.active
+        active: turn.active,
+        defcon: turn.defcon
     };
 }
 

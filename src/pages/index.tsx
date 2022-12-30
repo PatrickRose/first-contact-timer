@@ -1,17 +1,13 @@
 import React from 'react';
 import BaseApp from "../components/BasePage";
 import {ApiResponse} from "../types/types";
-import Roles from "../components/Roles";
+import DefconStatuses from "../components/DefconStatuses";
 
 class PlayerApp extends BaseApp {
   // eslint-disable-next-line class-methods-use-this
-  protected childComponents(apiResponse: ApiResponse): JSX.Element {
-    const {
-      phase
-    } = apiResponse;
-
+  protected childComponents({defcon}: ApiResponse): JSX.Element {
     return (
-        <Roles phaseNumber={phase} />
+        <DefconStatuses defcon={defcon} />
     );
   }
 
