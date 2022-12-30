@@ -179,30 +179,6 @@ export default class MongoRepo {
 
                         const newTurn = controlAction(turn);
 
-                        return this.updateTurn(controlAction(newTurn)).then(
-                            () => {
-                                return {_tag: "Right", right:newTurn}
-                            }
-                        );
-                    })
-            },
-            () => Promise.resolve({_tag: "Left", left: "Did not manage to lock"})
-        );
-    }
-
-    async pauseResume(active: boolean): ControlAction {
-        const current = await this.getCurrentTurn();
-
-        return this.updateTurnWithLock(
-            () => {
-                return this.getCurrentTurn()
-                    .then(turn => {
-                        if (!turnMatches(current, turn)) {
-                            return {_tag: "Left", left: "Did not manage to lock"}
-                        }
-
-                        const newTurn = pauseResume(turn, active);
-
                         return this.updateTurn(newTurn).then(
                             () => {
                                 return {_tag: "Right", right:newTurn}
@@ -214,120 +190,25 @@ export default class MongoRepo {
         );
     }
 
+    async pauseResume(active: boolean): ControlAction {
+        return this.#runControlAction((turn) => pauseResume(turn, active));
+    }
+
     async backTurn(): ControlAction {
-        let lock = null;
-        let lockResult = null;
-
-        try {
-            const turn = await this.getCurrentTurn();
-            const collection = await this.getCollection();
-
-            const database = this.mongo.db();
-
-            lock = database.collection<Lock>("lock");
-
-            lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
-
-            if (lockResult.matchedCount != 1) {
-                return {_tag: "Left", left: "Did not manage to lock"};
-            }
-
-            const newTurn = backATurn(turn);
-
-            await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
-
-            return {_tag: "Right", right: newTurn};
-        } finally {
-            if (lockResult?.matchedCount == 1) {
-                await lock?.updateOne({_id: STATIC_ID, active: true}, {$set: {active: false}});
-            }
-
-            await this.mongo.close();
-        }
+        return this.#runControlAction((turn) => backATurn(turn));
     }
 
     async backPhase(): ControlAction {
-        let lock = null;
-        let lockResult = null;
-
-        try {
-            const turn = await this.getCurrentTurn();
-            const collection = await this.getCollection();
-
-            const database = this.mongo.db();
-
-            lock = database.collection<Lock>("lock");
-
-            lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
-
-            if (lockResult.matchedCount != 1) {
-                return {_tag: "Left", left: "Did not manage to lock"};
-            }
-
-            const newTurn = backAPhase(turn);
-
-            await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
-
-            return {_tag: "Right", right: newTurn};
-        } finally {
-            if (lockResult?.matchedCount == 1) {
-                await lock?.updateOne({_id: STATIC_ID, active: true}, {$set: {active: false}});
-            }
-
-            await this.mongo.close();
-        }
+        return this.#runControlAction((turn) => backAPhase(turn));
     }
 
     async forwardPhase(): ControlAction {
-        let lock = null;
-        let lockResult = null;
-
-        try {
-            const turn = await this.getCurrentTurn();
-            const collection = await this.getCollection();
-
-            const database = this.mongo.db();
-
-            lock = database.collection<Lock>("lock");
-
-            lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
-
-            if (lockResult.matchedCount != 1) {
-                return {_tag: "Left", left: "Did not manage to lock"};
-            }
-
-            const newTurn = tickTurn(turn);
-
-            await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
-
-            return {_tag: "Right", right: newTurn};
-        } finally {
-            if (lockResult?.matchedCount == 1) {
-                await lock?.updateOne({_id: STATIC_ID, active: true}, {$set: {active: false}});
-            }
-
-            await this.mongo.close();
-        }
+        return this.#runControlAction((turn) => tickTurn(turn));
     }
 
     async forwardTurn(): ControlAction {
-        let lock = null;
-        let lockResult = null;
-
-        try {
-            const turn = await this.getCurrentTurn();
-            const collection = await this.getCollection();
+        return this.#runControlAction((turn) => {
             const turnNumber = turn.turnNumber;
-
-            const database = this.mongo.db();
-
-            lock = database.collection<Lock>("lock");
-
-            lockResult = await lock.updateOne({_id: STATIC_ID, active: false}, {$set: {active: true}});
-
-            if (lockResult.matchedCount != 1) {
-                return {_tag: "Left", left: "Did not manage to lock"};
-            }
 
             let newTurn = tickTurn(turn);
 
@@ -335,16 +216,8 @@ export default class MongoRepo {
                 newTurn = tickTurn(newTurn);
             }
 
-            await collection.updateOne({_id: STATIC_ID}, {$set: newTurn});
-
-            return {_tag: "Right", right: newTurn};
-        } finally {
-            if (lockResult?.matchedCount == 1) {
-                await lock?.updateOne({_id: STATIC_ID, active: true}, {$set: {active: false}});
-            }
-
-            await this.mongo.close();
-        }
+            return newTurn;
+        });
     }
 
     async updateTurnWithLock<T extends Turn|UnwrapPromise<ControlAction>>(
