@@ -16,7 +16,7 @@ function DefconStateInfo({inner, flex}: { inner: string, flex?: boolean }) {
     </div>
 }
 
-const DEFCON_STATE_TO_HUMAN_STATE: Record<keyof Defcon, React.ReactNode> = {
+export const DEFCON_STATE_TO_HUMAN_STATE: Record<keyof Defcon, React.ReactNode> = {
     China: <React.Fragment>
         <DefconStateInfo inner="🇨🇳"/>
         <DefconStateInfo inner="China" flex={true}/>
@@ -51,8 +51,8 @@ const DEFCON_STATE_TO_HUMAN_STATE: Record<keyof Defcon, React.ReactNode> = {
     </React.Fragment>
 }
 
-const BACKGROUNDS: Record<DefconStatus, { background: string, activeBorder: string, inactiveBorder: string }> = {
-    hidden: {background: '', activeBorder: '', inactiveBorder: ''},
+export const BACKGROUNDS: Record<DefconStatus, { background: string, activeBorder: string, inactiveBorder: string }> = {
+    hidden: {background: 'bg-gray-200', activeBorder: '', inactiveBorder: ''},
     1: {background: 'bg-red-500', activeBorder: 'border-red-500', inactiveBorder: 'border-red-300'},
     2: {background: 'bg-orange-300', activeBorder: 'border-orange-300', inactiveBorder: 'border-orange-100'},
     3: {background: 'bg-green-300', activeBorder: 'border-green-300', inactiveBorder: 'border-green-100'},
@@ -79,7 +79,7 @@ function DefconState({defconNumber, active}: { defconNumber: DefconStatus, activ
     </div>
 }
 
-function CountryDefcon({stateName, status}: CountryDefconProps) {
+export function CountryDefcon({stateName, status}: CountryDefconProps) {
     if (status == 'hidden') {
         return null;
     }

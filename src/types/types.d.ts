@@ -15,3 +15,4 @@ export type ControlAction = Promise<Either<string, Turn>>;
 
 export type Defcon = t.TypeOf<typeof types.DefconDecode>;
 export type DefconStatus = t.TypeOf<typeof types.DefconStatusDecode>;
+export type DefconAPIBody = t.TypeOf<typeof types.DefconAPIBodyDecode>

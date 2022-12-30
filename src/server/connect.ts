@@ -1,5 +1,5 @@
 import {Collection, MongoClient} from "mongodb";
-import {BreakingNewsKey, ControlAction, Turn} from "../types/types";
+import {BreakingNewsKey, ControlAction, Defcon, DefconStatus, Turn} from "../types/types";
 import {backAPhase, backATurn, nextDate, pauseResume, tickTurn, toApiResponse, turnMatches} from "./turn";
 import {UnwrapPromise} from "next/dist/lib/coalesced-function";
 
@@ -291,5 +291,15 @@ export default class MongoRepo {
                     )
             })
             .finally(() => this.mongo.close())
+    }
+
+    async updateDefconStatus(stateName: keyof Defcon, newState: DefconStatus): ControlAction {
+        return this.#runControlAction(
+            (turn) => {
+                turn.defcon[stateName] = newState;
+
+                return turn;
+            }
+        )
     }
 }

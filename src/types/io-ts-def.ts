@@ -72,3 +72,8 @@ export const TurnDecode = t.type({
   defcon: DefconDecode,
   frozenTurn: t.union([t.null, ApiResponseDecode]),
 });
+
+export const DefconAPIBodyDecode = t.type({
+  stateName: t.keyof(DefconDecode.props),
+  newStatus: DefconStatusDecode
+})
