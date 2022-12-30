@@ -1,6 +1,7 @@
 import {Collection, MongoClient} from "mongodb";
 import {BreakingNewsKey, ControlAction, Turn} from "../types/types";
 import {backAPhase, backATurn, nextDate, pauseResume, tickTurn, toApiResponse} from "./turn";
+import {UnwrapPromise} from "next/dist/lib/coalesced-function";
 
 type DBProps = {
     protocol?: string,
@@ -152,7 +153,7 @@ export default class MongoRepo {
             () => {
                 return this.getCurrentTurn()
                     .then(turn => {
-                        if (turn.phase != current.phase || turn.turnNumber != current.turnNumber) {
+                        if (!turnMatches(turn, current)) {
                             return turn;
                         }
 
@@ -330,7 +331,10 @@ export default class MongoRepo {
         }
     }
 
-    async updateTurnWithLock(runWhenLocked: () => Promise<Turn>, runWhenNotLocked: () => Promise<Turn>): Promise<Turn> {
+    async updateTurnWithLock<T extends Turn|UnwrapPromise<ControlAction>>(
+        runWhenLocked: () => Promise<T>,
+        runWhenNotLocked: () => Promise<T>
+    ): Promise<T> {
         return this.#gainLock()
             .then(result => {
                 if (!result) {
