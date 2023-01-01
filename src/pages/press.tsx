@@ -96,9 +96,12 @@ class PressForm extends React.Component<FormProps, FormState> {
 
             return <div className="flex my-2" key={key}>
                 <hr/>
-                <p className="flex-1 [word-break:break-word] text-left">
-                    {currentBreakingNews[key]}
-                </p>
+                <div className="flex-1 [word-break:break-word] text-left">
+                    {currentBreakingNews[key]?.replace('\n\n', '\n')
+                        .split('\n').map((i, key) => {
+                            return <p key={key}>{i}</p>;
+                        })}
+                </div>
                 <button
                     className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-75 disabled:hover:bg-red-700"
                     type="button"
