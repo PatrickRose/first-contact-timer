@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import BaseApp from "../components/BasePage";
-import {ApiResponse, ControlAPI} from "../types/types";
+import {ApiResponse, ControlAPI, Defcon, DefconAPIBody, DefconStatus} from "../types/types";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import {faBackward} from "@fortawesome/free-solid-svg-icons/faBackward";
@@ -12,6 +12,8 @@ import {faForward} from "@fortawesome/free-solid-svg-icons/faForward";
 import {faFastForward} from "@fortawesome/free-solid-svg-icons/faFastForward";
 import {ApiResponseDecode} from "../types/io-ts-def";
 import {PHASE_LISTS} from "../server/turn";
+import {BACKGROUNDS, DEFCON_STATE_TO_HUMAN_STATE} from "../components/DefconStatuses";
+import {useState} from "react";
 
 
 type ControlButtonProps = {
@@ -88,6 +90,8 @@ abstract class ControlButton extends React.Component<ControlButtonProps, Control
                         if (body.msg) {
                             setErrorMessage(body.msg);
                         }
+                    }).catch((e: Error) => {
+                        setErrorMessage(`${e}`);
                     })
                 } else if (error.msg) {
                     setErrorMessage(error.msg);
@@ -190,6 +194,139 @@ class ForwardTurn extends ControlButton {
     protected title = (): string => 'Go forward a turn';
 }
 
+function DefconState({
+                         defconNumber,
+                         active,
+                         onClick
+                     }: { defconNumber: DefconStatus, active: boolean, onClick: () => void }) {
+    const backgroundDef = BACKGROUNDS[defconNumber];
+    const background: string[] = [
+        active ? backgroundDef.activeBorder : backgroundDef.inactiveBorder
+    ];
+
+    if (active) {
+        background.push('delay-250');
+
+        background.push(backgroundDef.background)
+    }
+
+    return <button onClick={onClick}
+                   className={`p-2 text-center items-center flex flex-col transition duration-500 border-4 ${background.join(' ')}`}>
+        <span className="hidden lg:block">Defcon</span>
+        <span>{defconNumber}</span>
+    </button>
+}
+
+type CountryDefconProps = {
+    stateName: keyof Defcon,
+    status: DefconStatus,
+    triggerUpdate: (countryName: CountryDefconProps["stateName"], status: DefconStatus) => Promise<void>
+};
+
+function CountryDefcon(
+    {stateName, status, triggerUpdate}: CountryDefconProps
+) {
+    const [updatingTo, setUpdatingTo] = useState<DefconStatus | null>(null)
+
+    const onClick = (newStatus: DefconStatus) => {
+        setUpdatingTo(newStatus);
+        triggerUpdate(stateName, newStatus)
+            .finally(() => setUpdatingTo(null))
+    }
+
+    return <div className={`flex mx-1`}>
+        <div className={`flex-1 justify-center items-center content-center border-2 transition duration-500 ${BACKGROUNDS[status].activeBorder}`}>
+            {DEFCON_STATE_TO_HUMAN_STATE[stateName]}
+        </div>
+        {
+            updatingTo === null
+                ? <React.Fragment>
+                    <DefconState defconNumber="hidden" active={status == 'hidden'} onClick={() => onClick('hidden')}/>
+                    <DefconState defconNumber={3} active={status == 3} onClick={() => onClick(3)}/>
+                    <DefconState defconNumber={2} active={status == 2} onClick={() => onClick(2)}/>
+                    <DefconState defconNumber={1} active={status == 1} onClick={() => onClick(1)}/>
+                </React.Fragment>
+                : <div className="flex-1">
+                    Updating to defcon level {updatingTo}...
+                </div>
+        }
+
+    </div>
+}
+
+function ControlDefconStatus(
+    {defcon, pauseRefresh, triggerFetch, setResponse, setErrorMessage}: { defcon: Defcon } & ControlButtonProps
+) {
+    const triggerUpdate: CountryDefconProps["triggerUpdate"] = async (countryName: CountryDefconProps["stateName"], status: DefconStatus): Promise<void> => {
+        pauseRefresh(true);
+
+        const apiReqBody: DefconAPIBody = {
+            newStatus: status,
+            stateName: countryName
+        }
+
+        return fetch('/api/defcon', {
+            method: 'post',
+            body: JSON.stringify(apiReqBody),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((body) => {
+                if (body.ok) {
+                    return body.json()
+                } else {
+                    return Promise.reject(body)
+                }
+            })
+            .then((result) => {
+                    pauseRefresh(false);
+
+                    if (ApiResponseDecode.is(result)) {
+                        setResponse(result);
+                        setErrorMessage(undefined);
+                    } else {
+                        return Promise.reject(result)
+                    }
+
+                    triggerFetch();
+                }
+            )
+            .catch((error) => {
+                if (error instanceof Response) {
+                    error.json().then((body) => {
+                        if (body.msg) {
+                            setErrorMessage(body.msg);
+                        }
+                    }).catch((e: Error) => {
+                        setErrorMessage(`${e}`);
+                    })
+                } else if (error.msg) {
+                    setErrorMessage(error.msg);
+                } else {
+                    setErrorMessage("Unknown error");
+                }
+            })
+            .finally(
+                () => {
+                    pauseRefresh(false);
+                }
+            );
+    }
+
+    return <div className="flex justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {
+                Object.entries(defcon).map(([country, status]) => {
+                    return <CountryDefcon key={country} stateName={country as keyof Defcon} status={status}
+                                          triggerUpdate={triggerUpdate}/>
+                })
+            }
+        </div>
+    </div>
+}
+
+
 export default class ControlApp extends BaseApp {
     protected mainComponents(apiResponse: ApiResponse): JSX.Element {
         const triggerFetch = () => this.fetchFromAPI();
@@ -198,20 +335,25 @@ export default class ControlApp extends BaseApp {
         const setErrorMessage = (msg: string | undefined) => this.setState({errorMessage: msg})
 
         return (
-            <div className="flex w-full p-4 justify-around">
-                <BackATurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
-                           setResponse={setResponse} setErrorMessage={setErrorMessage}/>
-                <BackAPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
-                            setResponse={setResponse} setErrorMessage={setErrorMessage}/>
-                <PlayButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
-                            setResponse={setResponse} setErrorMessage={setErrorMessage}/>
-                <PauseButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
-                             setResponse={setResponse} setErrorMessage={setErrorMessage}/>
-                <ForwardPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
-                              setResponse={setResponse} setErrorMessage={setErrorMessage}/>
-                <ForwardTurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
-                             setResponse={setResponse} setErrorMessage={setErrorMessage}/>
-            </div>
+            <React.Fragment>
+                <div className="flex w-full p-4 justify-around">
+                    <BackATurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                               setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                    <BackAPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                                setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                    <PlayButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                                setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                    <PauseButton pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                                 setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                    <ForwardPhase pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                                  setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                    <ForwardTurn pauseRefresh={pauseRefresh} apiResponse={apiResponse} triggerFetch={triggerFetch}
+                                 setResponse={setResponse} setErrorMessage={setErrorMessage}/>
+                </div>
+                <ControlDefconStatus defcon={apiResponse.defcon} triggerFetch={triggerFetch} pauseRefresh={pauseRefresh}
+                                     apiResponse={apiResponse} setResponse={setResponse}
+                                     setErrorMessage={setErrorMessage}/>
+            </React.Fragment>
         );
     }
 
