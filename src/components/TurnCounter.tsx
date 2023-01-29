@@ -90,10 +90,10 @@ export default function TurnCounter(props: TurnCounterProps) {
       </h1>
         <div className="flex lg:flex-wrap mt-4 border border-first-contact">
             {PHASE_LISTS.map((val) => {
-                return <>
+                return <React.Fragment key={val}>
                     <PhaseCount phase={val} length={lengthOfPhase(val, turn)} active={phase} key={val} />
                     {val == Math.max(...PHASE_LISTS) / 2 ? <div className="hidden lg:flex lg:basis-full" /> : null}
-                </>
+                </React.Fragment>
 
             })}
         </div>
