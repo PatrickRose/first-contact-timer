@@ -1,7 +1,6 @@
-import {Collection, MongoClient} from "mongodb";
+import {Collection, MongoClient, UpdateResult} from "mongodb";
 import {BreakingNewsKey, ControlAction, Defcon, DefconStatus, Turn} from "../types/types";
 import {backAPhase, backATurn, nextDate, pauseResume, tickTurn, toApiResponse, turnMatches} from "./turn";
-import {UnwrapPromise} from "next/dist/lib/coalesced-function";
 
 type DBProps = {
     protocol?: string,
@@ -34,11 +33,6 @@ function makeClient({protocol, credentials, dbURL, dbName, options}: DBProps): M
 
 const STATIC_ID = 'watch-the-skies';
 
-type Lock = {
-    _id: 'watch-the-skies',
-    active: boolean,
-}
-
 export default class MongoRepo {
     private readonly mongo: MongoClient;
 
@@ -69,13 +63,20 @@ export default class MongoRepo {
         return new MongoRepo(makeClient(dbProps));
     }
 
-    async updateTurn(fields: Partial<Turn>, upsert: boolean = false) {
+    async updateTurn(fields: Partial<Turn>, upsert: boolean = false, currTurn?: { turnNumber: Turn["turnNumber"], phase: Turn["phase"] }): Promise<UpdateResult> {
+        if (upsert && currTurn !== undefined) {
+            throw new Error('Cannot upset with a defined turn');
+        }
+
         return this.mongo.connect()
             .then(client => {
+                const filter: Partial<Turn> = {_id: STATIC_ID};
+                if (currTurn != undefined) {
+                    filter.turnNumber = currTurn.turnNumber;
+                    filter.phase = currTurn.phase;
+                }
                 return client.db().collection<Turn>('turns').updateOne(
-                    {
-                        _id: STATIC_ID
-                    },
+                    filter,
                     {
                         $set: fields
                     },
@@ -124,7 +125,6 @@ export default class MongoRepo {
                         defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);
 
                         return this.updateTurn(defaultTurn, true)
-                            .then(() => this.#releaseLock(true))
                             .then(() => defaultTurn);
                     }
 
@@ -159,49 +159,39 @@ export default class MongoRepo {
     }
 
     async nextTurn(current: Turn): Promise<Turn> {
-        return this.updateTurnWithLock(
-            () => {
-                return this.getCurrentTurn()
-                    .then(turn => {
-                        if (!turnMatches(turn, current)) {
-                            return turn;
-                        }
+        return this.getCurrentTurn()
+            .then(
+                turn => {
+                    if (!turnMatches(turn, current)) {
+                        return turn;
+                    }
 
-                        const newTurn = tickTurn(turn);
+                    const newTurn = tickTurn(turn);
 
-                        return this.updateTurn(newTurn).then(() => newTurn)
-                    });
-            },
-            () => Promise.resolve(current)
-        );
+                    return this.updateTurn(newTurn, false, current).then(() => newTurn)
+                }
+            );
     }
 
     async #runControlAction(controlAction: (turn: Turn) => Turn): ControlAction {
-        const current = await this.getCurrentTurn();
+        return this.getCurrentTurn()
+            .then(turn => {
+                const turnAfterAction = controlAction(turn);
 
-        return this.updateTurnWithLock(
-            () => {
-                return this.getCurrentTurn()
-                    .then(turn => {
-                        if (!turnMatches(current, turn)) {
-                            return {_tag: "Left", left: "Did not manage to lock"}
+                const newTurn = turnAfterAction.active
+                    ? turnAfterAction
+                    : pauseResume(pauseResume(turnAfterAction, true), false);
+
+                return this.updateTurn(newTurn, false, turn).then(
+                    (result) => {
+                        if (result.matchedCount == 0) {
+                            return {_tag: "Left", left: "Failed to get lock"};
+                        } else {
+                            return {_tag: "Right", right: newTurn}
                         }
-
-                        const turnAfterAction = controlAction(turn);
-
-                        const newTurn = turnAfterAction.active
-                            ? turnAfterAction
-                            : pauseResume(pauseResume(turnAfterAction, true), false);
-
-                        return this.updateTurn(newTurn).then(
-                            () => {
-                                return {_tag: "Right", right:newTurn}
-                            }
-                        );
-                    })
-            },
-            () => Promise.resolve({_tag: "Left", left: "Did not manage to lock"})
-        );
+                    }
+                );
+            });
     }
 
     async pauseResume(active: boolean): ControlAction {
@@ -232,65 +222,6 @@ export default class MongoRepo {
 
             return newTurn;
         });
-    }
-
-    async updateTurnWithLock<T extends Turn|UnwrapPromise<ControlAction>>(
-        runWhenLocked: () => Promise<T>,
-        runWhenNotLocked: () => Promise<T>
-    ): Promise<T> {
-        return this.#gainLock()
-            .then(result => {
-                if (!result) {
-                    return runWhenNotLocked()
-                }
-
-                return runWhenLocked()
-                    .finally(() => this.#releaseLock());
-            })
-            .catch(e => {
-                console.log(e);
-                throw e;
-            })
-    }
-
-    async #gainLock(): Promise<boolean> {
-        return this.mongo.connect()
-            .then(client => {
-                return client.db()
-                    .collection<Lock>('lock')
-                    .updateOne(
-                        {_id: STATIC_ID, active: false},
-                        {
-                            $set: {
-                                active: true
-                            }
-                        }
-                    )
-            })
-            .then(result => {
-                return result.matchedCount == 1;
-            })
-            .finally(() => this.mongo.close())
-    }
-
-    async #releaseLock(upsert: boolean = false) {
-        this.mongo.connect()
-            .then(client => {
-                return client.db()
-                    .collection<Lock>('lock')
-                    .updateOne(
-                        {_id: STATIC_ID},
-                        {
-                            $set: {
-                                active: false
-                            }
-                        },
-                        {
-                            upsert
-                        }
-                    )
-            })
-            .finally(() => this.mongo.close())
     }
 
     async updateDefconStatus(stateName: keyof Defcon, newState: DefconStatus): ControlAction {
