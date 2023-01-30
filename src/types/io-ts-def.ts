@@ -1,4 +1,4 @@
-import * as t from 'io-ts';
+import * as t from "io-ts";
 
 export const PhaseDecode = t.union([
   t.literal(1),
@@ -17,14 +17,14 @@ export const BreakingNewsDecode = t.type({
   1: t.union([t.string, t.null]),
   2: t.union([t.string, t.null]),
   3: t.union([t.string, t.null]),
-})
+});
 
 export const DefconStatusDecode = t.union([
-  t.literal('hidden'),
+  t.literal("hidden"),
   t.literal(3),
   t.literal(2),
   t.literal(1),
-])
+]);
 
 export const DefconDecode = t.type({
   China: DefconStatusDecode,
@@ -34,7 +34,7 @@ export const DefconDecode = t.type({
   UnitedKingdom: DefconStatusDecode,
   Pakistan: DefconStatusDecode,
   India: DefconStatusDecode,
-  Israel: DefconStatusDecode
+  Israel: DefconStatusDecode,
 });
 
 export const ApiResponseDecode = t.type({
@@ -43,23 +43,23 @@ export const ApiResponseDecode = t.type({
   breakingNews: BreakingNewsDecode,
   active: t.boolean,
   phaseEnd: t.number,
-  defcon: DefconDecode
+  defcon: DefconDecode,
 });
 
 export const SetBreakingNewsDecode = t.type({
   breakingNews: t.string,
-  number: t.union([t.literal(1), t.literal(2), t.literal(3)])
+  number: t.union([t.literal(1), t.literal(2), t.literal(3)]),
 });
 
 export const ControlAPIDecode = t.type({
   action: t.union([
-    t.literal('pause'),
-    t.literal('play'),
-    t.literal('back-turn'),
-    t.literal('back-phase'),
-    t.literal('forward-phase'),
-    t.literal('forward-turn'),
-  ])
+    t.literal("pause"),
+    t.literal("play"),
+    t.literal("back-turn"),
+    t.literal("back-phase"),
+    t.literal("forward-phase"),
+    t.literal("forward-turn"),
+  ]),
 });
 
 export const TurnDecode = t.type({
@@ -75,5 +75,5 @@ export const TurnDecode = t.type({
 
 export const DefconAPIBodyDecode = t.type({
   stateName: t.keyof(DefconDecode.props),
-  newStatus: DefconStatusDecode
-})
+  newStatus: DefconStatusDecode,
+});
