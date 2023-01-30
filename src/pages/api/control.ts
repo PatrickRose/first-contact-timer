@@ -7,44 +7,44 @@ import { ControlAPIDecode } from "../../types/io-ts-def";
 import { isLeft } from "fp-ts/Either";
 
 const actions: {
-  [key in ControlAPI["action"]]: (mongo: MongoRepo) => ControlAction;
+    [key in ControlAPI["action"]]: (mongo: MongoRepo) => ControlAction;
 } = {
-  pause: (mongo) => mongo.pauseResume(false),
-  play: (mongo) => mongo.pauseResume(true),
-  "back-phase": (mongo) => mongo.backPhase(),
-  "back-turn": (mongo) => mongo.backTurn(),
-  "forward-phase": (mongo) => mongo.forwardPhase(),
-  "forward-turn": (mongo) => mongo.forwardTurn(),
+    pause: (mongo) => mongo.pauseResume(false),
+    play: (mongo) => mongo.pauseResume(true),
+    "back-phase": (mongo) => mongo.backPhase(),
+    "back-turn": (mongo) => mongo.backTurn(),
+    "forward-phase": (mongo) => mongo.forwardPhase(),
+    "forward-turn": (mongo) => mongo.forwardTurn(),
 };
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ApiResponse | { success: false; msg?: string }>
+    req: NextApiRequest,
+    res: NextApiResponse<ApiResponse | { success: false; msg?: string }>
 ) {
-  if (req.method?.toUpperCase() !== "POST") {
-    res.status(404).json({ success: false, msg: "Incorrect method" });
-    return;
-  }
+    if (req.method?.toUpperCase() !== "POST") {
+        res.status(404).json({ success: false, msg: "Incorrect method" });
+        return;
+    }
 
-  const mongo = MongoRepo.MakeInstance();
+    const mongo = MongoRepo.MakeInstance();
 
-  const body = req.body;
+    const body = req.body;
 
-  if (!ControlAPIDecode.is(body)) {
-    res.status(400).json({ success: false, msg: "Incorrect API body" });
-    return;
-  }
+    if (!ControlAPIDecode.is(body)) {
+        res.status(400).json({ success: false, msg: "Incorrect API body" });
+        return;
+    }
 
-  const functionToRun = actions[body.action];
+    const functionToRun = actions[body.action];
 
-  const nextTurn = await functionToRun(mongo);
+    const nextTurn = await functionToRun(mongo);
 
-  if (isLeft(nextTurn)) {
-    res.status(500).json({
-      success: false,
-      msg: nextTurn.left,
-    });
-  } else {
-    res.status(200).json(toApiResponse(nextTurn.right));
-  }
+    if (isLeft(nextTurn)) {
+        res.status(500).json({
+            success: false,
+            msg: nextTurn.left,
+        });
+    } else {
+        res.status(200).json(toApiResponse(nextTurn.right));
+    }
 }
