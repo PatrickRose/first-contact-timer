@@ -3,35 +3,35 @@
 @tailwind utilities;
 
 @layer components {
-  body {
-    @apply flex flex-col min-h-screen;
-  }
+    body {
+        @apply flex flex-col min-h-screen;
+    }
 
-  #__next {
-    @apply flex flex-col flex-1;
-  }
+    #__next {
+        @apply flex flex-col flex-1;
+    }
 
-  .roles {
-    @apply text-3xl;
-  }
+    .roles {
+        @apply text-3xl;
+    }
 
-  .overflow-hidden {
-    overflow: hidden;
-  }
+    .overflow-hidden {
+        overflow: hidden;
+    }
 
-  .container {
-    @apply w-full px-2 mx-auto;
-  }
+    .container {
+        @apply w-full px-2 mx-auto;
+    }
 
-  .marquee-1 {
-    @apply animate-marquee-1 lg:[animation-duration:15s] xl:[animation-duration:20s];
-  }
+    .marquee-1 {
+        @apply animate-marquee-1 lg:[animation-duration:15s] xl:[animation-duration:20s];
+    }
 
-  .marquee-2 {
-    @apply animate-marquee-2 lg:[animation-duration:30s] xl:[animation-duration:40s];
-  }
+    .marquee-2 {
+        @apply animate-marquee-2 lg:[animation-duration:30s] xl:[animation-duration:40s];
+    }
 
-  .marquee-3 {
-    @apply animate-marquee-3 lg:[animation-duration:45s] xl:[animation-duration:60s];
-  }
+    .marquee-3 {
+        @apply animate-marquee-3 lg:[animation-duration:45s] xl:[animation-duration:60s];
+    }
 }

@@ -1,35 +1,35 @@
 {
-  "name": "first-contact-timer",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "ts:watch": "tsc --noEmit --incremental --watch"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.2.1",
-    "@fortawesome/free-solid-svg-icons": "^6.2.1",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "@headlessui/react": "^1.7.8",
-    "@tailwindcss/forms": "^0.5.3",
-    "fp-ts": "^2.13.1",
-    "io-ts": "^2.2.20",
-    "mongodb": "^4.13.0",
-    "next": "^13.1.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.0.27",
-    "autoprefixer": "^10.4.13",
-    "eslint": "^8.33.0",
-    "eslint-config-next": "^13.1.6",
-    "postcss": "^8.4.21",
-    "prettier": "2.8.3",
-    "tailwindcss": "^3.2.4",
-    "typescript": "^4.9.4"
-  }
+    "name": "first-contact-timer",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "ts:watch": "tsc --noEmit --incremental --watch"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.2.1",
+        "@fortawesome/free-solid-svg-icons": "^6.2.1",
+        "@fortawesome/react-fontawesome": "^0.2.0",
+        "@headlessui/react": "^1.7.8",
+        "@tailwindcss/forms": "^0.5.3",
+        "fp-ts": "^2.13.1",
+        "io-ts": "^2.2.20",
+        "mongodb": "^4.13.0",
+        "next": "^13.1.6",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.27",
+        "autoprefixer": "^10.4.13",
+        "eslint": "^8.33.0",
+        "eslint-config-next": "^13.1.6",
+        "postcss": "^8.4.21",
+        "prettier": "2.8.3",
+        "tailwindcss": "^3.2.4",
+        "typescript": "^4.9.4"
+    }
 }
