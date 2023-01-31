@@ -43,18 +43,18 @@ const TurnTimer = function TurnTimer(props: {
     );
 };
 
-const BUFFER: React.ReactNode = <p className="text-md flex-1">Buffer</p>;
+const BUFFER: React.ReactNode = null;
 
 const PHASE_LABELS: Record<Phase, React.ReactNode> = {
     1: <PhaseLabel title="Team Time" />,
     2: BUFFER,
-    3: <PhaseLabel title="2" />,
+    3: <PhaseLabel title="Action Phase 1" />,
     4: BUFFER,
-    5: <PhaseLabel title="3" />,
+    5: <PhaseLabel title="Action Phase 2" />,
     6: BUFFER,
-    7: <PhaseLabel title="4" />,
+    7: <PhaseLabel title="Action Phase 3" />,
     8: BUFFER,
-    9: <PhaseLabel title="Press" />,
+    9: <PhaseLabel title="Press Broadcast" />,
     10: BUFFER,
 };
 
@@ -88,6 +88,10 @@ export function PhaseCount({
         visibleOnTablet ? "md:flex" : ""
     } ${!visibleOnPhone && !visibleOnTablet ? "lg:flex" : ""}`;
 
+    if (PHASE_LABELS[phase] === null) {
+        return;
+    }
+
     return (
         <div
             className={`${visibleClass} flex-1 flex-col border border-first-contact p-3 transition duration-500 ${backgroundClass}`}
@@ -116,9 +120,6 @@ export default function TurnCounter(props: TurnCounterProps) {
                                 active={phase}
                                 key={val}
                             />
-                            {val == Math.max(...PHASE_LISTS) / 2 ? (
-                                <div className="hidden lg:flex lg:basis-full" />
-                            ) : null}
                         </React.Fragment>
                     );
                 })}
