@@ -97,7 +97,7 @@ export function PhaseCount({
     } ${!visibleOnPhone && !visibleOnTablet ? "lg:flex" : ""}`;
 
     if (PHASE_LABELS[phase] === null) {
-        return;
+        return null;
     }
 
     return (
