@@ -83,12 +83,14 @@ export function PhaseCount({
             : "bg-white text-black";
 
     const visibleOnPhone = [
+        active - 2,
         active - 1,
         active,
         active + 1,
         active + 2,
+        active + 3,
     ].includes(phase);
-    const visibleOnTablet = [active - 2, active + 3].includes(phase);
+    const visibleOnTablet = [active - 3, active + 4].includes(phase);
 
     const visibleClass = `${visibleOnPhone ? "flex" : "hidden"} ${
         visibleOnTablet ? "md:flex" : ""
