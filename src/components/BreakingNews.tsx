@@ -48,7 +48,7 @@ export default function BreakingNews({ content }: BreakingNewsProps) {
                 });
             }
         }
-    }, [values]);
+    }, [values, activeValue]);
 
     const getNextBreakingNews = (lastBreakingNews?: string): string | null => {
         const key = values.indexOf(

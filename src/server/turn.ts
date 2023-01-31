@@ -16,17 +16,17 @@ const ALL_PHASES: { [key in Phase]: number } = {
 };
 
 export const PHASE_TITLES: Record<Phase, string> = {
-    1: 'Team Time',
-    2: 'BUFFER',
-    3: 'Action Phase 1',
-    4: 'BUFFER',
-    5: 'Action Phase 2',
-    6: 'BUFFER',
-    7: 'Action Phase 3',
-    8: 'BUFFER',
-    9: 'Press Broadcast',
-    10: 'BUFFER',
-}
+    1: "Team Time",
+    2: "BUFFER",
+    3: "Action Phase 1",
+    4: "BUFFER",
+    5: "Action Phase 2",
+    6: "BUFFER",
+    7: "Action Phase 3",
+    8: "BUFFER",
+    9: "Press Broadcast",
+    10: "BUFFER",
+};
 
 function isPhase(phase: unknown): phase is Phase {
     if (typeof phase !== "number") {
@@ -89,7 +89,7 @@ export function nextPhase(phase: Phase): Phase {
 }
 
 export function tickTurn(turn: Turn): Turn {
-    const newPhase: Phase = nextPhase(turn.phase)
+    const newPhase: Phase = nextPhase(turn.phase);
     const newTurn = newPhase == 1 ? turn.turnNumber + 1 : turn.turnNumber;
 
     return {
