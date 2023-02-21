@@ -4,6 +4,7 @@ import { Either } from "fp-ts/Either";
 
 export type ApiResponse = t.TypeOf<typeof types.ApiResponseDecode>;
 export type Phase = t.TypeOf<typeof types.PhaseDecode>;
+export type NewsItem = t.TypeOf<typeof types.NewsItemDecode>;
 export type SetBreakingNews = t.TypeOf<typeof types.SetBreakingNewsDecode>;
 export type ControlAPI = t.TypeOf<typeof types.ControlAPIDecode>;
 

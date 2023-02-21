@@ -1,5 +1,10 @@
 import * as t from "io-ts";
 
+export const NewsItemDecode = t.type({
+    newsText: t.string,
+    date: t.string,
+});
+
 export const PhaseDecode = t.union([
     t.literal(1),
     t.literal(2),
@@ -77,3 +82,4 @@ export const DefconAPIBodyDecode = t.type({
     stateName: t.keyof(DefconDecode.props),
     newStatus: DefconStatusDecode,
 });
+``;
