@@ -15,6 +15,19 @@ const ALL_PHASES: { [key in Phase]: number } = {
     10: 2,
 };
 
+export const PHASE_TITLES: Record<Phase, string> = {
+    1: "Team Time",
+    2: "BUFFER",
+    3: "Action Phase 1",
+    4: "BUFFER",
+    5: "Action Phase 2",
+    6: "BUFFER",
+    7: "Action Phase 3",
+    8: "BUFFER",
+    9: "Press Broadcast",
+    10: "BUFFER",
+};
+
 function isPhase(phase: unknown): phase is Phase {
     if (typeof phase !== "number") {
         return false;
@@ -23,22 +36,12 @@ function isPhase(phase: unknown): phase is Phase {
     return Object.keys(ALL_PHASES).includes(`${phase}`);
 }
 
+export function isBreatherPhase(phase: Phase): boolean {
+    return phase % 2 == 0;
+}
+
 export function lengthOfPhase(phase: Phase, turn: number): number {
     let base = ALL_PHASES[phase];
-
-    if (turn == 1) {
-        if (phase == 1) {
-            base += 10;
-        } else if (phase == 3) {
-            base += 5;
-        }
-    } else if (turn == 3) {
-        if (phase == 2) {
-            base += 5;
-        } else if (phase == 5) {
-            base += 10;
-        }
-    }
 
     return base;
 }
@@ -79,10 +82,14 @@ export function toApiResponse(
     };
 }
 
-export function tickTurn(turn: Turn): Turn {
-    const newPhaseNumber = turn.phase + 1;
+export function nextPhase(phase: Phase): Phase {
+    const newPhaseNumber = phase + 1;
 
-    const newPhase: Phase = isPhase(newPhaseNumber) ? newPhaseNumber : 1;
+    return isPhase(newPhaseNumber) ? newPhaseNumber : 1;
+}
+
+export function tickTurn(turn: Turn): Turn {
+    const newPhase: Phase = nextPhase(turn.phase);
     const newTurn = newPhase == 1 ? turn.turnNumber + 1 : turn.turnNumber;
 
     return {

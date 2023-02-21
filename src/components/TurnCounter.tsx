@@ -1,6 +1,12 @@
 import * as React from "react";
 import { Phase } from "../types/types";
-import { lengthOfPhase, PHASE_LISTS } from "../server/turn";
+import {
+    lengthOfPhase,
+    PHASE_LISTS,
+    isBreatherPhase,
+    PHASE_TITLES,
+    nextPhase,
+} from "../server/turn";
 
 interface TurnCounterProps {
     turn: number;
@@ -43,18 +49,18 @@ const TurnTimer = function TurnTimer(props: {
     );
 };
 
-const BUFFER: React.ReactNode = <p className="text-md flex-1">Buffer</p>;
+const BUFFER: React.ReactNode = null;
 
 const PHASE_LABELS: Record<Phase, React.ReactNode> = {
-    1: <PhaseLabel title="Team Time" />,
+    1: <PhaseLabel title={PHASE_TITLES[1]} />,
     2: BUFFER,
-    3: <PhaseLabel title="2" />,
+    3: <PhaseLabel title={PHASE_TITLES[3]} />,
     4: BUFFER,
-    5: <PhaseLabel title="3" />,
+    5: <PhaseLabel title={PHASE_TITLES[5]} />,
     6: BUFFER,
-    7: <PhaseLabel title="4" />,
+    7: <PhaseLabel title={PHASE_TITLES[7]} />,
     8: BUFFER,
-    9: <PhaseLabel title="Press" />,
+    9: <PhaseLabel title={PHASE_TITLES[9]} />,
     10: BUFFER,
 };
 
@@ -77,16 +83,22 @@ export function PhaseCount({
             : "bg-white text-black";
 
     const visibleOnPhone = [
+        active - 2,
         active - 1,
         active,
         active + 1,
         active + 2,
+        active + 3,
     ].includes(phase);
-    const visibleOnTablet = [active - 2, active + 3].includes(phase);
+    const visibleOnTablet = [active - 3, active + 4].includes(phase);
 
     const visibleClass = `${visibleOnPhone ? "flex" : "hidden"} ${
         visibleOnTablet ? "md:flex" : ""
     } ${!visibleOnPhone && !visibleOnTablet ? "lg:flex" : ""}`;
+
+    if (PHASE_LABELS[phase] === null) {
+        return null;
+    }
 
     return (
         <div
@@ -101,11 +113,12 @@ export function PhaseCount({
 export default function TurnCounter(props: TurnCounterProps) {
     const { turn, phase, timestamp, active } = props;
 
-    const text = `You're in turn ${turn}, phase ${phase}`;
+    const text = isBreatherPhase(phase)
+        ? `You're in turn ${turn}. ${PHASE_TITLES[nextPhase(phase)]} starts in:`
+        : `You're in turn ${turn}, ${PHASE_TITLES[phase]}`;
 
     return (
         <React.Fragment>
-            <h1 className="text-5xl">{text}</h1>
             <div className="flex lg:flex-wrap mt-4 border border-first-contact">
                 {PHASE_LISTS.map((val) => {
                     return (
@@ -116,13 +129,11 @@ export default function TurnCounter(props: TurnCounterProps) {
                                 active={phase}
                                 key={val}
                             />
-                            {val == Math.max(...PHASE_LISTS) / 2 ? (
-                                <div className="hidden lg:flex lg:basis-full" />
-                            ) : null}
                         </React.Fragment>
                     );
                 })}
             </div>
+            <h1 className="text-5xl mt-4">{text}</h1>
             <TurnTimer timestamp={timestamp} active={active} />
         </React.Fragment>
     );
