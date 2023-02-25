@@ -189,21 +189,6 @@ export default abstract class BaseApp extends React.Component<
         const child = this.childComponents(apiResponse);
         const main = this.mainComponents(apiResponse);
 
-        const newsItems: NewsItem[] = [
-            {
-                newsText: "Here is some breaking news",
-                date: new Date(2022, 10, 10, 10, 10, 10).toUTCString(),
-            },
-            {
-                newsText: "Here is some more breaking news",
-                date: new Date(2022, 10, 10, 10, 0, 10).toUTCString(),
-            },
-            {
-                newsText: "Here is even more breaking news",
-                date: new Date(2022, 10, 10, 9, 10, 10).toUTCString(),
-            },
-        ];
-
         return (
             <React.Fragment>
                 <Head>
@@ -222,7 +207,6 @@ export default abstract class BaseApp extends React.Component<
                         />
                         {main}
                     </div>
-                    <NewsFeed newsItems={newsItems} />
                 </main>
                 {child}
                 <BreakingNews content={breakingNews} />

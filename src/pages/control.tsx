@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 
 import BaseApp from "../components/BasePage";
 import {
@@ -22,7 +23,6 @@ import {
     BACKGROUNDS,
     DEFCON_STATE_TO_HUMAN_STATE,
 } from "../components/DefconStatuses";
-import { useState } from "react";
 
 type ControlButtonProps = {
     triggerFetch: () => void;
@@ -440,14 +440,6 @@ export default class ControlApp extends BaseApp {
                         setErrorMessage={setErrorMessage}
                     />
                 </div>
-                <ControlDefconStatus
-                    defcon={apiResponse.defcon}
-                    triggerFetch={triggerFetch}
-                    pauseRefresh={pauseRefresh}
-                    apiResponse={apiResponse}
-                    setResponse={setResponse}
-                    setErrorMessage={setErrorMessage}
-                />
             </React.Fragment>
         );
     }

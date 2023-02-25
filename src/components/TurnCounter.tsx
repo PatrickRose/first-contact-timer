@@ -53,15 +53,8 @@ const BUFFER: React.ReactNode = null;
 
 const PHASE_LABELS: Record<Phase, React.ReactNode> = {
     1: <PhaseLabel title={PHASE_TITLES[1]} />,
-    2: BUFFER,
+    2: <PhaseLabel title={PHASE_TITLES[2]} />,
     3: <PhaseLabel title={PHASE_TITLES[3]} />,
-    4: BUFFER,
-    5: <PhaseLabel title={PHASE_TITLES[5]} />,
-    6: BUFFER,
-    7: <PhaseLabel title={PHASE_TITLES[7]} />,
-    8: BUFFER,
-    9: <PhaseLabel title={PHASE_TITLES[9]} />,
-    10: BUFFER,
 };
 
 function PhaseLabel({ title }: { title: string }) {

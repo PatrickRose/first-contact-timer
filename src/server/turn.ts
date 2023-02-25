@@ -1,31 +1,17 @@
 import { ApiResponse, Phase, Turn } from "../types/types";
 
-export const PHASE_LISTS: Phase[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+export const PHASE_LISTS: Phase[] = [1, 2, 3];
 
 const ALL_PHASES: { [key in Phase]: number } = {
-    1: 10,
-    2: 2,
-    3: 20,
-    4: 2,
-    5: 10,
-    6: 2,
-    7: 5,
-    8: 2,
-    9: 5,
-    10: 2,
+    1: 15,
+    2: 15,
+    3: 5,
 };
 
 export const PHASE_TITLES: Record<Phase, string> = {
-    1: "Team Time",
-    2: "BUFFER",
-    3: "Action Phase 1",
-    4: "BUFFER",
-    5: "Action Phase 2",
-    6: "BUFFER",
-    7: "Action Phase 3",
-    8: "BUFFER",
-    9: "Press Broadcast",
-    10: "BUFFER",
+    1: "Setup Phase",
+    2: "Action Phase",
+    3: "Team Time",
 };
 
 function isPhase(phase: unknown): phase is Phase {
@@ -37,7 +23,7 @@ function isPhase(phase: unknown): phase is Phase {
 }
 
 export function isBreatherPhase(phase: Phase): boolean {
-    return phase % 2 == 0;
+    return false;
 }
 
 export function lengthOfPhase(phase: Phase, turn: number): number {
@@ -78,7 +64,6 @@ export function toApiResponse(
         phaseEnd: secondsLeft,
         breakingNews: turn.breakingNews || null,
         active: turn.active,
-        defcon: turn.defcon,
     };
 }
 
@@ -127,6 +112,7 @@ export function pauseResume(turn: Turn, active: boolean): Turn {
 export function hasFinished(turn: Turn): boolean {
     return turn.active && new Date(turn.phaseEnd) < new Date();
 }
+
 export function backAPhase(turn: Turn): Turn {
     // eslint-disable-next-line default-case
     const newTurn: Turn = { ...turn };
@@ -151,6 +137,7 @@ export function backAPhase(turn: Turn): Turn {
 
     return newTurn;
 }
+
 export function backATurn(turn: Turn): Turn {
     const newTurn = { ...turn };
     newTurn.turnNumber = Math.max(1, newTurn.turnNumber - 1);

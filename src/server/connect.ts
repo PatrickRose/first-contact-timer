@@ -1,11 +1,5 @@
 import { Collection, MongoClient, UpdateResult } from "mongodb";
-import {
-    BreakingNewsKey,
-    ControlAction,
-    Defcon,
-    DefconStatus,
-    Turn,
-} from "../types/types";
+import { BreakingNewsKey, ControlAction, Turn } from "../types/types";
 import {
     backAPhase,
     backATurn,
@@ -51,7 +45,7 @@ function makeClient({
     return new MongoClient(uri);
 }
 
-const STATIC_ID = "watch-the-skies";
+const STATIC_ID = "running-hot-subgs";
 
 export default class MongoRepo {
     private readonly mongo: MongoClient;
@@ -134,16 +128,6 @@ export default class MongoRepo {
                             1: null,
                             2: null,
                             3: null,
-                        },
-                        defcon: {
-                            China: 3,
-                            France: 3,
-                            Russia: 3,
-                            UnitedStates: 3,
-                            UnitedKingdom: 3,
-                            Pakistan: 3,
-                            India: 3,
-                            Israel: "hidden",
                         },
                         frozenTurn: null,
                     };
@@ -240,17 +224,6 @@ export default class MongoRepo {
             }
 
             return newTurn;
-        });
-    }
-
-    async updateDefconStatus(
-        stateName: keyof Defcon,
-        newState: DefconStatus
-    ): ControlAction {
-        return this.#runControlAction((turn) => {
-            turn.defcon[stateName] = newState;
-
-            return turn;
         });
     }
 }
