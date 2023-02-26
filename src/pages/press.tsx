@@ -210,7 +210,7 @@ class PressForm extends React.Component<FormProps, FormState> {
 
 export default class PressApp extends BaseApp {
     // eslint-disable-next-line class-methods-use-this
-    protected mainComponents(apiResponse: ApiResponse): JSX.Element {
+    protected childComponents(apiResponse: ApiResponse): JSX.Element {
         return (
             <PressForm
                 currentBreakingNews={apiResponse.breakingNews}

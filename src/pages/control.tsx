@@ -386,7 +386,7 @@ function ControlDefconStatus({
 }
 
 export default class ControlApp extends BaseApp {
-    protected mainComponents(apiResponse: ApiResponse): JSX.Element {
+    protected childComponents(apiResponse: ApiResponse): JSX.Element {
         const triggerFetch = () => this.fetchFromAPI();
         const pauseRefresh = (pause: boolean) => this.pauseRefresh(pause);
         const setResponse = (response: ApiResponse) =>
@@ -440,6 +440,9 @@ export default class ControlApp extends BaseApp {
                         setErrorMessage={setErrorMessage}
                     />
                 </div>
+                <div className="flex w-full p-4 justify-around">
+                    {this.error(apiResponse)}
+                </div>
                 <ControlDefconStatus
                     defcon={apiResponse.defcon}
                     triggerFetch={triggerFetch}
@@ -456,7 +459,7 @@ export default class ControlApp extends BaseApp {
         return "Control commands";
     }
 
-    protected childComponents(apiResponse: ApiResponse): JSX.Element {
+    protected error(apiResponse: ApiResponse): JSX.Element {
         if (this.state.errorMessage !== undefined) {
             return (
                 <div className="bg-red-600 text-white mt-4 p-4">

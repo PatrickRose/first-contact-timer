@@ -3,14 +3,17 @@ import { PathReporter } from "io-ts/PathReporter";
 import React from "react";
 import TurnCounter from "./TurnCounter";
 import BreakingNews from "./BreakingNews";
-import { ApiResponse, NewsItem } from "../types/types";
+import { ActiveTabs, ApiResponse, NewsItem } from "../types/types";
 import { ApiResponseDecode } from "../types/io-ts-def";
 import Head from "next/head";
 import { NewsFeed } from "./NewsFeed";
+import DefconStatuses from "./DefconStatuses";
+import TabSwitcher from "./TabSwitcher";
 
 type BaseAppState = {
     fetchFailed: boolean;
     apiResponse?: ApiResponse;
+    activeTab: ActiveTabs;
     secondsUntilFetch: number;
     pauseRefresh: boolean;
     errorMessage?: string;
@@ -58,6 +61,7 @@ export default abstract class BaseApp extends React.Component<
             apiResponse: undefined,
             secondsUntilFetch: 0,
             errorMessage: undefined,
+            activeTab: "home",
         };
 
         if (typeof window !== "undefined") {
@@ -174,7 +178,7 @@ export default abstract class BaseApp extends React.Component<
     }
 
     render() {
-        const { fetchFailed, apiResponse } = this.state;
+        const { fetchFailed, apiResponse, activeTab } = this.state;
 
         if (fetchFailed) {
             return <div>Failed to get state, try reloading?</div>;
@@ -222,9 +226,37 @@ export default abstract class BaseApp extends React.Component<
                         />
                         {main}
                     </div>
-                    <NewsFeed newsItems={newsItems} />
                 </main>
-                {child}
+                <div>
+                    <div
+                        className={`${
+                            activeTab != "home" ? "hidden" : ""
+                        } lg:block`}
+                    >
+                        {child}
+                    </div>
+                    <div
+                        className={`${
+                            activeTab != "press" ? "hidden" : ""
+                        } lg:block`}
+                    >
+                        <NewsFeed newsItems={newsItems} />
+                    </div>
+                    <div
+                        className={`${
+                            activeTab != "defcon" ? "hidden" : ""
+                        } lg:block`}
+                    >
+                        <DefconStatuses defcon={apiResponse.defcon} />
+                    </div>
+                    <TabSwitcher
+                        activeTab={activeTab}
+                        setActiveTab={(newActive: ActiveTabs) =>
+                            this.setState({ activeTab: newActive })
+                        }
+                    />
+                </div>
+
                 <BreakingNews content={breakingNews} />
             </React.Fragment>
         );
