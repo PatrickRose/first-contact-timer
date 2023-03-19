@@ -1,11 +1,5 @@
-import { Collection, MongoClient, UpdateResult } from "mongodb";
-import {
-    BreakingNewsKey,
-    ControlAction,
-    Defcon,
-    DefconStatus,
-    Turn,
-} from "../types/types";
+import { Collection, MongoClient, UpdateFilter, UpdateResult } from "mongodb";
+import { ControlAction, Defcon, DefconStatus, Turn } from "../types/types";
 import {
     backAPhase,
     backATurn,
@@ -51,7 +45,7 @@ function makeClient({
     return new MongoClient(uri);
 }
 
-const STATIC_ID = "watch-the-skies";
+const STATIC_ID = "first-contact-2023";
 
 export default class MongoRepo {
     private readonly mongo: MongoClient;
@@ -87,7 +81,7 @@ export default class MongoRepo {
     }
 
     async updateTurn(
-        fields: Partial<Turn>,
+        updates: UpdateFilter<Turn> | Partial<Turn>,
         upsert: boolean = false,
         currTurn?: { turnNumber: Turn["turnNumber"]; phase: Turn["phase"] }
     ): Promise<UpdateResult> {
@@ -103,15 +97,12 @@ export default class MongoRepo {
                     filter.turnNumber = currTurn.turnNumber;
                     filter.phase = currTurn.phase;
                 }
-                return client.db().collection<Turn>("turns").updateOne(
-                    filter,
-                    {
-                        $set: fields,
-                    },
-                    {
+                return client
+                    .db()
+                    .collection<Turn>("turns")
+                    .updateOne(filter, updates, {
                         upsert,
-                    }
-                );
+                    });
             })
             .finally(() => this.mongo.close());
     }
@@ -130,11 +121,7 @@ export default class MongoRepo {
                         phase: 1,
                         turnNumber: 1,
                         phaseEnd: nextDate(1, 1).toString(),
-                        breakingNews: {
-                            1: null,
-                            2: null,
-                            3: null,
-                        },
+                        breakingNews: [],
                         defcon: {
                             China: 3,
                             France: 3,
@@ -149,7 +136,7 @@ export default class MongoRepo {
                     };
                     defaultTurn.frozenTurn = toApiResponse(defaultTurn, true);
 
-                    return this.updateTurn(defaultTurn, true).then(
+                    return this.updateTurn({ $set: defaultTurn }, true).then(
                         () => defaultTurn
                     );
                 }
@@ -169,16 +156,15 @@ export default class MongoRepo {
         return database.collection<Turn>("turns");
     }
 
-    async setBreakingNews(
-        newBreakingNews: string | null,
-        number: BreakingNewsKey
-    ): Promise<Turn> {
-        const key: `${keyof Turn}.${BreakingNewsKey}` = `breakingNews.${number}`;
-        const toSet = {
-            [key]: newBreakingNews === "" ? null : newBreakingNews,
-        };
-
-        return this.updateTurn(toSet).then(() => this.getCurrentTurn());
+    async setBreakingNews(newBreakingNews: string): Promise<Turn> {
+        return this.updateTurn({
+            $push: {
+                breakingNews: {
+                    newsText: newBreakingNews,
+                    date: new Date().toISOString(),
+                },
+            },
+        }).then(() => this.getCurrentTurn());
     }
 
     async nextTurn(current: Turn): Promise<Turn> {
@@ -189,7 +175,9 @@ export default class MongoRepo {
 
             const newTurn = tickTurn(turn);
 
-            return this.updateTurn(newTurn, false, current).then(() => newTurn);
+            return this.updateTurn({ $set: newTurn }, false, current).then(
+                () => newTurn
+            );
         });
     }
 
@@ -203,13 +191,15 @@ export default class MongoRepo {
                 ? turnAfterAction
                 : pauseResume(pauseResume(turnAfterAction, true), false);
 
-            return this.updateTurn(newTurn, false, turn).then((result) => {
-                if (result.matchedCount == 0) {
-                    return { _tag: "Left", left: "Failed to get lock" };
-                } else {
-                    return { _tag: "Right", right: newTurn };
+            return this.updateTurn({ $set: newTurn }, false, turn).then(
+                (result) => {
+                    if (result.matchedCount == 0) {
+                        return { _tag: "Left", left: "Failed to get lock" };
+                    } else {
+                        return { _tag: "Right", right: newTurn };
+                    }
                 }
-            });
+            );
         });
     }
 

@@ -10,7 +10,6 @@ export type ControlAPI = t.TypeOf<typeof types.ControlAPIDecode>;
 
 export type Turn = t.TypeOf<typeof types.TurnDecode>;
 export type BreakingNews = t.TypeOf<typeof types.BreakingNewsDecode>;
-export type BreakingNewsKey = keyof BreakingNews;
 
 export type ControlAction = Promise<Either<string, Turn>>;
 

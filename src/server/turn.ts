@@ -76,7 +76,7 @@ export function toApiResponse(
         turnNumber: turn.turnNumber,
         phase: turn.phase,
         phaseEnd: secondsLeft,
-        breakingNews: turn.breakingNews || null,
+        breakingNews: turn.breakingNews,
         active: turn.active,
         defcon: turn.defcon,
     };

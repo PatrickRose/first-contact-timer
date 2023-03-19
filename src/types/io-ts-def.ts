@@ -18,12 +18,6 @@ export const PhaseDecode = t.union([
     t.literal(10),
 ]);
 
-export const BreakingNewsDecode = t.type({
-    1: t.union([t.string, t.null]),
-    2: t.union([t.string, t.null]),
-    3: t.union([t.string, t.null]),
-});
-
 export const DefconStatusDecode = t.union([
     t.literal("hidden"),
     t.literal(3),
@@ -45,7 +39,7 @@ export const DefconDecode = t.type({
 export const ApiResponseDecode = t.type({
     turnNumber: t.number,
     phase: PhaseDecode,
-    breakingNews: BreakingNewsDecode,
+    breakingNews: t.array(NewsItemDecode),
     active: t.boolean,
     phaseEnd: t.number,
     defcon: DefconDecode,
@@ -53,7 +47,6 @@ export const ApiResponseDecode = t.type({
 
 export const SetBreakingNewsDecode = t.type({
     breakingNews: t.string,
-    number: t.union([t.literal(1), t.literal(2), t.literal(3)]),
 });
 
 export const ControlAPIDecode = t.type({
@@ -72,7 +65,7 @@ export const TurnDecode = t.type({
     turnNumber: t.number,
     phase: PhaseDecode,
     phaseEnd: t.string,
-    breakingNews: BreakingNewsDecode,
+    breakingNews: t.array(NewsItemDecode),
     active: t.boolean,
     defcon: DefconDecode,
     frozenTurn: t.union([t.null, ApiResponseDecode]),
