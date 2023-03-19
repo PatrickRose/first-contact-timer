@@ -1,10 +1,5 @@
 import * as t from "io-ts";
 
-export const NewsItemDecode = t.type({
-    newsText: t.string,
-    date: t.string,
-});
-
 export const PhaseDecode = t.union([
     t.literal(1),
     t.literal(2),
@@ -17,6 +12,13 @@ export const PhaseDecode = t.union([
     t.literal(9),
     t.literal(10),
 ]);
+
+export const NewsItemDecode = t.type({
+    newsText: t.string,
+    date: t.string,
+    turn: t.number,
+    phase: PhaseDecode,
+});
 
 export const DefconStatusDecode = t.union([
     t.literal("hidden"),

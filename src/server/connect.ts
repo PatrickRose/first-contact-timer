@@ -157,11 +157,15 @@ export default class MongoRepo {
     }
 
     async setBreakingNews(newBreakingNews: string): Promise<Turn> {
+        const turn = await this.getCurrentTurn();
+
         return this.updateTurn({
             $push: {
                 breakingNews: {
                     newsText: newBreakingNews,
                     date: new Date().toISOString(),
+                    turn: turn.turnNumber,
+                    phase: turn.phase,
                 },
             },
         }).then(() => this.getCurrentTurn());
