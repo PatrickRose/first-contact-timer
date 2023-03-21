@@ -3,12 +3,15 @@
 @tailwind utilities;
 
 @layer components {
+
+    @import url('https://fonts.googleapis.com/css?family=Century+Gothic:regular,bold,italic&subset=latin,latin-ext');
+
     body {
         @apply flex flex-col min-h-screen;
     }
 
     #__next {
-        @apply flex flex-col flex-1;
+        @apply flex flex-col flex-1 bg-black text-white;
     }
 
     .roles {

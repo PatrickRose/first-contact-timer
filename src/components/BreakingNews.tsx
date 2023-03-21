@@ -95,7 +95,7 @@ export default function BreakingNews({ content }: BreakingNewsProps) {
     };
 
     return (
-        <footer className={"bg-red-600 text-white mt-4"}>
+        <footer className={"w-full bg-red-600 text-white mt-4"}>
             <Transition show={activeValue.state == "show"} appear={true}>
                 <Transition.Child
                     afterEnter={afterEnter}

@@ -13,7 +13,7 @@ interface CountryDefconProps {
 }
 
 function DefconStateInfo({ inner, flex }: { inner: string; flex?: boolean }) {
-    return <div className={`px-4 ${flex ? "flex-1" : ""}`}>{inner}</div>;
+    return <div className={`pl-4 ${flex ? "flex-1" : ""}`}>{inner}</div>;
 }
 
 export const DEFCON_STATE_TO_HUMAN_STATE: Record<
@@ -72,21 +72,24 @@ export const DEFCON_STATE_TO_HUMAN_STATE: Record<
 
 export const BACKGROUNDS: Record<
     DefconStatus,
-    { background: string; activeBorder: string; inactiveBorder: string }
+    { activeBackground: string, background: string; activeBorder: string; inactiveBorder: string }
 > = {
-    hidden: { background: "bg-gray-200", activeBorder: "", inactiveBorder: "" },
+    hidden: { activeBackground: "bg-gray-200", background: "bg-gray-200", activeBorder: "", inactiveBorder: "" },
     1: {
-        background: "bg-red-500",
+        activeBackground: "bg-gradient-to-l from-defcon-1-light to-defcon-1-dark",
+        background: "bg-defcon-1-light",
         activeBorder: "border-red-500",
         inactiveBorder: "border-red-300",
     },
     2: {
-        background: "bg-orange-300",
+        activeBackground: "bg-gradient-to-l from-defcon-2-light to-defcon-2-dark",
+        background: "bg-defcon-2-light",
         activeBorder: "border-orange-300",
         inactiveBorder: "border-orange-100",
     },
     3: {
-        background: "bg-green-300",
+        activeBackground: "bg-gradient-to-l from-defcon-3-light to-defcon-3-dark",
+        background: "bg-defcon-3-light",
         activeBorder: "border-green-300",
         inactiveBorder: "border-green-100",
     },
@@ -101,7 +104,7 @@ function DefconState({
 }) {
     const backgroundDef = BACKGROUNDS[defconNumber];
     const background: string[] = [
-        active ? backgroundDef.activeBorder : backgroundDef.inactiveBorder,
+//        active ? backgroundDef.activeBorder : backgroundDef.inactiveBorder,
     ];
 
     if (active) {
@@ -114,12 +117,15 @@ function DefconState({
 
     return (
         <div
-            className={`p-2 text-center items-center flex flex-col transition duration-500 border-4 ${background.join(
+            className={`p-2 pr-6 text-center items-center flex flex-col transition duration-500 border-0 rounded-r-full ${background.join(
                 " "
             )}`}
         >
-            <div>Defcon</div>
-            <div>{defconNumber}</div>
+            <div
+                className={`text-2xl`}
+            >
+            {defconNumber}
+            </div>
         </div>
     );
 }
@@ -132,30 +138,62 @@ export function CountryDefcon({ stateName, status }: CountryDefconProps) {
     return (
         <div className="flex mx-4">
             <div
-                className={`flex-1 flex items-center content-center justify-center text-2xl border-4 transition duration-500 ${BACKGROUNDS[status].activeBorder}`}
+                className={`flex-1 flex items-center content-center justify-center text-2xl border-0 transition duration-500 rounded-l-full ${BACKGROUNDS[status].activeBackground}`}
             >
                 {DEFCON_STATE_TO_HUMAN_STATE[stateName]}
             </div>
+            <DefconState defconNumber={status} active={true} />
+        </div>
+    );
+/*
             <DefconState defconNumber={3} active={status == 3} />
             <DefconState defconNumber={2} active={status == 2} />
             <DefconState defconNumber={1} active={status == 1} />
-        </div>
-    );
+
+*/
 }
 
 function DisplayDefconStatus({ defcon }: DefconProps) {
     return (
         <div className="flex justify-center mx-1">
-            <div className="w-full xl:w-3/4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {Object.entries(defcon).map(([country, status]) => {
-                    return (
-                        <CountryDefcon
-                            key={country}
-                            stateName={country as keyof Defcon}
-                            status={status}
-                        />
-                    );
-                })}
+            <div className="">
+                <h3 className="text-3xl mt-2 mb-6 uppercase text-center">DEFCON<br/>Levels</h3>
+                <div className="pb-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
+                    {Object.entries(defcon).map(([country, status]) => {
+                        if (status != 1) return "";
+                        return (
+                            <CountryDefcon
+                                key={country}
+                                stateName={country as keyof Defcon}
+                                status={status}
+                            />
+                        );
+                    })}
+                </div>
+                <div className="pb-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
+                    {Object.entries(defcon).map(([country, status]) => {
+                        if (status != 2) return "";
+                        return (
+                            <CountryDefcon
+                                key={country}
+                                stateName={country as keyof Defcon}
+                                status={status}
+                            />
+                        );
+                    })}
+                </div>
+                <div className="pb-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
+                    {Object.entries(defcon).map(([country, status]) => {
+                        if (status != 3) return "";
+                        return (
+                            <CountryDefcon
+                                key={country}
+                                stateName={country as keyof Defcon}
+                                status={status}
+                            />
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

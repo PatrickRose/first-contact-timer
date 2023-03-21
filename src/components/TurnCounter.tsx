@@ -41,7 +41,7 @@ const TurnTimer = function TurnTimer(props: {
 
     return (
         <React.Fragment>
-            <p className="text-8xl font-bold py-8">
+            <p className="text-8xl py-8">
                 {`${formatter.format(minutes)}:${formatter.format(seconds)}`}
             </p>
             {paused}
@@ -79,8 +79,10 @@ export function PhaseCount({
 }) {
     const backgroundClass =
         phase == active
-            ? "bg-first-contact text-white delay-250"
-            : "bg-white text-black";
+            ? "bg-turn-counter-current text-white delay-250 border-yellow-300"
+            : phase > active 
+                ? "bg-turn-counter-future text-white border-black"
+                : "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
 
     const visibleOnPhone = [
         active - 2,
@@ -102,7 +104,7 @@ export function PhaseCount({
 
     return (
         <div
-            className={`${visibleClass} flex-1 flex-col border border-first-contact p-3 transition duration-500 ${backgroundClass}`}
+            className={`${visibleClass} flex-1 flex-col  p-3 transition duration-500 border-4 ${backgroundClass}`}
         >
             {PHASE_LABELS[phase]}
             <p>{length} minutes</p>
@@ -114,12 +116,13 @@ export default function TurnCounter(props: TurnCounterProps) {
     const { turn, phase, timestamp, active } = props;
 
     const text = isBreatherPhase(phase)
-        ? `You're in turn ${turn}. ${PHASE_TITLES[nextPhase(phase)]} starts in:`
-        : `You're in turn ${turn}, ${PHASE_TITLES[phase]}`;
+        ? `Turn ${turn}: ${PHASE_TITLES[nextPhase(phase)]} starts in:`
+        : `Turn ${turn}: ${PHASE_TITLES[phase]}`;
 
     return (
         <React.Fragment>
-            <div className="flex lg:flex-wrap mt-4 border border-first-contact">
+            <h1 className="text-5xl mt-4 mb-2 uppercase ">{text}</h1>
+            <div className="flex lg:flex-wrap mt-4">
                 {PHASE_LISTS.map((val) => {
                     return (
                         <React.Fragment key={val}>
@@ -133,7 +136,6 @@ export default function TurnCounter(props: TurnCounterProps) {
                     );
                 })}
             </div>
-            <h1 className="text-5xl mt-4">{text}</h1>
             <TurnTimer timestamp={timestamp} active={active} />
         </React.Fragment>
     );

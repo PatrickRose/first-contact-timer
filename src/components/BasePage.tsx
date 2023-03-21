@@ -213,51 +213,52 @@ export default abstract class BaseApp extends React.Component<
                 <Head>
                     <title>First Contact - {this.title()}</title>
                 </Head>
-                <main
-                    role="main"
-                    className="container flex-1 text-center h-full flex flex-col justify-center justify-items-stretch items-center"
-                >
-                    <div className="flex flex-col justify-center items-center flex-1">
-                        <TurnCounter
-                            turn={turnNumber}
-                            phase={phase}
-                            timestamp={phaseEnd}
-                            active={active}
+                <div className="flex flex-row flex-1">
+                    <main
+                        role="main"
+                        className="container flex-1 text-center h-full flex flex-col justify-center justify-items-stretch items-center"
+                    >
+                        <div className="p-8 flex flex-col justify-center items-center flex-1">
+                            <TurnCounter
+                                turn={turnNumber}
+                                phase={phase}
+                                timestamp={phaseEnd}
+                                active={active}
+                            />
+                            {main}
+                        </div>
+                        <BreakingNews content={breakingNews} />
+                    </main>
+                    <div>
+                        <div
+                            className={`${
+                                activeTab != "home" ? "hidden" : ""
+                            } lg:block`}
+                        >
+                            {child}
+                        </div>
+                        <div
+                            className={`${
+                                activeTab != "press" ? "hidden" : ""
+                            } lg:hidden`}
+                        >
+                            <NewsFeed newsItems={newsItems} />
+                        </div>
+                        <div
+                            className={`${
+                                activeTab != "defcon" ? "hidden" : ""
+                            } lg:block`}
+                        >
+                            <DefconStatuses defcon={apiResponse.defcon} />
+                        </div>
+                        <TabSwitcher
+                            activeTab={activeTab}
+                            setActiveTab={(newActive: ActiveTabs) =>
+                                this.setState({ activeTab: newActive })
+                            }
                         />
-                        {main}
                     </div>
-                </main>
-                <div>
-                    <div
-                        className={`${
-                            activeTab != "home" ? "hidden" : ""
-                        } lg:block`}
-                    >
-                        {child}
-                    </div>
-                    <div
-                        className={`${
-                            activeTab != "press" ? "hidden" : ""
-                        } lg:block`}
-                    >
-                        <NewsFeed newsItems={newsItems} />
-                    </div>
-                    <div
-                        className={`${
-                            activeTab != "defcon" ? "hidden" : ""
-                        } lg:block`}
-                    >
-                        <DefconStatuses defcon={apiResponse.defcon} />
-                    </div>
-                    <TabSwitcher
-                        activeTab={activeTab}
-                        setActiveTab={(newActive: ActiveTabs) =>
-                            this.setState({ activeTab: newActive })
-                        }
-                    />
                 </div>
-
-                <BreakingNews content={breakingNews} />
             </React.Fragment>
         );
     }
