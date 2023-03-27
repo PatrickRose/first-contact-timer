@@ -17,6 +17,7 @@ function NewsItem({ item }: { item: NewsItem }) {
 export function NewsFeed({ newsItems }: { newsItems: NewsItem[] }) {
     return (
         <div>
+            <h3 className="text-3xl mt-2 mb-6 uppercase text-center">News<br/>Feed</h3>
             {newsItems.map((item, index) => (
                 <NewsItem item={item} key={index} />
             ))}

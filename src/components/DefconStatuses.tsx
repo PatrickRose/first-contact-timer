@@ -204,30 +204,7 @@ export default function DefconStatuses({ defcon }: DefconProps) {
 
     return (
         <div className="py-4">
-            <div className="md:hidden">
-                <div className="m-10 flex justify-center">
-                    <button
-                        onClick={() => setShow((show) => !show)}
-                        className={`transition-colors border-2 rounded-full p-5 ${
-                            show ? "bg-gray-300" : ""
-                        }`}
-                    >
-                        {show ? "Hide" : "Show"} defcon states
-                    </button>
-                </div>
-                <Transition
-                    show={show}
-                    enter="transition-transform duration-500"
-                    enterFrom="translate-y-full"
-                    enterTo="translate-y-0"
-                    leave="transition-transform duration-500"
-                    leaveFrom="translate-y-0"
-                    leaveTo="translate-y-full"
-                >
-                    <DisplayDefconStatus defcon={defcon} />
-                </Transition>
-            </div>
-            <div className="hidden md:block">
+            <div className="block w-full">
                 <DisplayDefconStatus defcon={defcon} />
             </div>
         </div>

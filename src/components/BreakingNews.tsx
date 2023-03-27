@@ -95,45 +95,55 @@ export default function BreakingNews({ content }: BreakingNewsProps) {
     };
 
     return (
-        <footer className={"w-full bg-red-600 text-white mt-4"}>
-            <Transition show={activeValue.state == "show"} appear={true}>
-                <Transition.Child
-                    afterEnter={afterEnter}
-                    beforeLeave={beforeLeave}
-                    afterLeave={afterLeave}
-                    enter="transition-all duration-500 text-center underline"
-                    enterFrom="translate-y-full"
-                    enterTo="translate-y-0 text-4xl m-2 font-bold"
-                    leave="transition-all delay-200 duration-500 text-center underline"
-                    leaveFrom="translate-y-0 text-4xl font-bold"
-                    leaveTo="translate-y-full"
-                    entered="text-4xl m-2 font-bold text-center underline"
-                >
-                    <h3>Breaking news</h3>
-                </Transition.Child>
-                <Transition.Child
-                    enter="text-4xl transition ease-in-out delay-500 duration-1000 transform p-4"
-                    enterFrom="translate-x-full"
-                    enterTo="translate-x-0"
-                    leave="text-4xl transition-transform duration-500 p-4"
-                    leaveFrom="translate-y-0"
-                    leaveTo="translate-y-full"
-                    entered="p-4 text-4xl"
-                >
-                    <div>
-                        {activeValue.value
-                            ?.replace("\n\n", "\n")
-                            .split("\n")
-                            .map((val, key) => {
-                                return (
-                                    <p className="py-2" key={key}>
-                                        {val}
-                                    </p>
-                                );
-                            })}
-                    </div>
-                </Transition.Child>
-            </Transition>
+        <footer className="w-full bg-red-600 text-white mt-4 overflow-hidden hidden lg:flex flex-row justify-between">
+            <div className="p-8">
+                <Transition show={activeValue.state == "show"} appear={true}>
+                    <Transition.Child
+                        afterEnter={afterEnter}
+                        beforeLeave={beforeLeave}
+                        afterLeave={afterLeave}
+                        enter="transition-all duration-500 text-left"
+                        enterFrom="translate-y-full"
+                        enterTo="translate-y-0 text-4xl m-2 font-bold"
+                        leave="transition-all delay-200 duration-500 text-left"
+                        leaveFrom="translate-y-0 text-4xl font-bold"
+                        leaveTo="translate-y-full"
+                        entered="text-4xl m-2 font-bold text-left"
+                    >
+                        <h3 className="uppercase">Breaking news</h3>
+                    </Transition.Child>
+                    <Transition.Child
+                        enter="text-4xl transition ease-in-out delay-500 duration-1000 transform p-4 text-left"
+                        enterFrom="translate-x-full"
+                        enterTo="translate-x-0"
+                        leave="text-4xl transition-transform duration-500 p-4 text-left"
+                        leaveFrom="translate-y-0"
+                        leaveTo="translate-y-full"
+                        entered="p-4 text-4xl text-left"
+                    >
+                        <div>
+                            {activeValue.value
+                                ?.replace("\n\n", "\n")
+                                .split("\n")
+                                .map((val, key) => {
+                                    return (
+                                        <p className="py-2" key={key}>
+                                            {val}
+                                        </p>
+                                    );
+                                })}
+                        </div>
+                    </Transition.Child>
+                </Transition>
+            </div>
+            <div 
+                className="w-64 h-64 p-8"
+            >
+                <img 
+                    className="w-full h-full"
+                    src="/GNNLogo.png" 
+                />
+            </div>
         </footer>
     );
 }

@@ -100,9 +100,9 @@ class PressForm extends React.Component<FormProps, FormState> {
             }
 
             return (
-                <div className="flex my-2" key={key}>
+                <div className="flex my-2 p-4 bg-defcon-1-dark " key={key}>
                     <hr />
-                    <div className="flex-1 [word-break:break-word] text-left">
+                    <div className="flex-1 [word-break:break-word] text-left text-white">
                         {currentBreakingNews[key]
                             ?.replace("\n\n", "\n")
                             .split("\n")
@@ -134,14 +134,17 @@ class PressForm extends React.Component<FormProps, FormState> {
                     className="mt-2"
                     key={key}
                 >
-                    <hr />
-                    <label id="breaking-news" htmlFor={id}>
+                    <label 
+                        id="breaking-news" 
+                        className="py-4 text-left"
+                        htmlFor={id}
+                        >
                         Enter breaking news headline {key} here:
                     </label>
                     <div className="flex">
                         <textarea
                             name={id}
-                            className="form-control flex-1 mx-2"
+                            className="form-control flex-1 mx-2 text-black"
                             value={breakingNews}
                             onChange={(e) => this.onChange(e, key)}
                             rows={4}
@@ -161,7 +164,7 @@ class PressForm extends React.Component<FormProps, FormState> {
         };
 
         return (
-            <div className="container">
+            <div className="container p-4 bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
                 <div className="flex flex-col">
                     {keys.map((key) => outputKey(key))}
                 </div>

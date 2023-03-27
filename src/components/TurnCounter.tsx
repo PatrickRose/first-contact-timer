@@ -31,7 +31,7 @@ const TurnTimer = function TurnTimer(props: {
 
     if (!active) {
         paused = (
-            <p className="py-3 px-6 bg-red-200 text-red-800 rounded alert alert-danger">
+            <p className="py-3 px-6 bg-zinc-600 text-white rounded alert alert-danger">
                 GAME PAUSED
             </p>
         );
@@ -101,10 +101,10 @@ export function PhaseCount({
     if (PHASE_LABELS[phase] === null) {
         return null;
     }
-
+//${visibleClass}
     return (
         <div
-            className={`${visibleClass} flex-1 flex-col  p-3 transition duration-500 border-4 ${backgroundClass}`}
+            className={`md:flex flex-1 flex-col  p-3 transition duration-500 border-4 ${backgroundClass}`}
         >
             {PHASE_LABELS[phase]}
             <p>{length} minutes</p>
@@ -122,7 +122,7 @@ export default function TurnCounter(props: TurnCounterProps) {
     return (
         <React.Fragment>
             <h1 className="text-5xl mt-4 mb-2 uppercase ">{text}</h1>
-            <div className="flex lg:flex-wrap mt-4">
+            <div className="flex lg:flex-wrap flex-col lg:flex-row  mt-4">
                 {PHASE_LISTS.map((val) => {
                     return (
                         <React.Fragment key={val}>

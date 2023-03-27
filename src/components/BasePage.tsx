@@ -9,6 +9,7 @@ import Head from "next/head";
 import { NewsFeed } from "./NewsFeed";
 import DefconStatuses from "./DefconStatuses";
 import TabSwitcher from "./TabSwitcher";
+import LogoBlock from "./LogoBlock";
 
 type BaseAppState = {
     fetchFailed: boolean;
@@ -216,34 +217,50 @@ export default abstract class BaseApp extends React.Component<
                 <div className="flex flex-row flex-1">
                     <main
                         role="main"
-                        className="container flex-1 text-center h-full flex flex-col justify-center justify-items-stretch items-center"
+                        className={`${
+                                    activeTab != "home" && activeTab != "manage" && activeTab != "press" ? "hidden" : ""
+                                } lg:flex container flex-1 text-center h-screen 
+                                flex-col 
+                                justify-between justify-items-stretch items-center
+                                `}
                     >
-                        <div className="p-8 flex flex-col justify-center items-center flex-1">
-                            <TurnCounter
-                                turn={turnNumber}
-                                phase={phase}
-                                timestamp={phaseEnd}
-                                active={active}
-                            />
-                            {main}
+                        <div>
+                            <div 
+                                className={`${
+                                    activeTab != "home" ? "hidden" : ""
+                                } lg:block p-8 flex flex-col items-center flex-1`}
+                            >
+                                <TurnCounter
+                                    turn={turnNumber}
+                                    phase={phase}
+                                    timestamp={phaseEnd}
+                                    active={active}
+                                />
+                                {main}
+                            </div>
+                            <div
+                                className={`${
+                                    activeTab != "manage" ? "hidden" : ""
+                                } lg:block`}
+                            >
+                                {child}
+                            </div>
+                            <div
+                                className={`${
+                                    activeTab != "press" ? "hidden" : ""
+                                } lg:hidden`}
+                            >
+                                <NewsFeed newsItems={newsItems} />
+                            </div>
                         </div>
                         <BreakingNews content={breakingNews} />
                     </main>
-                    <div>
-                        <div
-                            className={`${
-                                activeTab != "home" ? "hidden" : ""
-                            } lg:block`}
-                        >
-                            {child}
-                        </div>
-                        <div
-                            className={`${
-                                activeTab != "press" ? "hidden" : ""
-                            } lg:hidden`}
-                        >
-                            <NewsFeed newsItems={newsItems} />
-                        </div>
+                    <div
+                        className={`${
+                                activeTab != "defcon" ? "hidden" : ""
+                            } lg:flex flex-col justify-between border-l-4 border-turn-counter-past-light w-full lg:w-auto`}
+                    >
+                       
                         <div
                             className={`${
                                 activeTab != "defcon" ? "hidden" : ""
@@ -251,14 +268,20 @@ export default abstract class BaseApp extends React.Component<
                         >
                             <DefconStatuses defcon={apiResponse.defcon} />
                         </div>
-                        <TabSwitcher
-                            activeTab={activeTab}
-                            setActiveTab={(newActive: ActiveTabs) =>
-                                this.setState({ activeTab: newActive })
-                            }
-                        />
+
+                        <div
+                            className="hidden lg:block"
+                        >
+                            <LogoBlock />
+                        </div>
                     </div>
                 </div>
+                <TabSwitcher
+                    activeTab={activeTab}
+                    setActiveTab={(newActive: ActiveTabs) =>
+                        this.setState({ activeTab: newActive })
+                    }
+                />
             </React.Fragment>
         );
     }

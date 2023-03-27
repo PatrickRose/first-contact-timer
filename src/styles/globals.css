@@ -7,11 +7,11 @@
     @import url('https://fonts.googleapis.com/css?family=Century+Gothic:regular,bold,italic&subset=latin,latin-ext');
 
     body {
-        @apply flex flex-col min-h-screen;
+        @apply flex flex-col min-h-screen bg-black text-white;
     }
 
     #__next {
-        @apply flex flex-col flex-1 bg-black text-white;
+        @apply flex flex-col flex-1;
     }
 
     .roles {
