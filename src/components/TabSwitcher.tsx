@@ -1,5 +1,7 @@
 import { ActiveTabs } from "../types/types";
-
+import Image from "next/image";
+import VLHGLogo from "../../public/vlhg-logo.svg";
+import GNNLogo from "../../public/GNNLogo.png";
 
 function DisplayManageTabSwitch({
     activeTab,
@@ -10,7 +12,7 @@ function DisplayManageTabSwitch({
 }) {
 
     const activeClass = "bg-red-700";
-    const baseClass = "flex-1 border-2 text-lg transition";
+    const baseClass = "flex-1 text-lg transition pt-2";
 
     if (false) return "";
     return (
@@ -20,7 +22,10 @@ function DisplayManageTabSwitch({
             }`}
             onClick={() => setActiveTab("manage")}
         >
-            Manage
+            <Image className="mx-auto" src={GNNLogo} alt="" width={40} />
+            <span>
+                Manage
+            </span>
         </button>   
     );
 }
@@ -34,17 +39,20 @@ export default function TabSwitcher({
     setActiveTab: (newActive: ActiveTabs) => void;
 }) {
     const activeClass = "bg-red-700";
-    const baseClass = "flex-1 border-2 text-lg transition";
+    const baseClass = "flex-1 text-lg transition pt-2";
 
     return (
-        <div className="flex w-full lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black">
+        <div className="flex w-full lg:hidden fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black">
             <button
                 className={`${baseClass} ${
                     activeTab == "home" ? activeClass : ""
                 }`}
                 onClick={() => setActiveTab("home")}
             >
-                Home
+                <Image className="mx-auto" src={GNNLogo} alt="" width={40} />
+                <span>
+                    Game
+                </span>
             </button>
             <button
                 className={`${baseClass} ${
@@ -52,7 +60,10 @@ export default function TabSwitcher({
                 }`}
                 onClick={() => setActiveTab("press")}
             >
-                News
+                <Image className="mx-auto" src={GNNLogo} alt="" width={40} />
+                <span>
+                    News
+                </span>
             </button>
             <button
                 className={`${baseClass} ${
@@ -60,7 +71,10 @@ export default function TabSwitcher({
                 }`}
                 onClick={() => setActiveTab("defcon")}
             >
-                Defcon
+                <Image className="mx-auto" src={GNNLogo} alt="" width={40} />
+                <span>
+                    Defcon
+                </span>
             </button>
             <DisplayManageTabSwitch 
                 activeTab={activeTab}

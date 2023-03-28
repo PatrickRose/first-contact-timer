@@ -41,9 +41,9 @@ module.exports = {
                 "defcon-2-light" : "#634011",
                 "defcon-2-dark" : "#472e0c",
                 "defcon-3-light" : "#1a521a",
-                "defcon-3-dark" : "#113311",      
+                "defcon-3-dark" : "#113311",
             },
-        },
+        }
     },
     plugins: [require("@tailwindcss/forms")],
 };

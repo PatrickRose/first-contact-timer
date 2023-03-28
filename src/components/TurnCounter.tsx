@@ -18,12 +18,13 @@ interface TurnCounterProps {
 const TurnTimer = function TurnTimer(props: {
     timestamp: number;
     active: boolean;
+    mobile: boolean;
 }) {
     const formatter = new Intl.NumberFormat("en-GB", {
         minimumIntegerDigits: 2,
     });
 
-    const { timestamp, active } = props;
+    const { timestamp, active, mobile } = props;
     const minutes = Math.floor(Number(timestamp / 60));
     const seconds = timestamp % 60;
 
@@ -31,7 +32,7 @@ const TurnTimer = function TurnTimer(props: {
 
     if (!active) {
         paused = (
-            <p className="py-3 px-6 bg-zinc-600 text-white rounded alert alert-danger">
+            <p className="py-3 px-6 bg-zinc-600 text-white rounded alert alert-danger text-3xl">
                 GAME PAUSED
             </p>
         );
@@ -39,9 +40,14 @@ const TurnTimer = function TurnTimer(props: {
         paused = <React.Fragment />;
     }
 
+    const textClass = 
+        mobile == true
+            ? "lg:hidden text-6xl py-2"
+            : "hidden lg:block text-8xl py-8";
+
     return (
         <React.Fragment>
-            <p className="text-8xl py-8">
+            <p className={`${textClass}`}>
                 {`${formatter.format(minutes)}:${formatter.format(seconds)}`}
             </p>
             {paused}
@@ -84,6 +90,11 @@ export function PhaseCount({
                 ? "bg-turn-counter-future text-white border-black"
                 : "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
 
+    const subTextClass = 
+        phase == active
+            ? "block"
+            : "hidden";
+
     const visibleOnPhone = [
         active - 2,
         active - 1,
@@ -107,7 +118,7 @@ export function PhaseCount({
             className={`md:flex flex-1 flex-col  p-3 transition duration-500 border-4 ${backgroundClass}`}
         >
             {PHASE_LABELS[phase]}
-            <p>{length} minutes</p>
+            <p className={`${subTextClass} lg:block`}>{length} minutes</p>
         </div>
     );
 }
@@ -121,7 +132,9 @@ export default function TurnCounter(props: TurnCounterProps) {
 
     return (
         <React.Fragment>
-            <h1 className="text-5xl mt-4 mb-2 uppercase ">{text}</h1>
+            <h3 className="lg:hidden text-2xl mt-2 mb-6 uppercase text-center">Game Timer</h3>
+            <h1 className="text-4xl lg:text-5xl mt-4 mb-8 uppercase ">{text}</h1>
+            <TurnTimer timestamp={timestamp} active={active} mobile={true} />
             <div className="flex lg:flex-wrap flex-col lg:flex-row  mt-4">
                 {PHASE_LISTS.map((val) => {
                     return (
@@ -136,7 +149,7 @@ export default function TurnCounter(props: TurnCounterProps) {
                     );
                 })}
             </div>
-            <TurnTimer timestamp={timestamp} active={active} />
+            <TurnTimer timestamp={timestamp} active={active} mobile={false} />
         </React.Fragment>
     );
 }

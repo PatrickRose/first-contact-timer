@@ -228,7 +228,7 @@ export default abstract class BaseApp extends React.Component<
                             <div 
                                 className={`${
                                     activeTab != "home" ? "hidden" : ""
-                                } lg:block p-8 flex flex-col items-center flex-1`}
+                                } lg:block py-4 lg:p-8 flex flex-col items-center flex-1`}
                             >
                                 <TurnCounter
                                     turn={turnNumber}

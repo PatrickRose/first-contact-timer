@@ -16,6 +16,7 @@ function DefconStateInfo({ inner, flex }: { inner: string; flex?: boolean }) {
     return <div className={`pl-4 ${flex ? "flex-1" : ""}`}>{inner}</div>;
 }
 
+
 export const DEFCON_STATE_TO_HUMAN_STATE: Record<
     keyof Defcon,
     React.ReactNode
@@ -74,7 +75,7 @@ export const BACKGROUNDS: Record<
     DefconStatus,
     { activeBackground: string, background: string; activeBorder: string; inactiveBorder: string }
 > = {
-    hidden: { activeBackground: "bg-gray-200", background: "bg-gray-200", activeBorder: "", inactiveBorder: "" },
+    hidden: { activeBackground: "bg-gray-700", background: "bg-gray-700", activeBorder: "", inactiveBorder: "" },
     1: {
         activeBackground: "bg-gradient-to-l from-defcon-1-light to-defcon-1-dark",
         background: "bg-defcon-1-light",
@@ -136,7 +137,7 @@ export function CountryDefcon({ stateName, status }: CountryDefconProps) {
     }
 
     return (
-        <div className="flex mx-4">
+        <div className="flex mx-auto lg:mx-4 w-[320px] max-w-[100%]">
             <div
                 className={`flex-1 flex items-center content-center justify-center text-2xl border-0 transition duration-500 rounded-l-full ${BACKGROUNDS[status].activeBackground}`}
             >
@@ -145,20 +146,14 @@ export function CountryDefcon({ stateName, status }: CountryDefconProps) {
             <DefconState defconNumber={status} active={true} />
         </div>
     );
-/*
-            <DefconState defconNumber={3} active={status == 3} />
-            <DefconState defconNumber={2} active={status == 2} />
-            <DefconState defconNumber={1} active={status == 1} />
-
-*/
 }
 
 function DisplayDefconStatus({ defcon }: DefconProps) {
     return (
         <div className="flex justify-center mx-1">
-            <div className="">
-                <h3 className="text-3xl mt-2 mb-6 uppercase text-center">DEFCON<br/>Levels</h3>
-                <div className="pb-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
+            <div className="w-full w-max-[400px]">
+                <h3 className="text-2xl mt-2 mb-6 uppercase text-center lg:w-1/2 mx-auto">DEFCON Levels</h3>
+                <div className="pt-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
                     {Object.entries(defcon).map(([country, status]) => {
                         if (status != 1) return "";
                         return (
@@ -170,7 +165,7 @@ function DisplayDefconStatus({ defcon }: DefconProps) {
                         );
                     })}
                 </div>
-                <div className="pb-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
+                <div className="pt-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
                     {Object.entries(defcon).map(([country, status]) => {
                         if (status != 2) return "";
                         return (
@@ -182,7 +177,7 @@ function DisplayDefconStatus({ defcon }: DefconProps) {
                         );
                     })}
                 </div>
-                <div className="pb-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
+                <div className="pt-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
                     {Object.entries(defcon).map(([country, status]) => {
                         if (status != 3) return "";
                         return (

@@ -67,30 +67,31 @@ class PressForm extends React.Component<FormProps, FormState> {
             : "Submit breaking news";
 
         return (
-            <div className="container p-4 bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
+            <div className="container lg:p-4 pb-24 lg:pb-4 lg:bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
+                <h2 className="text-3xl mt-2 mb-6 uppercase text-center">Press Tools</h2>
                 <div className="flex flex-col">
                     <form onSubmit={(e) => this.submitForm(e)} className="mt-2">
-                        <label id="breaking-news-label" className="py-4 text-left" htmlFor="breaking-news">
+                        <label id="breaking-news-label" className="pb-4 pt-0 block text-xl text-center" htmlFor="breaking-news">
                             Enter breaking news headline here:
                         </label>
-                        <div className="flex">
+                        <div className="block">
                             <textarea
                                 name="breaking-news"
-                                className="form-control flex-1 mx-2 text-black"
+                                className="form-control w-full ml-0 mr-4 bg-black text-white text-xl"
                                 value={breakingNews}
                                 onChange={(e) => this.onChange(e)}
                                 rows={4}
                                 maxLength={150}
                             />
                             <button
-                                className="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-75 disabled:hover:bg-blue-70"
+                                className="mt-4 text-xl text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-75 disabled:hover:bg-blue-70"
                                 type="submit"
                                 disabled={!this.props.active || isSubmitting}
                             >
                                 {buttonMsg}
                             </button>
                         </div>
-                        <hr />
+
                     </form>
                 </div>
             </div>

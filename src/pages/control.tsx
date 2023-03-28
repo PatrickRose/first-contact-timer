@@ -128,10 +128,11 @@ abstract class ControlButton extends React.Component<
         if (!this.appearForState(apiResponse)) {
             return null;
         }
+
         return (
             <button
                 type="button"
-                className="outline rounded p-2 px-4 disabled:opacity-75"
+                className="bg-turn-counter-future border-black hover:bg-turn-counter-current hover:border-yellow-300  border-4 rounded p-3 px-5 disabled:opacity-75 "
                 key={this.constructor.name}
                 onClick={() => this.handleOnClick()}
                 title={title}
@@ -262,9 +263,9 @@ function CountryDefcon({
     };
 
     return (
-        <div className={`flex mx-1`}>
+        <div className={`flex mx-1 bg-black`}>
             <div
-                className={`flex-1 justify-center items-center content-center border-2 transition duration-500 ${BACKGROUNDS[status].activeBorder}`}
+                className={`flex-1 justify-center items-center content-center pt-2 pr-4 border-2 transition duration-500 ${BACKGROUNDS[status].activeBackground}`}
             >
                 {DEFCON_STATE_TO_HUMAN_STATE[stateName]}
             </div>
@@ -396,61 +397,64 @@ export default class ControlApp extends BaseApp {
 
         return (
             <React.Fragment>
-                <div className="flex w-full p-4 justify-around">
-                    <BackATurn
+                <div className="container py-4 lg:p-4 pb-24 lg:pb-4 lg:bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
+                    <h2 className="text-2xl mt-2 mb-6 uppercase text-center">Control Tools</h2>
+                    <div className="flex w-full pb-4 justify-around">
+                        <BackATurn
+                            pauseRefresh={pauseRefresh}
+                            apiResponse={apiResponse}
+                            triggerFetch={triggerFetch}
+                            setResponse={setResponse}
+                            setErrorMessage={setErrorMessage}
+                        />
+                        <BackAPhase
+                            pauseRefresh={pauseRefresh}
+                            apiResponse={apiResponse}
+                            triggerFetch={triggerFetch}
+                            setResponse={setResponse}
+                            setErrorMessage={setErrorMessage}
+                        />
+                        <PlayButton
+                            pauseRefresh={pauseRefresh}
+                            apiResponse={apiResponse}
+                            triggerFetch={triggerFetch}
+                            setResponse={setResponse}
+                            setErrorMessage={setErrorMessage}
+                        />
+                        <PauseButton
+                            pauseRefresh={pauseRefresh}
+                            apiResponse={apiResponse}
+                            triggerFetch={triggerFetch}
+                            setResponse={setResponse}
+                            setErrorMessage={setErrorMessage}
+                        />
+                        <ForwardPhase
+                            pauseRefresh={pauseRefresh}
+                            apiResponse={apiResponse}
+                            triggerFetch={triggerFetch}
+                            setResponse={setResponse}
+                            setErrorMessage={setErrorMessage}
+                        />
+                        <ForwardTurn
+                            pauseRefresh={pauseRefresh}
+                            apiResponse={apiResponse}
+                            triggerFetch={triggerFetch}
+                            setResponse={setResponse}
+                            setErrorMessage={setErrorMessage}
+                        />
+                    </div>
+                    <div className="flex w-full p-4 justify-around">
+                        {this.error(apiResponse)}
+                    </div>
+                    <ControlDefconStatus
+                        defcon={apiResponse.defcon}
+                        triggerFetch={triggerFetch}
                         pauseRefresh={pauseRefresh}
                         apiResponse={apiResponse}
-                        triggerFetch={triggerFetch}
-                        setResponse={setResponse}
-                        setErrorMessage={setErrorMessage}
-                    />
-                    <BackAPhase
-                        pauseRefresh={pauseRefresh}
-                        apiResponse={apiResponse}
-                        triggerFetch={triggerFetch}
-                        setResponse={setResponse}
-                        setErrorMessage={setErrorMessage}
-                    />
-                    <PlayButton
-                        pauseRefresh={pauseRefresh}
-                        apiResponse={apiResponse}
-                        triggerFetch={triggerFetch}
-                        setResponse={setResponse}
-                        setErrorMessage={setErrorMessage}
-                    />
-                    <PauseButton
-                        pauseRefresh={pauseRefresh}
-                        apiResponse={apiResponse}
-                        triggerFetch={triggerFetch}
-                        setResponse={setResponse}
-                        setErrorMessage={setErrorMessage}
-                    />
-                    <ForwardPhase
-                        pauseRefresh={pauseRefresh}
-                        apiResponse={apiResponse}
-                        triggerFetch={triggerFetch}
-                        setResponse={setResponse}
-                        setErrorMessage={setErrorMessage}
-                    />
-                    <ForwardTurn
-                        pauseRefresh={pauseRefresh}
-                        apiResponse={apiResponse}
-                        triggerFetch={triggerFetch}
                         setResponse={setResponse}
                         setErrorMessage={setErrorMessage}
                     />
                 </div>
-                <div className="flex w-full p-4 justify-around">
-                    {this.error(apiResponse)}
-                </div>
-                <ControlDefconStatus
-                    defcon={apiResponse.defcon}
-                    triggerFetch={triggerFetch}
-                    pauseRefresh={pauseRefresh}
-                    apiResponse={apiResponse}
-                    setResponse={setResponse}
-                    setErrorMessage={setErrorMessage}
-                />
             </React.Fragment>
         );
     }
