@@ -29,7 +29,7 @@ export default async function handler(
     }
 
     if (turn.active) {
-        turn = await mongo.setBreakingNews(body.breakingNews, body.number);
+        turn = await mongo.setBreakingNews(body.breakingNews);
         res.status(200).json(toApiResponse(turn));
     } else {
         res.status(400).json({

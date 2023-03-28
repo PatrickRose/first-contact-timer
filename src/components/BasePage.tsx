@@ -3,7 +3,7 @@ import { PathReporter } from "io-ts/PathReporter";
 import React from "react";
 import TurnCounter from "./TurnCounter";
 import BreakingNews from "./BreakingNews";
-import { ActiveTabs, ApiResponse, NewsItem } from "../types/types";
+import { ActiveTabs, ApiResponse } from "../types/types";
 import { ApiResponseDecode } from "../types/io-ts-def";
 import Head from "next/head";
 import { NewsFeed } from "./NewsFeed";
@@ -190,23 +190,23 @@ export default abstract class BaseApp extends React.Component<
         const { phase, turnNumber, phaseEnd, active, breakingNews } =
             apiResponse;
 
+        breakingNews.sort((a, b) => {
+            const aDate = a.date;
+            const bDate = b.date;
+
+            if (aDate < bDate) {
+                return 1;
+            }
+
+            if (aDate > bDate) {
+                return -1;
+            }
+
+            return 0;
+        });
+
         const child = this.childComponents(apiResponse);
         const main = this.mainComponents(apiResponse);
-
-        const newsItems: NewsItem[] = [
-            {
-                newsText: "Here is some breaking news",
-                date: new Date(2022, 10, 10, 10, 10, 10).toUTCString(),
-            },
-            {
-                newsText: "Here is some more breaking news",
-                date: new Date(2022, 10, 10, 10, 0, 10).toUTCString(),
-            },
-            {
-                newsText: "Here is even more breaking news",
-                date: new Date(2022, 10, 10, 9, 10, 10).toUTCString(),
-            },
-        ];
 
         return (
             <React.Fragment>
@@ -240,7 +240,7 @@ export default abstract class BaseApp extends React.Component<
                             activeTab != "press" ? "hidden" : ""
                         } lg:block`}
                     >
-                        <NewsFeed newsItems={newsItems} />
+                        <NewsFeed newsItems={apiResponse.breakingNews} />
                     </div>
                     <div
                         className={`${
@@ -257,7 +257,7 @@ export default abstract class BaseApp extends React.Component<
                     />
                 </div>
 
-                <BreakingNews content={breakingNews} />
+                <BreakingNews newsItem={breakingNews[0]} />
             </React.Fragment>
         );
     }
