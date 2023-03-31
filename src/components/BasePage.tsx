@@ -2,6 +2,7 @@ import { isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/PathReporter";
 import React from "react";
 import TurnCounter from "./TurnCounter";
+import CurrentTurn from "./CurrentTurn";
 import BreakingNews from "./BreakingNews";
 import { ActiveTabs, ApiResponse } from "../types/types";
 import { ApiResponseDecode } from "../types/io-ts-def";
@@ -214,6 +215,14 @@ export default abstract class BaseApp extends React.Component<
                 <Head>
                     <title>First Contact - {this.title()}</title>
                 </Head>
+                <div className="fixed top-0 left-0 right-0">
+                    <CurrentTurn
+                        turn={turnNumber}
+                        phase={phase}
+                        timestamp={phaseEnd}
+                        active={active}
+                    />
+                </div>
                 <div className="flex flex-row flex-1">
                     <main
                         role="main"
@@ -237,6 +246,13 @@ export default abstract class BaseApp extends React.Component<
                                     active={active}
                                 />
                                 {main}
+                            </div>
+                            <div
+                                className={`${
+                                    activeTab != "home" ? "hidden" : "block"
+                                } lg:hidden pb-24 `}
+                            >
+                                <LogoBlock />
                             </div>
                             <div
                                 className={`${
@@ -267,7 +283,6 @@ export default abstract class BaseApp extends React.Component<
                         >
                             <DefconStatuses defcon={apiResponse.defcon} />
                         </div>
-
                         <div
                             className="hidden lg:block"
                         >

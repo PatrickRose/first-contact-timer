@@ -31,8 +31,16 @@ const TurnTimer = function TurnTimer(props: {
     let paused;
 
     if (!active) {
+
+        const pausedClass = 
+            mobile == true
+                ? "lg:hidden"
+                : "hidden lg:block";
+
         paused = (
-            <p className="py-3 px-6 bg-zinc-600 text-white rounded alert alert-danger text-3xl">
+            <p 
+                className={`${pausedClass} py-3 px-6 bg-zinc-600 text-white rounded alert alert-danger text-3xl`}
+            >
                 GAME PAUSED
             </p>
         );
