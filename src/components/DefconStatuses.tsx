@@ -16,7 +16,6 @@ function DefconStateInfo({ inner, flex }: { inner: string; flex?: boolean }) {
     return <div className={`pl-4 ${flex ? "flex-1" : ""}`}>{inner}</div>;
 }
 
-
 export const DEFCON_STATE_TO_HUMAN_STATE: Record<
     keyof Defcon,
     React.ReactNode
@@ -73,23 +72,36 @@ export const DEFCON_STATE_TO_HUMAN_STATE: Record<
 
 export const BACKGROUNDS: Record<
     DefconStatus,
-    { activeBackground: string, background: string; activeBorder: string; inactiveBorder: string }
+    {
+        activeBackground: string;
+        background: string;
+        activeBorder: string;
+        inactiveBorder: string;
+    }
 > = {
-    hidden: { activeBackground: "bg-gray-700", background: "bg-gray-700", activeBorder: "", inactiveBorder: "" },
+    hidden: {
+        activeBackground: "bg-gray-700",
+        background: "bg-gray-700",
+        activeBorder: "",
+        inactiveBorder: "",
+    },
     1: {
-        activeBackground: "bg-gradient-to-l from-defcon-1-light to-defcon-1-dark",
+        activeBackground:
+            "bg-gradient-to-l from-defcon-1-light to-defcon-1-dark",
         background: "bg-defcon-1-light",
         activeBorder: "border-red-500",
         inactiveBorder: "border-red-300",
     },
     2: {
-        activeBackground: "bg-gradient-to-l from-defcon-2-light to-defcon-2-dark",
+        activeBackground:
+            "bg-gradient-to-l from-defcon-2-light to-defcon-2-dark",
         background: "bg-defcon-2-light",
         activeBorder: "border-orange-300",
         inactiveBorder: "border-orange-100",
     },
     3: {
-        activeBackground: "bg-gradient-to-l from-defcon-3-light to-defcon-3-dark",
+        activeBackground:
+            "bg-gradient-to-l from-defcon-3-light to-defcon-3-dark",
         background: "bg-defcon-3-light",
         activeBorder: "border-green-300",
         inactiveBorder: "border-green-100",
@@ -105,7 +117,7 @@ function DefconState({
 }) {
     const backgroundDef = BACKGROUNDS[defconNumber];
     const background: string[] = [
-//        active ? backgroundDef.activeBorder : backgroundDef.inactiveBorder,
+        //        active ? backgroundDef.activeBorder : backgroundDef.inactiveBorder,
     ];
 
     if (active) {
@@ -122,11 +134,7 @@ function DefconState({
                 " "
             )}`}
         >
-            <div
-                className={`text-2xl`}
-            >
-            {defconNumber}
-            </div>
+            <div className={`text-2xl`}>{defconNumber}</div>
         </div>
     );
 }
@@ -152,7 +160,9 @@ function DisplayDefconStatus({ defcon }: DefconProps) {
     return (
         <div className="flex justify-center mx-1 pb-24 lg:pb-0">
             <div className="w-full w-max-[400px]">
-                <h3 className="text-2xl mt-2 mb-6 uppercase text-center lg:w-1/2 mx-auto">DEFCON Levels</h3>
+                <h3 className="text-2xl mt-2 mb-6 uppercase text-center lg:w-1/2 mx-auto">
+                    DEFCON Levels
+                </h3>
                 <div className="pt-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
                     {Object.entries(defcon).map(([country, status]) => {
                         if (status != 1) return "";

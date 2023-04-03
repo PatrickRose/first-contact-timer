@@ -15,7 +15,6 @@ function DisplayManageTabSwitch({
     setActiveTab: (newActive: ActiveTabs) => void;
     manageTabTitle: string;
 }) {
-
     const activeClass = "bg-zinc-600";
     const baseClass = "flex-1 text-lg transition pt-2";
 
@@ -29,13 +28,10 @@ function DisplayManageTabSwitch({
             onClick={() => setActiveTab("manage")}
         >
             <Image className="mx-auto" src={Icon_Manage} alt="" width={40} />
-            <span>
-                {manageTabTitle}
-            </span>
-        </button>   
+            <span>{manageTabTitle}</span>
+        </button>
     );
 }
-
 
 export default function TabSwitcher({
     activeTab,
@@ -58,9 +54,7 @@ export default function TabSwitcher({
                 onClick={() => setActiveTab("home")}
             >
                 <Image className="mx-auto" src={Icon_Game} alt="" width={40} />
-                <span>
-                    Game
-                </span>
+                <span>Game</span>
             </button>
             <button
                 className={`${baseClass} ${
@@ -68,10 +62,13 @@ export default function TabSwitcher({
                 }`}
                 onClick={() => setActiveTab("press")}
             >
-                <Image className="mx-auto" src={Icon_NewsFeed} alt="" width={40} />
-                <span>
-                    News
-                </span>
+                <Image
+                    className="mx-auto"
+                    src={Icon_NewsFeed}
+                    alt=""
+                    width={40}
+                />
+                <span>News</span>
             </button>
             <button
                 className={`${baseClass} ${
@@ -79,12 +76,15 @@ export default function TabSwitcher({
                 }`}
                 onClick={() => setActiveTab("defcon")}
             >
-                <Image className="mx-auto" src={Icon_DefCon} alt="" width={40} />
-                <span>
-                    Defcon
-                </span>
+                <Image
+                    className="mx-auto"
+                    src={Icon_DefCon}
+                    alt=""
+                    width={40}
+                />
+                <span>Defcon</span>
             </button>
-            <DisplayManageTabSwitch 
+            <DisplayManageTabSwitch
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 manageTabTitle={manageTabTitle}

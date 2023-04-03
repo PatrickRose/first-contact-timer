@@ -68,10 +68,16 @@ class PressForm extends React.Component<FormProps, FormState> {
 
         return (
             <div className="container lg:p-4 pb-24 lg:pb-4 lg:bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
-                <h2 className="text-3xl mt-2 mb-6 uppercase text-center">Press Tools</h2>
+                <h2 className="text-3xl mt-2 mb-6 uppercase text-center">
+                    Press Tools
+                </h2>
                 <div className="flex flex-col">
                     <form onSubmit={(e) => this.submitForm(e)} className="mt-2">
-                        <label id="breaking-news-label" className="pb-4 pt-0 block text-xl text-center" htmlFor="breaking-news">
+                        <label
+                            id="breaking-news-label"
+                            className="pb-4 pt-0 block text-xl text-center"
+                            htmlFor="breaking-news"
+                        >
                             Enter breaking news headline here:
                         </label>
                         <div className="block">
@@ -91,7 +97,6 @@ class PressForm extends React.Component<FormProps, FormState> {
                                 {buttonMsg}
                             </button>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -118,5 +123,4 @@ export default class PressApp extends BaseApp {
     protected tabTitle(): string {
         return "Press";
     }
-
 }

@@ -37,7 +37,6 @@ const CurrentTurnTimer = function CurrentTurnTimer(props: {
     );
 };
 
-
 export default function CurrentTurn(props: CurrentTurnCounterProps) {
     const { turn, phase, timestamp, active } = props;
 
@@ -45,9 +44,7 @@ export default function CurrentTurn(props: CurrentTurnCounterProps) {
         ? "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark opacity-50"
         : "bg-turn-counter-current";
 
-    const textClass = isBreatherPhase(phase)
-        ? ""
-        : "";
+    const textClass = isBreatherPhase(phase) ? "" : "";
 
     const turnText = isBreatherPhase(phase)
         ? `Turn ${turn}, next phase:`
@@ -59,21 +56,25 @@ export default function CurrentTurn(props: CurrentTurnCounterProps) {
 
     return (
         <React.Fragment>
-            
             <div className="flex lg:flex-wrap flex-col lg:flex-row mt-0 bg-black">
                 <div
                     className={`lg:hidden flex flex-1 flex-row items-center justify-between p-3 transition duration-500 text-white delay-250 ${backgroundClass}`}
                 >
-                    <div>   
-                        <p className={`pb-0 mb-0 text-xl ${textClass}`}>{turnText}</p>
-                        <p className={`pb-0 mb-0 text-2xl ${textClass}`}>{phaseText}</p>
+                    <div>
+                        <p className={`pb-0 mb-0 text-xl ${textClass}`}>
+                            {turnText}
+                        </p>
+                        <p className={`pb-0 mb-0 text-2xl ${textClass}`}>
+                            {phaseText}
+                        </p>
                     </div>
-                    <CurrentTurnTimer timestamp={timestamp} active={active} mobile={true} />
+                    <CurrentTurnTimer
+                        timestamp={timestamp}
+                        active={active}
+                        mobile={true}
+                    />
                 </div>
-               
             </div>
         </React.Fragment>
     );
-
-
 }

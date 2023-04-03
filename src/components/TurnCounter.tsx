@@ -31,14 +31,10 @@ const TurnTimer = function TurnTimer(props: {
     let paused;
 
     if (!active) {
-
-        const pausedClass = 
-            mobile == true
-                ? "lg:hidden"
-                : "hidden lg:block";
+        const pausedClass = mobile == true ? "lg:hidden" : "hidden lg:block";
 
         paused = (
-            <p 
+            <p
                 className={`${pausedClass} py-3 px-6 bg-zinc-600 text-white rounded alert alert-danger text-3xl`}
             >
                 GAME PAUSED
@@ -48,7 +44,7 @@ const TurnTimer = function TurnTimer(props: {
         paused = <React.Fragment />;
     }
 
-    const textClass = 
+    const textClass =
         mobile == true
             ? "lg:hidden text-6xl py-2"
             : "hidden lg:block text-8xl py-8";
@@ -94,14 +90,11 @@ export function PhaseCount({
     const backgroundClass =
         phase == active
             ? "bg-turn-counter-current text-white delay-250 border-yellow-300"
-            : phase > active 
-                ? "bg-turn-counter-future text-white border-black"
-                : "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
+            : phase > active
+            ? "bg-turn-counter-future text-white border-black"
+            : "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
 
-    const subTextClass = 
-        phase == active
-            ? "block"
-            : "hidden";
+    const subTextClass = phase == active ? "block" : "hidden";
 
     const visibleOnPhone = [
         active - 2,
@@ -120,7 +113,7 @@ export function PhaseCount({
     if (PHASE_LABELS[phase] === null) {
         return null;
     }
-//${visibleClass}
+    //${visibleClass}
     return (
         <div
             className={`md:flex flex-1 flex-col  p-3 transition duration-500 border-4 ${backgroundClass}`}
@@ -140,8 +133,12 @@ export default function TurnCounter(props: TurnCounterProps) {
 
     return (
         <React.Fragment>
-            <h3 className="lg:hidden text-2xl mt-2 mb-6 uppercase text-center">Game Timer</h3>
-            <h1 className="text-4xl lg:text-5xl mt-4 mb-8 uppercase ">{text}</h1>
+            <h3 className="lg:hidden text-2xl mt-2 mb-6 uppercase text-center">
+                Game Timer
+            </h3>
+            <h1 className="text-4xl lg:text-5xl mt-4 mb-8 uppercase ">
+                {text}
+            </h1>
             <TurnTimer timestamp={timestamp} active={active} mobile={true} />
             <div className="flex lg:flex-wrap flex-col lg:flex-row  mt-4">
                 {PHASE_LISTS.map((val) => {

@@ -3,8 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-
-    @import url('https://fonts.googleapis.com/css?family=Century+Gothic:regular,bold,italic&subset=latin,latin-ext');
+    @import url("https://fonts.googleapis.com/css?family=Century+Gothic:regular,bold,italic&subset=latin,latin-ext");
 
     body {
         @apply flex flex-col min-h-screen bg-black text-white;

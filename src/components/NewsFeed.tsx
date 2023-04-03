@@ -20,7 +20,6 @@ export function BreakingNewsText({ item }: { item: NewsItem }) {
     );
 }
 
-
 export function NewsFeedNewsText({ item }: { item: NewsItem }) {
     return (
         <div>
@@ -47,7 +46,10 @@ function NewsItem({ item }: { item: NewsItem }) {
                 </div>
             </div>
             <div className="flex flex-col flex-1 px-2 pt-2">
-                <div className="text-gray-500 text-left text-sm">Turn {item.turn}, phase {item.phase} | {new Date(item.date).toLocaleString()}</div>
+                <div className="text-gray-500 text-left text-sm">
+                    Turn {item.turn}, phase {item.phase} |{" "}
+                    {new Date(item.date).toLocaleString()}
+                </div>
                 <NewsFeedNewsText item={item} />
             </div>
         </div>
@@ -57,7 +59,9 @@ function NewsItem({ item }: { item: NewsItem }) {
 export function NewsFeed({ newsItems }: { newsItems: NewsItem[] }) {
     return (
         <div className="py-4 pb-24">
-            <h3 className="text-2xl mt-2 mb-6 uppercase text-center">GNN News Feed</h3>
+            <h3 className="text-2xl mt-2 mb-6 uppercase text-center">
+                GNN News Feed
+            </h3>
             {newsItems.map((item, index) => (
                 <div className="py-2" key={index}>
                     <hr className="border-b-1 border-gray-500" />

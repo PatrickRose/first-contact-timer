@@ -227,14 +227,18 @@ export default abstract class BaseApp extends React.Component<
                     <main
                         role="main"
                         className={`${
-                                    activeTab != "home" && activeTab != "manage" && activeTab != "press" ? "hidden" : ""
-                                } lg:flex container flex-1 text-center h-screen 
+                            activeTab != "home" &&
+                            activeTab != "manage" &&
+                            activeTab != "press"
+                                ? "hidden"
+                                : ""
+                        } lg:flex container flex-1 text-center h-screen 
                                 flex-col 
                                 justify-between justify-items-stretch items-center
                                 `}
                     >
                         <div>
-                            <div 
+                            <div
                                 className={`${
                                     activeTab != "home" ? "hidden" : ""
                                 } lg:block py-4 lg:p-8 flex flex-col items-center flex-1`}
@@ -266,15 +270,17 @@ export default abstract class BaseApp extends React.Component<
                                     activeTab != "press" ? "hidden" : ""
                                 } lg:hidden`}
                             >
-                               <NewsFeed newsItems={apiResponse.breakingNews} />
+                                <NewsFeed
+                                    newsItems={apiResponse.breakingNews}
+                                />
                             </div>
                         </div>
                         <BreakingNews newsItem={breakingNews[0]} />
                     </main>
                     <div
                         className={`${
-                                activeTab != "defcon" ? "hidden" : ""
-                            } lg:flex flex-col justify-between border-l-4 border-turn-counter-past-light w-full lg:w-auto`}
+                            activeTab != "defcon" ? "hidden" : ""
+                        } lg:flex flex-col justify-between border-l-4 border-turn-counter-past-light w-full lg:w-auto`}
                     >
                         <div
                             className={`${
@@ -283,9 +289,7 @@ export default abstract class BaseApp extends React.Component<
                         >
                             <DefconStatuses defcon={apiResponse.defcon} />
                         </div>
-                        <div
-                            className="hidden lg:block"
-                        >
+                        <div className="hidden lg:block">
                             <LogoBlock />
                         </div>
                     </div>
@@ -297,7 +301,6 @@ export default abstract class BaseApp extends React.Component<
                     }
                     manageTabTitle={this.tabTitle()}
                 />
-
             </React.Fragment>
         );
     }
@@ -305,5 +308,4 @@ export default abstract class BaseApp extends React.Component<
     protected abstract title(): string;
 
     protected abstract tabTitle(): string;
-    
 }
