@@ -19,7 +19,7 @@ function DisplayManageTabSwitch({
     const activeClass = "bg-zinc-600";
     const baseClass = "flex-1 text-lg transition pt-2";
 
-    if (manageTabTitle == "") return "";
+    if (manageTabTitle == "") return null;
 
     return (
         <button
