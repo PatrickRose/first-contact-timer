@@ -295,6 +295,7 @@ export default abstract class BaseApp extends React.Component<
                     setActiveTab={(newActive: ActiveTabs) =>
                         this.setState({ activeTab: newActive })
                     }
+                    manageTabTitle={this.tabTitle()}
                 />
 
             </React.Fragment>
@@ -302,4 +303,7 @@ export default abstract class BaseApp extends React.Component<
     }
 
     protected abstract title(): string;
+
+    protected abstract tabTitle(): string;
+    
 }

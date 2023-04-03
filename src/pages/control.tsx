@@ -463,6 +463,10 @@ export default class ControlApp extends BaseApp {
         return "Control commands";
     }
 
+    protected tabTitle(): string {
+        return "Control";
+    }
+
     protected error(apiResponse: ApiResponse): JSX.Element {
         if (this.state.errorMessage !== undefined) {
             return (

@@ -114,4 +114,9 @@ export default class PressApp extends BaseApp {
     protected title(): string {
         return "Press";
     }
+
+    protected tabTitle(): string {
+        return "Press";
+    }
+
 }
