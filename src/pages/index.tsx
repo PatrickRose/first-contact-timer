@@ -7,6 +7,10 @@ class PlayerApp extends BaseApp {
     protected title(): string {
         return "Player";
     }
+
+    protected tabTitle(): string {
+        return "";
+    }
 }
 
 export default PlayerApp;

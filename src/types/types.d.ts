@@ -10,7 +10,6 @@ export type ControlAPI = t.TypeOf<typeof types.ControlAPIDecode>;
 
 export type Turn = t.TypeOf<typeof types.TurnDecode>;
 export type BreakingNews = t.TypeOf<typeof types.BreakingNewsDecode>;
-export type BreakingNewsKey = keyof BreakingNews;
 
 export type ControlAction = Promise<Either<string, Turn>>;
 
@@ -18,4 +17,4 @@ export type Defcon = t.TypeOf<typeof types.DefconDecode>;
 export type DefconStatus = t.TypeOf<typeof types.DefconStatusDecode>;
 export type DefconAPIBody = t.TypeOf<typeof types.DefconAPIBodyDecode>;
 
-export type ActiveTabs = "home" | "defcon" | "press";
+export type ActiveTabs = "home" | "defcon" | "press" | "manage";
