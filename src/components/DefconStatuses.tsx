@@ -1,7 +1,5 @@
 import * as React from "react";
 import { Defcon, DefconStatus } from "../types/types";
-import { useState } from "react";
-import { Transition } from "@headlessui/react";
 
 interface DefconProps {
     defcon: Defcon;
@@ -157,56 +155,47 @@ export function CountryDefcon({ stateName, status }: CountryDefconProps) {
 }
 
 function DisplayDefconStatus({ defcon }: DefconProps) {
+    const states: Record<DefconStatus, (keyof Defcon)[]> = {
+        hidden: [],
+        1: [],
+        2: [],
+        3: [],
+    };
+
+    Object.entries(defcon).forEach(([country, defconStatus]) =>
+        states[defconStatus].push(country as keyof Defcon)
+    );
+
     return (
         <div className="flex justify-center mx-1 pb-24 lg:pb-0">
             <div className="w-full w-max-[400px]">
                 <h3 className="text-2xl mt-2 mb-6 uppercase text-center lg:w-1/2 mx-auto">
                     DEFCON Levels
                 </h3>
-                <div className="pt-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
-                    {Object.entries(defcon).map(([country, status]) => {
-                        if (status != 1) return "";
-                        return (
-                            <CountryDefcon
-                                key={country}
-                                stateName={country as keyof Defcon}
-                                status={status}
-                            />
-                        );
-                    })}
-                </div>
-                <div className="pt-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
-                    {Object.entries(defcon).map(([country, status]) => {
-                        if (status != 2) return "";
-                        return (
-                            <CountryDefcon
-                                key={country}
-                                stateName={country as keyof Defcon}
-                                status={status}
-                            />
-                        );
-                    })}
-                </div>
-                <div className="pt-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4">
-                    {Object.entries(defcon).map(([country, status]) => {
-                        if (status != 3) return "";
-                        return (
-                            <CountryDefcon
-                                key={country}
-                                stateName={country as keyof Defcon}
-                                status={status}
-                            />
-                        );
-                    })}
-                </div>
+                {Object.entries(states).map(([state, countries]) => {
+                    return (
+                        <div
+                            key={state}
+                            className="pt-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4"
+                        >
+                            {countries.map((country) => {
+                                return (
+                                    <CountryDefcon
+                                        key={country}
+                                        stateName={country}
+                                        status={state as DefconStatus}
+                                    />
+                                );
+                            })}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
 }
 
 export default function DefconStatuses({ defcon }: DefconProps) {
-    const [show, setShow] = useState<boolean>(false);
-
     return (
         <div className="py-4">
             <div className="block w-full">
