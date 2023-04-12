@@ -24,7 +24,7 @@ export function NewsFeedNewsText({ item }: { item: NewsItem }) {
     return (
         <div>
             {item.newsText
-                ?.replace("\n\n", "\n")
+                .replace("\n\n", "\n")
                 .split("\n")
                 .map((val, key) => {
                     return (
