@@ -17,4 +17,4 @@ export type Defcon = t.TypeOf<typeof types.DefconDecode>;
 export type DefconStatus = t.TypeOf<typeof types.DefconStatusDecode>;
 export type DefconAPIBody = t.TypeOf<typeof types.DefconAPIBodyDecode>;
 
-export type ActiveTabs = "home" | "defcon" | "press";
+export type ActiveTabs = "home" | "defcon" | "press" | "manage";

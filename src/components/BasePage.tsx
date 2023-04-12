@@ -2,6 +2,7 @@ import { isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/PathReporter";
 import React from "react";
 import TurnCounter from "./TurnCounter";
+import CurrentTurn from "./CurrentTurn";
 import BreakingNews from "./BreakingNews";
 import { ActiveTabs, ApiResponse } from "../types/types";
 import { ApiResponseDecode } from "../types/io-ts-def";
@@ -9,6 +10,7 @@ import Head from "next/head";
 import { NewsFeed } from "./NewsFeed";
 import DefconStatuses from "./DefconStatuses";
 import TabSwitcher from "./TabSwitcher";
+import LogoBlock from "./LogoBlock";
 
 type BaseAppState = {
     fetchFailed: boolean;
@@ -213,54 +215,97 @@ export default abstract class BaseApp extends React.Component<
                 <Head>
                     <title>First Contact - {this.title()}</title>
                 </Head>
-                <main
-                    role="main"
-                    className="container flex-1 text-center h-full flex flex-col justify-center justify-items-stretch items-center"
-                >
-                    <div className="flex flex-col justify-center items-center flex-1">
-                        <TurnCounter
-                            turn={turnNumber}
-                            phase={phase}
-                            timestamp={phaseEnd}
-                            active={active}
-                        />
-                        {main}
-                    </div>
-                </main>
-                <div>
-                    <div
+                <div className="fixed top-0 left-0 right-0">
+                    <CurrentTurn
+                        turn={turnNumber}
+                        phase={phase}
+                        timestamp={phaseEnd}
+                        active={active}
+                    />
+                </div>
+                <div className="flex flex-row flex-1">
+                    <main
+                        role="main"
                         className={`${
-                            activeTab != "home" ? "hidden" : ""
-                        } lg:block`}
+                            activeTab != "home" &&
+                            activeTab != "manage" &&
+                            activeTab != "press"
+                                ? "hidden"
+                                : ""
+                        } lg:flex container flex-1 text-center h-screen 
+                                flex-col 
+                                justify-between justify-items-stretch items-center
+                                `}
                     >
-                        {child}
-                    </div>
-                    <div
-                        className={`${
-                            activeTab != "press" ? "hidden" : ""
-                        } lg:block`}
-                    >
-                        <NewsFeed newsItems={apiResponse.breakingNews} />
-                    </div>
+                        <div>
+                            <div
+                                className={`${
+                                    activeTab != "home" ? "hidden" : ""
+                                } lg:block py-4 lg:p-8 flex flex-col items-center flex-1`}
+                            >
+                                <TurnCounter
+                                    turn={turnNumber}
+                                    phase={phase}
+                                    timestamp={phaseEnd}
+                                    active={active}
+                                />
+                                {main}
+                            </div>
+                            <div
+                                className={`${
+                                    activeTab != "home" ? "hidden" : "block"
+                                } lg:hidden pb-24 `}
+                            >
+                                <LogoBlock />
+                            </div>
+                            <div
+                                className={`${
+                                    activeTab != "manage" ? "hidden" : ""
+                                } lg:block`}
+                            >
+                                {child}
+                            </div>
+                            <div
+                                className={`${
+                                    activeTab != "press" ? "hidden" : ""
+                                } lg:hidden`}
+                            >
+                                <NewsFeed
+                                    newsItems={apiResponse.breakingNews}
+                                />
+                            </div>
+                        </div>
+                        <BreakingNews newsItem={breakingNews[0]} />
+                    </main>
                     <div
                         className={`${
                             activeTab != "defcon" ? "hidden" : ""
-                        } lg:block`}
+                        } lg:flex flex-col justify-between border-l-4 border-turn-counter-past-light w-full lg:w-auto`}
                     >
-                        <DefconStatuses defcon={apiResponse.defcon} />
+                        <div
+                            className={`${
+                                activeTab != "defcon" ? "hidden" : ""
+                            } lg:block`}
+                        >
+                            <DefconStatuses defcon={apiResponse.defcon} />
+                        </div>
+                        <div className="hidden lg:block">
+                            <LogoBlock />
+                        </div>
                     </div>
-                    <TabSwitcher
-                        activeTab={activeTab}
-                        setActiveTab={(newActive: ActiveTabs) =>
-                            this.setState({ activeTab: newActive })
-                        }
-                    />
                 </div>
-
-                <BreakingNews newsItem={breakingNews[0]} />
+                <TabSwitcher
+                    activeTab={activeTab}
+                    setActiveTab={(newActive: ActiveTabs) =>
+                        this.setState({ activeTab: newActive })
+                    }
+                    manageTabTitle={this.tabTitle()}
+                />
             </React.Fragment>
         );
     }
 
     protected abstract title(): string;
+
+    protected abstract tabTitle(): string;
 }

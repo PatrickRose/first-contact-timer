@@ -6,10 +6,7 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: [
-                    '"Century Gothic Regular"',
-                    ...defaultTheme.fontFamily.sans,
-                ],
+                sans: ['"Century Gothic"', ...defaultTheme.fontFamily.sans],
             },
             animation: {
                 "marquee-1": "slide-1 10s linear infinite",
@@ -32,6 +29,16 @@ module.exports = {
             },
             colors: {
                 "first-contact": "#757380",
+                "turn-counter-current": "#257a25",
+                "turn-counter-future": "#123812",
+                "turn-counter-past-light": "#1a1a1a",
+                "turn-counter-past-dark": "#333333",
+                "defcon-1-light": "#751616",
+                "defcon-1-dark": "#590e07",
+                "defcon-2-light": "#634011",
+                "defcon-2-dark": "#472e0c",
+                "defcon-3-light": "#1a521a",
+                "defcon-3-dark": "#113311",
             },
         },
     },
