@@ -5,6 +5,7 @@ import Icon_Game from "../../public/Icon-VLHG.png";
 import Icon_NewsFeed from "../../public/GNNLogo.png";
 import Icon_DefCon from "../../public/Icon-DefCon.png";
 import Icon_Manage from "../../public/Icon-Manage.png";
+import { useEffect } from "react";
 
 function DisplayManageTabSwitch({
     activeTab,
@@ -44,6 +45,8 @@ export default function TabSwitcher({
 }) {
     const activeClass = "bg-zinc-600";
     const baseClass = "flex-1 text-lg transition pt-2";
+
+    useEffect(() => window.scrollTo({ top: 0 }), [activeTab]);
 
     return (
         <div className="flex w-full lg:hidden fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black">
