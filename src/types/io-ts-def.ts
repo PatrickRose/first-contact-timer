@@ -77,4 +77,24 @@ export const DefconAPIBodyDecode = t.type({
     stateName: t.keyof(DefconDecode.props),
     newStatus: DefconStatusDecode,
 });
-``;
+
+export const UserDecode = t.type({
+    isLoggedIn: t.boolean,
+    login: t.string,
+    passwordNeedsReset: t.boolean,
+});
+
+export const LoginFailedDecode = t.type({
+    message: t.string,
+});
+
+export const DBUserDecode = t.type({
+    _id: t.string,
+    password: t.string,
+    passwordNeedsReset: t.boolean,
+});
+
+export const LoginFormValuesDecode = t.type({
+    username: t.string,
+    password: t.string,
+});
