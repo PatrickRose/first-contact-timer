@@ -37,7 +37,7 @@
         @apply animate-marquee-3 lg:[animation-duration:45s] xl:[animation-duration:60s];
     }
 
-    input[type="text"] {
+    input {
         @apply text-black;
     }
 }

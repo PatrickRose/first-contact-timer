@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import * as types from "./io-ts-def";
-import { Either } from "fp-ts/Either";
+import {Either} from "fp-ts/Either";
 
 export type ApiResponse = t.TypeOf<typeof types.ApiResponseDecode>;
 export type Phase = t.TypeOf<typeof types.PhaseDecode>;
@@ -23,3 +23,10 @@ export type User = t.TypeOf<typeof types.UserDecode>;
 
 export type LoginFailed = t.TypeOf<typeof types.LoginFailedDecode>;
 export type DBUser = t.TypeOf<typeof types.DBUserDecode>;
+
+export type CreateGameRequest = t.TypeOf<typeof types.CreateGameRequestDecode>;
+export type CreateGameResponse = t.TypeOf<typeof types.CreateGameResponseDecode>;
+export type GameType = t.TypeOf<typeof types.GameTypeDecode>;
+
+export type Game = t.TypeOf<typeof types.GameDecode>;
+export type SetupInformation = t.TypeOf<typeof types.SetupInformationDecode>;
