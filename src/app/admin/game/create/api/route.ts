@@ -15,7 +15,7 @@ const GAME_TYPES: Record<GameType, { setupInformation: Game["setupInformation"],
                 {
                     title: "Team Time",
                     length: 10,
-                    hidden: true,
+                    hidden: false,
                 },
                 {
                     title: "Action Phase 1 begins in",
@@ -25,7 +25,7 @@ const GAME_TYPES: Record<GameType, { setupInformation: Game["setupInformation"],
                 {
                     title: "Action Phase 1",
                     length: 20,
-                    hidden: true
+                    hidden: false
                 },
                 {
                     title: "Action Phase 2 begins in",
@@ -35,7 +35,7 @@ const GAME_TYPES: Record<GameType, { setupInformation: Game["setupInformation"],
                 {
                     title: "Action Phase 2",
                     length: 10,
-                    hidden: true
+                    hidden: false
                 },
                 {
                     title: "Action Phase 3 begins in",
@@ -45,7 +45,7 @@ const GAME_TYPES: Record<GameType, { setupInformation: Game["setupInformation"],
                 {
                     title: "Action Phase 3",
                     length: 5,
-                    hidden: true
+                    hidden: false
                 },
                 {
                     title: "Press Broadcast begins in",
@@ -55,7 +55,7 @@ const GAME_TYPES: Record<GameType, { setupInformation: Game["setupInformation"],
                 {
                     title: "Press Broadcast",
                     length: 5,
-                    hidden: true
+                    hidden: false
                 },
                 {
                     title: "Next turn (Team Time) begins in",
@@ -71,14 +71,46 @@ const GAME_TYPES: Record<GameType, { setupInformation: Game["setupInformation"],
             {
                 componentType: "Defcon",
                 countries: {
-                    China: 3,
-                    France: 3,
-                    Russia: 3,
-                    UnitedStates: 3,
-                    UnitedKingdom: 3,
-                    Pakistan: 3,
-                    India: 3,
-                    Israel: "hidden",
+                    China: {
+                        shortName: "🇨🇳",
+                        countryName: "China",
+                        status: 3
+                    },
+                    France: {
+                        shortName: "🇫🇷",
+                        countryName: "France",
+                        status: 3
+                    },
+                    Russia: {
+                        shortName: "🇷🇺",
+                        countryName: "Russia",
+                        status: 3
+                    },
+                    UnitedStates: {
+                        shortName: "🇺🇸",
+                        countryName: "United States",
+                        status: 3
+                    },
+                    UnitedKingdom: {
+                        shortName: "🇬🇧",
+                        countryName: "United Kingdom",
+                        status: 3
+                    },
+                    Pakistan: {
+                        shortName: "🇵🇰",
+                        countryName: "Pakistan",
+                        status: 3
+                    },
+                    India: {
+                        shortName: "🇮🇳",
+                        countryName: "India",
+                        status: 3
+                    },
+                    Israel: {
+                        shortName: "🇮🇱",
+                        countryName: "Israel",
+                        status: "hidden"
+                    },
                 }
             }
         ]

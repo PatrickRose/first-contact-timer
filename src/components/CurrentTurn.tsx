@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Phase } from "../types/types";
+import {Phase, SetupInformation} from "../types/types";
 import {
     lengthOfPhase,
     PHASE_LISTS,
@@ -9,10 +9,11 @@ import {
 } from "../server/turn";
 
 interface CurrentTurnCounterProps {
-    turn: number;
-    phase: Phase;
-    timestamp: number;
-    active: boolean;
+    turn: number,
+    phase: number,
+    timestamp: number,
+    active: boolean,
+    phaseInformation: SetupInformation["phases"][0]
 }
 
 const CurrentTurnTimer = function CurrentTurnTimer(props: {
@@ -38,21 +39,19 @@ const CurrentTurnTimer = function CurrentTurnTimer(props: {
 };
 
 export default function CurrentTurn(props: CurrentTurnCounterProps) {
-    const { turn, phase, timestamp, active } = props;
+    const { turn, phase, timestamp, active, phaseInformation } = props;
 
-    const backgroundClass = isBreatherPhase(phase)
+    const backgroundClass = phaseInformation.hidden
         ? "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark opacity-50"
         : "bg-turn-counter-current";
 
-    const textClass = isBreatherPhase(phase) ? "" : "";
+    const textClass = "";
 
-    const turnText = isBreatherPhase(phase)
+    const turnText = phaseInformation.hidden
         ? `Turn ${turn}, next phase:`
         : `Turn ${turn}, current phase:`;
 
-    const phaseText = isBreatherPhase(phase)
-        ? `${PHASE_TITLES[nextPhase(phase)]}`
-        : `${PHASE_TITLES[phase]}`;
+    const phaseText = phaseInformation.title;
 
     return (
         <React.Fragment>

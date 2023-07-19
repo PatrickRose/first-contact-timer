@@ -30,3 +30,6 @@ export type GameType = t.TypeOf<typeof types.GameTypeDecode>;
 
 export type Game = t.TypeOf<typeof types.GameDecode>;
 export type SetupInformation = t.TypeOf<typeof types.SetupInformationDecode>;
+export type DefconComponent = t.TypeOf<typeof types.DefconComponentDecode>;
+export type DefconCountry = t.TypeOf<typeof types.DefconCountryDecode>;
+export type WeatherStatus = t.TypeOf<typeof types.WeatherStatusDecode>;

@@ -1,72 +1,18 @@
 import * as React from "react";
-import { Defcon, DefconStatus } from "../types/types";
+import {Defcon, DefconComponent, DefconCountry, DefconStatus} from "../types/types";
 
 interface DefconProps {
-    defcon: Defcon;
+    defcon: DefconComponent["countries"];
 }
 
 interface CountryDefconProps {
-    stateName: keyof Defcon;
+    country: DefconComponent["countries"][0];
     status: DefconStatus;
 }
 
-function DefconStateInfo({ inner, flex }: { inner: string; flex?: boolean }) {
+function DefconStateInfo({inner, flex}: { inner: string; flex?: boolean }) {
     return <div className={`pl-4 ${flex ? "flex-1" : ""}`}>{inner}</div>;
 }
-
-export const DEFCON_STATE_TO_HUMAN_STATE: Record<
-    keyof Defcon,
-    React.ReactNode
-> = {
-    China: (
-        <React.Fragment>
-            <DefconStateInfo inner="🇨🇳" />
-            <DefconStateInfo inner="China" flex={true} />
-        </React.Fragment>
-    ),
-    France: (
-        <React.Fragment>
-            <DefconStateInfo inner="🇫🇷" />
-            <DefconStateInfo inner="France" flex={true} />
-        </React.Fragment>
-    ),
-    Russia: (
-        <React.Fragment>
-            <DefconStateInfo inner="🇷🇺" />
-            <DefconStateInfo inner="Russia" flex={true} />
-        </React.Fragment>
-    ),
-    UnitedStates: (
-        <React.Fragment>
-            <DefconStateInfo inner="🇺🇸" />
-            <DefconStateInfo inner="United States" flex={true} />
-        </React.Fragment>
-    ),
-    UnitedKingdom: (
-        <React.Fragment>
-            <DefconStateInfo inner="🇬🇧" />
-            <DefconStateInfo inner="United Kingdom" flex={true} />
-        </React.Fragment>
-    ),
-    Pakistan: (
-        <React.Fragment>
-            <DefconStateInfo inner="🇵🇰" />
-            <DefconStateInfo inner="Pakistan" flex={true} />
-        </React.Fragment>
-    ),
-    India: (
-        <React.Fragment>
-            <DefconStateInfo inner="🇮🇳" />
-            <DefconStateInfo inner="India" flex={true} />
-        </React.Fragment>
-    ),
-    Israel: (
-        <React.Fragment>
-            <DefconStateInfo inner="🇮🇱" />
-            <DefconStateInfo inner="Israel" flex={true} />
-        </React.Fragment>
-    ),
-};
 
 export const BACKGROUNDS: Record<
     DefconStatus,
@@ -107,9 +53,9 @@ export const BACKGROUNDS: Record<
 };
 
 function DefconState({
-    defconNumber,
-    active,
-}: {
+                         defconNumber,
+                         active,
+                     }: {
     defconNumber: DefconStatus;
     active: boolean;
 }) {
@@ -137,7 +83,7 @@ function DefconState({
     );
 }
 
-export function CountryDefcon({ stateName, status }: CountryDefconProps) {
+export function CountryDefcon({country, status}: CountryDefconProps) {
     if (status == "hidden") {
         return null;
     }
@@ -147,24 +93,23 @@ export function CountryDefcon({ stateName, status }: CountryDefconProps) {
             <div
                 className={`flex-1 flex items-center content-center justify-center text-2xl border-0 transition duration-500 rounded-l-full ${BACKGROUNDS[status].activeBackground}`}
             >
-                {DEFCON_STATE_TO_HUMAN_STATE[stateName]}
+                <DefconStateInfo inner={country.shortName} />
+                <DefconStateInfo inner={country.countryName} flex={true} />
             </div>
-            <DefconState defconNumber={status} active={true} />
+            <DefconState defconNumber={status} active={true}/>
         </div>
     );
 }
 
-function DisplayDefconStatus({ defcon }: DefconProps) {
-    const states: Record<DefconStatus, (keyof Defcon)[]> = {
+function DisplayDefconStatus({defcon}: DefconProps) {
+    const states: Record<DefconStatus, DefconCountry[]> = {
         hidden: [],
         1: [],
         2: [],
         3: [],
     };
 
-    Object.entries(defcon).forEach(([country, defconStatus]) =>
-        states[defconStatus].push(country as keyof Defcon)
-    );
+    Object.values(defcon).forEach((defconStatus) => states[defconStatus.status].push(defconStatus));
 
     return (
         <div className="flex justify-center mx-1 pb-24 lg:pb-0">
@@ -178,11 +123,11 @@ function DisplayDefconStatus({ defcon }: DefconProps) {
                             key={state}
                             className="pt-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4"
                         >
-                            {countries.map((country) => {
+                            {countries.map((country, key) => {
                                 return (
                                     <CountryDefcon
-                                        key={country}
-                                        stateName={country}
+                                        key={key}
+                                        country={country}
                                         status={state as DefconStatus}
                                     />
                                 );
@@ -195,11 +140,11 @@ function DisplayDefconStatus({ defcon }: DefconProps) {
     );
 }
 
-export default function DefconStatuses({ defcon }: DefconProps) {
+export default function DefconStatuses({defcon}: DefconProps) {
     return (
         <div className="py-4">
             <div className="block w-full">
-                <DisplayDefconStatus defcon={defcon} />
+                <DisplayDefconStatus defcon={defcon}/>
             </div>
         </div>
     );

@@ -105,9 +105,17 @@ export const ThemeDecode = t.union([
     t.literal('aftermath')
 ]);
 
+export const DefconCountryDecode = t.type({
+    shortName: t.string,
+    countryName: t.string,
+    status: DefconStatusDecode
+});
 export const DefconComponentDecode = t.type({
     componentType: t.literal('Defcon'),
-    countries: t.record(t.string, DefconStatusDecode)
+    countries: t.record(
+        t.string,
+        DefconCountryDecode
+    )
 });
 
 export const WeatherStatusDecode = t.type({
@@ -149,7 +157,6 @@ export const ApiResponseDecode = t.type({
     active: t.boolean,
     phaseEnd: t.number,
     components: t.array(ComponentDecode),
-    setupInformation: SetupInformationDecode,
 });
 export const GameDecode = t.intersection([
     t.type({

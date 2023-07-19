@@ -1,5 +1,4 @@
 import {ApiResponse, Game, Phase, SetupInformation, Turn} from "../types/types";
-import {base} from "next/dist/build/webpack/config/blocks/base";
 import {Either, isLeft} from "fp-ts/Either";
 import {MakeLeft, MakeRight} from "../lib/io-ts-helpers";
 
@@ -46,16 +45,16 @@ export function isBreatherPhase(phase: Phase): boolean {
 export function lengthOfPhase(phase: number, turn: number, setupInformation: SetupInformation): Either<string, number> {
     const phases = setupInformation.phases;
 
-    const thisPhaseInfo = phases[phase - 1];
+    const thisPhaseInfo = getCurrentPhase(phase, setupInformation);
 
-    if (thisPhaseInfo === undefined) {
+    if (isLeft(thisPhaseInfo)) {
         return MakeLeft(`Tried to get length of phase ${phase}, but there are only ${phases.length} phases`);
     }
 
-    let length = thisPhaseInfo.length;
+    let length = thisPhaseInfo.right.length;
 
-    if (thisPhaseInfo.extraTime?.[turn] !== undefined) {
-        length += thisPhaseInfo.extraTime[turn]
+    if (thisPhaseInfo.right.extraTime?.[turn] !== undefined) {
+        length += thisPhaseInfo.right.extraTime[turn]
     }
 
     return MakeRight(length);
@@ -106,7 +105,7 @@ export function nextPhase(phase: Phase): Phase {
     return isPhase(newPhaseNumber) ? newPhaseNumber : 1;
 }
 
-export function tickTurn(turn: Turn): Turn {
+export function tickTurn(turn: Game): Game {
     const newPhase: Phase = nextPhase(turn.phase);
     const newTurn = newPhase == 1 ? turn.turnNumber + 1 : turn.turnNumber;
 
@@ -142,8 +141,8 @@ export function pauseResume(turn: Turn, active: boolean): Turn {
     return newTurn;
 }
 
-export function hasFinished(turn: Turn): boolean {
-    return turn.active && new Date(turn.phaseEnd) < new Date();
+export function hasFinished(game: Game): boolean {
+    return game.active && new Date(game.turnInformation.phaseEnd) < new Date();
 }
 export function backAPhase(turn: Turn): Turn {
     // eslint-disable-next-line default-case
@@ -211,6 +210,16 @@ export function createGame(id: Game["_id"], setupInformation: Game["setupInforma
     return MakeRight({
         ...base,
         active: false,
-        frozenTurn: toApiResponse(base)
+        frozenTurn: {...toApiResponse(base), active: false}
     });
+}
+
+export function getCurrentPhase(phase: number, setupInformation: SetupInformation):Either<false, SetupInformation["phases"][0]>{
+    const possible = setupInformation.phases[phase - 1];
+
+    if (possible === undefined) {
+        return MakeLeft(false);
+    }
+
+    return MakeRight(possible);
 }

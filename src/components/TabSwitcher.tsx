@@ -12,8 +12,8 @@ function DisplayManageTabSwitch({
     setActiveTab,
     manageTabTitle,
 }: {
-    activeTab: ActiveTabs;
-    setActiveTab: (newActive: ActiveTabs) => void;
+    activeTab: string;
+    setActiveTab: (newActive: string) => void;
     manageTabTitle: string;
 }) {
     const activeClass = "bg-zinc-600";
@@ -39,8 +39,8 @@ export default function TabSwitcher({
     setActiveTab,
     manageTabTitle,
 }: {
-    activeTab: ActiveTabs;
-    setActiveTab: (newActive: ActiveTabs) => void;
+    activeTab: string;
+    setActiveTab: (newActive: string) => void;
     manageTabTitle: string;
 }) {
     const activeClass = "bg-zinc-600";
