@@ -1,4 +1,4 @@
-import {ApiResponse, ControlAction, ControlAPI, Game, Turn} from "../types/types";
+import {ApiResponse, ControlAPI, Game} from "../types/types";
 import {FontAwesomeIcon, FontAwesomeIconProps} from "@fortawesome/react-fontawesome";
 import {faBackward} from "@fortawesome/free-solid-svg-icons/faBackward";
 import {faFastBackward} from "@fortawesome/free-solid-svg-icons/faFastBackward";
@@ -8,8 +8,8 @@ import {faPause} from "@fortawesome/free-solid-svg-icons/faPause";
 import {faPlay} from "@fortawesome/free-solid-svg-icons/faPlay";
 import React, {useState} from "react";
 import {ApiResponseDecode} from "../types/io-ts-def";
-import DefconStatuses from "./DefconStatuses";
 import {ControlDefconStatus} from "../app/game/[id]/control/ControlDefconStatus";
+import {ControlWeather} from "./control/ControlWeather";
 
 type ControlButtonMainProps = {
     icon: FontAwesomeIconProps["icon"],
@@ -193,6 +193,14 @@ export default function ControlTools({game, apiResponse, setApiResponse}: {
                     case "Defcon":
                         innerComponent = <ControlDefconStatus
                             defcon={component}
+                            id={game._id}
+                            setAPIResponse={setApiResponse}
+                            setError={setError}
+                        />
+                        break;
+                    case "Weather":
+                        innerComponent = <ControlWeather
+                            weatherMessage={component.weatherMessage}
                             id={game._id}
                             setAPIResponse={setApiResponse}
                             setError={setError}

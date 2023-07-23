@@ -114,6 +114,46 @@ const GAME_TYPES: Record<GameType, { setupInformation: Game["setupInformation"],
                 }
             }
         ]
+    },
+    aftermath: {
+        setupInformation: {
+            phases: [
+                {
+                    title: "Planning",
+                    length: 9,
+                    hidden: false,
+                },
+                {
+                    title: "BBC News Broadcast begins in",
+                    length: 2,
+                    hidden: true
+                },
+                {
+                    title: "BBC News",
+                    length: 2,
+                    hidden: false
+                },
+                {
+                    title: "Action Phase begins in",
+                    length: 2,
+                    hidden: true
+                },
+                {
+                    title: "Action Phase",
+                    length: 20,
+                    hidden: false
+                },
+            ],
+            theme: "aftermath",
+            breakingNewsBanner: false,
+            components: ['Weather'],
+        },
+        components: [
+            {
+                componentType: "Weather",
+                weatherMessage: ""
+            }
+        ]
     }
 }
 

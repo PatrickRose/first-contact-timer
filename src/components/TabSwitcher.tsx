@@ -96,6 +96,23 @@ export default function TabSwitcher({
                                 <span>Defcon</span>
                             </button>
                             break;
+                        case "Weather":
+                            innerComponent = <button
+                                className={`${baseClass} ${
+                                    activeTab == component.componentType ? activeClass : ""
+                                }`}
+                                onClick={() => setActiveTab(component.componentType)}
+                            >
+                                <Image
+                                    className="mx-auto"
+                                    // TODO: Update weather Icon
+                                    src={Icon_DefCon}
+                                    alt=""
+                                    width={40}
+                                />
+                                <span>Weather</span>
+                            </button>
+                            break;
                     }
 
                     return <React.Fragment key={key}>

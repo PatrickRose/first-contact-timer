@@ -1,5 +1,10 @@
 import * as t from "io-ts";
 
+export let SetWeatherStatusDecode = t.type({
+    newWeatherMessage: t.string
+})
+
+
 export const PhaseDecode = t.union([
     t.literal(1),
     t.literal(2),
@@ -79,10 +84,9 @@ export const LoginFormValuesDecode = t.type({
     password: t.string,
 });
 
-export const GameTypeDecode = t.literal("first-contact");
-t.union([
+export const GameTypeDecode = t.union([
     t.literal("first-contact"),
-    t.literal("TMP")
+    t.literal("aftermath")
 ])
 
 export const CreateGameRequestDecode = t.type({

@@ -15,6 +15,7 @@ import DefconStatuses from "../../../components/DefconStatuses";
 import {ApiResponseDecode} from "../../../types/io-ts-def";
 import ControlTools from "../../../components/ControlTools";
 import PressForm from "./press/PressForm";
+import WeatherStatus from "../../../components/WeatherStatus";
 
 const triggersAudio: (keyof ApiResponse)[] = [
     "active",
@@ -162,6 +163,9 @@ export default function GameWrapper({game, mode}: { game: Game, mode: "Player" |
                     switch (component.componentType) {
                         case "Defcon":
                             innerComponent = <DefconStatuses defcon={component.countries} />
+                            break;
+                        case "Weather":
+                            innerComponent = <WeatherStatus message={component.weatherMessage} />
                             break;
                     }
 
