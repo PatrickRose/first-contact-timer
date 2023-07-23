@@ -59,6 +59,7 @@ export function GameCreateForm() {
     const gameTypes: Record<GameType, string> = {
         "first-contact": "First Contact: 2035",
         aftermath: "Aftermath",
+        "wts-lite": "Watch the Skies Lite",
     };
 
     return (

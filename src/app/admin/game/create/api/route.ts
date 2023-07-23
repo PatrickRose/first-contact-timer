@@ -191,7 +191,7 @@ const GAME_TYPES: Record<
             components: [],
         },
         components: [],
-    }
+    },
 };
 
 export async function POST(
