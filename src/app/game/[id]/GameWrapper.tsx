@@ -82,7 +82,7 @@ export default function GameWrapper({
     if (isLeft(currentPhaseInformation)) {
         throw new Error("Unknown current phase information");
     }
-    const main = mode;
+
     let child: React.ReactNode = null;
     let manageTabTitle: string | null = null;
 
@@ -147,7 +147,6 @@ export default function GameWrapper({
                                 active={apiResponse.active}
                                 setupInformation={game.setupInformation}
                             />
-                            {main}
                         </div>
                         <div
                             className={`${
