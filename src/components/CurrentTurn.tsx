@@ -1,12 +1,5 @@
 import * as React from "react";
-import {Phase, SetupInformation} from "../types/types";
-import {
-    lengthOfPhase,
-    PHASE_LISTS,
-    isBreatherPhase,
-    PHASE_TITLES,
-    nextPhase,
-} from "../server/turn";
+import { SetupInformation} from "../types/types";
 
 interface CurrentTurnCounterProps {
     turn: number,

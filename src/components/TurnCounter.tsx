@@ -1,11 +1,7 @@
 import * as React from "react";
-import {Phase, SetupInformation} from "../types/types";
+import { SetupInformation} from "../types/types";
 import {
     lengthOfPhase,
-    PHASE_LISTS,
-    isBreatherPhase,
-    PHASE_TITLES,
-    nextPhase,
 } from "../server/turn";
 import {isLeft} from "fp-ts/Either";
 
@@ -60,25 +56,6 @@ const TurnTimer = function TurnTimer(props: {
         </React.Fragment>
     );
 };
-
-const BUFFER: React.ReactNode = null;
-
-const PHASE_LABELS: Record<Phase, React.ReactNode> = {
-    1: <PhaseLabel title={PHASE_TITLES[1]}/>,
-    2: BUFFER,
-    3: <PhaseLabel title={PHASE_TITLES[3]}/>,
-    4: BUFFER,
-    5: <PhaseLabel title={PHASE_TITLES[5]}/>,
-    6: BUFFER,
-    7: <PhaseLabel title={PHASE_TITLES[7]}/>,
-    8: BUFFER,
-    9: <PhaseLabel title={PHASE_TITLES[9]}/>,
-    10: BUFFER,
-};
-
-function PhaseLabel({title}: { title: string }) {
-    return <p className="flex-1 text-3xl">{title}</p>;
-}
 
 export function PhaseCount(
     {
