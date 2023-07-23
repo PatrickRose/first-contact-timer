@@ -73,6 +73,7 @@ export const LoginFormValuesDecode = t.type({
 export const GameTypeDecode = t.union([
     t.literal("first-contact"),
     t.literal("aftermath"),
+    t.literal("wts-lite")
 ]);
 
 export const CreateGameRequestDecode = t.type({

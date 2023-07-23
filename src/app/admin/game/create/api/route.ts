@@ -161,6 +161,37 @@ const GAME_TYPES: Record<
             },
         ],
     },
+    "wts-lite": {
+        setupInformation: {
+            gameName: "Aftermath",
+            phases: [
+                {
+                    title: "Team Time",
+                    length: 10,
+                    hidden: false,
+                },
+                {
+                    title: "Action Time",
+                    length: 15,
+                    hidden: false,
+                },
+                {
+                    title: "Diplomacy Time",
+                    length: 10,
+                    hidden: false,
+                },
+                {
+                    title: "End of turn",
+                    length: 5,
+                    hidden: false,
+                },
+            ],
+            theme: "first-contact",
+            breakingNewsBanner: true,
+            components: [],
+        },
+        components: [],
+    }
 };
 
 export async function POST(
