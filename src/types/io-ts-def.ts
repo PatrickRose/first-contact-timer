@@ -4,19 +4,6 @@ export let SetWeatherStatusDecode = t.type({
     newWeatherMessage: t.string,
 });
 
-export const PhaseDecode = t.union([
-    t.literal(1),
-    t.literal(2),
-    t.literal(3),
-    t.literal(4),
-    t.literal(5),
-    t.literal(6),
-    t.literal(7),
-    t.literal(8),
-    t.literal(9),
-    t.literal(10),
-]);
-
 export const NewsItemDecode = t.type({
     newsText: t.string,
     date: t.string,
@@ -168,25 +155,6 @@ export const GameDecode = t.intersection([
         turnInformation: TurnInformationDecode,
         breakingNews: t.array(NewsItemDecode),
         components: t.array(ComponentDecode),
-    }),
-    t.union([
-        t.type({ active: t.literal(true) }),
-        t.type({
-            active: t.literal(false),
-            frozenTurn: ApiResponseDecode,
-        }),
-    ]),
-]);
-
-export const TurnDecode = t.intersection([
-    t.type({
-        _id: t.string,
-        turnNumber: t.number,
-        phase: PhaseDecode,
-        phaseEnd: t.string,
-        breakingNews: t.array(NewsItemDecode),
-        defcon: DefconDecode,
-        frozenTurn: t.union([t.null, ApiResponseDecode]),
     }),
     t.union([
         t.type({ active: t.literal(true) }),
