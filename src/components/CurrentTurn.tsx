@@ -58,11 +58,7 @@ export default function CurrentTurn(props: CurrentTurnCounterProps) {
                             {phaseText}
                         </p>
                     </div>
-                    <CurrentTurnTimer
-                        timestamp={timestamp}
-                        active={active}
-                        mobile={true}
-                    />
+                    <CurrentTurnTimer timestamp={timestamp} />
                 </div>
             </div>
         </React.Fragment>
