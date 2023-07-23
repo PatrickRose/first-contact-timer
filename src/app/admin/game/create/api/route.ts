@@ -161,9 +161,9 @@ const GAME_TYPES: Record<
             },
         ],
     },
-    "wts-lite": {
+    "wts-1970": {
         setupInformation: {
-            gameName: "Aftermath",
+            gameName: "Watch the Skies: 1970",
             phases: [
                 {
                     title: "Team Time",
