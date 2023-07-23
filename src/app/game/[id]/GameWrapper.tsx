@@ -154,7 +154,7 @@ export default function GameWrapper({
                             } lg:hidden pb-24 `}
                         >
                             <LogoBlock
-                                gameName={game.setupInformation.gameName}
+                                setupInformation={game.setupInformation}
                             />
                         </div>
                         {child ? (
@@ -220,7 +220,7 @@ export default function GameWrapper({
                             </div>
                             <div className="hidden lg:block">
                                 <LogoBlock
-                                    gameName={game.setupInformation.gameName}
+                                    setupInformation={game.setupInformation}
                                 />
                             </div>
                         </div>

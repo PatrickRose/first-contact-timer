@@ -189,6 +189,7 @@ const GAME_TYPES: Record<
             theme: "first-contact",
             breakingNewsBanner: true,
             components: [],
+            logo: "/WTS_1970__Coulee_Con.png",
         },
         components: [],
     },

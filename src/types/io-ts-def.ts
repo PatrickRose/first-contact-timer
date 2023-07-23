@@ -116,24 +116,29 @@ export const ComponentDecode = t.union([
     WeatherStatusDecode,
 ]);
 
-export const SetupInformationDecode = t.type({
-    phases: t.array(
-        t.intersection([
-            t.type({
-                title: t.string,
-                length: t.number,
-                hidden: t.boolean,
-            }),
-            t.partial({
-                extraTime: t.record(t.number, t.number),
-            }),
-        ])
-    ),
-    theme: ThemeDecode,
-    breakingNewsBanner: t.boolean,
-    components: t.array(t.union([t.literal("Defcon"), t.literal("Weather")])),
-    gameName: t.string,
-});
+export const SetupInformationDecode = t.intersection([
+    t.type({
+        phases: t.array(
+            t.intersection([
+                t.type({
+                    title: t.string,
+                    length: t.number,
+                    hidden: t.boolean,
+                }),
+                t.partial({
+                    extraTime: t.record(t.number, t.number),
+                }),
+            ])
+        ),
+        theme: ThemeDecode,
+        breakingNewsBanner: t.boolean,
+        components: t.array(t.union([t.literal("Defcon"), t.literal("Weather")])),
+        gameName: t.string,
+    }),
+    t.partial({
+        logo: t.string
+    })
+]);
 
 export const TurnInformationDecode = t.type({
     turnNumber: t.number,
@@ -158,7 +163,7 @@ export const GameDecode = t.intersection([
         components: t.array(ComponentDecode),
     }),
     t.union([
-        t.type({ active: t.literal(true) }),
+        t.type({active: t.literal(true)}),
         t.type({
             active: t.literal(false),
             frozenTurn: ApiResponseDecode,
