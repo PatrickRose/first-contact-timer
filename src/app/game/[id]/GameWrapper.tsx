@@ -1,7 +1,7 @@
 "use client";
 
 import {ApiResponse, Game} from "../../../types/types";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getCurrentPhase, toApiResponse} from "../../../server/turn";
 import useInterval from "../../../lib/useInterval";
 import CurrentTurn from "../../../components/CurrentTurn";
@@ -13,6 +13,7 @@ import BreakingNews from "../../../components/BreakingNews";
 import TabSwitcher from "../../../components/TabSwitcher";
 import DefconStatuses from "../../../components/DefconStatuses";
 import {ApiResponseDecode} from "../../../types/io-ts-def";
+import ControlTools from "../../../components/ControlTools";
 
 const triggersAudio: (keyof ApiResponse)[] = [
     "active",
@@ -20,11 +21,13 @@ const triggersAudio: (keyof ApiResponse)[] = [
     "phase"
 ]
 
-export default function GameWrapper({game}: { game: Game }) {
+export default function GameWrapper({game, mode}: { game: Game, mode: "Player" | "Control" }) {
     const [apiResponse, setAPIResponse] = useState<ApiResponse>(toApiResponse(game));
     const [activeTab, setActiveTab] = useState<string>("home");
 
-    const audio = new Audio("/turn-change.mp3");
+    const [audio, setAudio] = useState<HTMLAudioElement>();
+
+    useEffect(() => setAudio(new Audio('/turn-change.mp3')), []);
 
     const delay = Math.min(apiResponse.phaseEnd * 1000, 5000);
     useInterval(() => {
@@ -35,7 +38,7 @@ export default function GameWrapper({game}: { game: Game }) {
                     setAPIResponse(body);
 
                     if (triggersAudio.some((val) => body[val] != apiResponse[val])) {
-                        audio.play().catch((e) => console.log(e));
+                        audio?.play().catch((e) => console.log(e));
                     }
                 } else {
                     throw new Error("Body did not match API")
@@ -44,13 +47,31 @@ export default function GameWrapper({game}: { game: Game }) {
             .catch((error) => console.error(error))
     }, delay == 0 ? 100 : delay);
 
+    useInterval(
+        () => {
+            if (!apiResponse.active) {
+                return;
+            }
+
+            const phaseEnd = apiResponse.phaseEnd;
+
+            const newPhaseEnd = Math.max(phaseEnd - 1, 0);
+            setAPIResponse({...apiResponse, phaseEnd: newPhaseEnd});
+        },
+        1000
+    );
+
     const currentPhaseInformation = getCurrentPhase(apiResponse.phase, game.setupInformation);
 
     if (isLeft(currentPhaseInformation)) {
         throw new Error("Unknown current phase information")
     }
-    const main = 'MAIN';
-    const child = "CHILD";
+    const main = mode;
+    let child: React.ReactNode = null;
+
+    if (mode == "Control") {
+        child = <ControlTools game={game} apiResponse={apiResponse} setApiResponse={setAPIResponse} />
+    }
 
     const manageTabTitle = "MANAGE TAB TITLE";
 
@@ -100,13 +121,17 @@ export default function GameWrapper({game}: { game: Game }) {
                     >
                         <LogoBlock/>
                     </div>
-                    <div
-                        className={`${
-                            activeTab != "manage" ? "hidden" : ""
-                        } lg:block`}
-                    >
-                        {child}
-                    </div>
+                    {
+                        child ?
+                            <div
+                                className={`${
+                                    activeTab != "manage" ? "hidden" : ""
+                                } lg:block`}
+                            >
+                                {child}
+                            </div>
+                            : null
+                    }
                     <div
                         className={`${
                             activeTab != "press" ? "hidden" : ""

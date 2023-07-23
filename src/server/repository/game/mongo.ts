@@ -1,6 +1,6 @@
 import GameRepository from "./index";
 import {Either, isLeft} from "fp-ts/Either";
-import {Game} from "../../../types/types";
+import {ControlAction, Game} from "../../../types/types";
 import {MakeLeft, MakeRight} from "../../../lib/io-ts-helpers";
 import {MongoClient} from "mongodb";
 import initialiseMongo, {getCollection} from "../../mongo";
@@ -105,4 +105,24 @@ export class MongoRepository implements GameRepository {
         return isRight(result) ? result : MakeLeft("Failed to get game?");
     }
 
+    async runControlAction(currentGame: Game, action: ControlAction): Promise<Either<string, Game>> {
+        const tickedTurn = action(currentGame)
+
+        if (isLeft(tickedTurn)) {
+            return tickedTurn;
+        }
+
+        const updateResult = await this.#updateTurn(
+            tickedTurn.right,
+            currentGame
+        );
+
+        if (isLeft(updateResult)) {
+            return updateResult;
+        }
+
+        const result = await this.get(currentGame._id);
+
+        return isRight(result) ? result : MakeLeft("Failed to get game?");
+    }
 }

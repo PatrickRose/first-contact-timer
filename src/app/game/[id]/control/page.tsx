@@ -1,7 +1,7 @@
-import {getGameRepo} from "../../../server/repository/game";
+import {getGameRepo} from "../../../../server/repository/game";
 import {isLeft} from "fp-ts/Either";
 import {NotFound} from "next/dist/client/components/error";
-import GameWrapper from "./GameWrapper";
+import GameWrapper from "../GameWrapper";
 
 export default async function Page({ params }: { params: { id: string } }) {
     const gameRepo = getGameRepo();
@@ -17,6 +17,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     }
 
     return <div>
-        <GameWrapper game={game.right} mode="Player" />
+        <GameWrapper game={game.right} mode="Control" />
     </div>
 }

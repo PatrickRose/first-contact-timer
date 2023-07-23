@@ -10,7 +10,7 @@ interface CountryDefconProps {
     status: DefconStatus;
 }
 
-function DefconStateInfo({inner, flex}: { inner: string; flex?: boolean }) {
+export function DefconStateInfo({inner, flex}: { inner: string; flex?: boolean }) {
     return <div className={`pl-4 ${flex ? "flex-1" : ""}`}>{inner}</div>;
 }
 

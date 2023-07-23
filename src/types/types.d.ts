@@ -11,7 +11,7 @@ export type ControlAPI = t.TypeOf<typeof types.ControlAPIDecode>;
 export type Turn = t.TypeOf<typeof types.TurnDecode>;
 export type BreakingNews = ApiResponse["breakingNews"];
 
-export type ControlAction = Promise<Either<string, Turn>>;
+export type ControlAction = (game: Game) => Either<string, Partial<Game>>;
 
 export type Defcon = t.TypeOf<typeof types.DefconDecode>;
 export type DefconStatus = t.TypeOf<typeof types.DefconStatusDecode>;

@@ -54,7 +54,7 @@ export const ControlAPIDecode = t.type({
 });
 
 export const DefconAPIBodyDecode = t.type({
-    stateName: t.keyof(DefconDecode.props),
+    stateName: t.string,
     newStatus: DefconStatusDecode,
 });
 

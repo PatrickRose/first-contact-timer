@@ -99,22 +99,31 @@ export function toApiResponse(
     };
 }
 
-export function nextPhase(phase: Phase): Phase {
+export function nextPhase(phase: number, setup: SetupInformation): number {
     const newPhaseNumber = phase + 1;
 
-    return isPhase(newPhaseNumber) ? newPhaseNumber : 1;
+    return newPhaseNumber >= setup.phases.length
+        ? 1
+        : newPhaseNumber
 }
 
-export function tickTurn(turn: Game): Game {
-    const newPhase: Phase = nextPhase(turn.phase);
-    const newTurn = newPhase == 1 ? turn.turnNumber + 1 : turn.turnNumber;
+export function tickTurn(game: Game): Game {
+    const newPhase: number = nextPhase(game.turnInformation.currentPhase, game.setupInformation);
+    const newTurn = newPhase == 1 ? game.turnInformation.turnNumber + 1 : game.turnInformation.turnNumber;
+
+    const turnInformation = generateNewTurnInformation(
+        newPhase,
+        newTurn,
+        game.setupInformation
+    )
+
+    if (isLeft(turnInformation)) {
+        throw new Error('Should not happen');
+    }
 
     return {
-        ...turn,
-        phaseEnd: nextDate(newPhase, newTurn).toString(),
-        phase: newPhase,
-        turnNumber: newTurn,
-        active: true,
+        ...game,
+        turnInformation: turnInformation.right
     };
 }
 
@@ -222,4 +231,18 @@ export function getCurrentPhase(phase: number, setupInformation: SetupInformatio
     }
 
     return MakeRight(possible);
+}
+
+export function generateNewTurnInformation(phase: Game["turnInformation"]["currentPhase"], turn: Game["turnInformation"]["turnNumber"], setupInfo: Game["setupInformation"]): Either<string, Game["turnInformation"]> {
+    const newPhaseEnd = nextDate(phase, turn, setupInfo);
+
+    if (isLeft(newPhaseEnd)) {
+        return newPhaseEnd;
+    }
+
+    return MakeRight({
+        turnNumber: turn,
+        currentPhase: phase,
+        phaseEnd: newPhaseEnd.right.toString()
+    });
 }
