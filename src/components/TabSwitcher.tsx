@@ -57,7 +57,13 @@ export default function TabSwitcher({
                 }`}
                 onClick={() => setActiveTab("home")}
             >
-                <Image className="mx-auto" src={game.setupInformation.logo ?? Icon_Game} alt="" width={40} height={40} />
+                <Image
+                    className="mx-auto"
+                    src={game.setupInformation.logo ?? Icon_Game}
+                    alt=""
+                    width={40}
+                    height={40}
+                />
                 <span>Game</span>
             </button>
             <button

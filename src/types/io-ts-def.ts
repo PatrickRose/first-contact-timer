@@ -132,12 +132,14 @@ export const SetupInformationDecode = t.intersection([
         ),
         theme: ThemeDecode,
         breakingNewsBanner: t.boolean,
-        components: t.array(t.union([t.literal("Defcon"), t.literal("Weather")])),
+        components: t.array(
+            t.union([t.literal("Defcon"), t.literal("Weather")])
+        ),
         gameName: t.string,
     }),
     t.partial({
-        logo: t.string
-    })
+        logo: t.string,
+    }),
 ]);
 
 export const TurnInformationDecode = t.type({
@@ -163,7 +165,7 @@ export const GameDecode = t.intersection([
         components: t.array(ComponentDecode),
     }),
     t.union([
-        t.type({active: t.literal(true)}),
+        t.type({ active: t.literal(true) }),
         t.type({
             active: t.literal(false),
             frozenTurn: ApiResponseDecode,

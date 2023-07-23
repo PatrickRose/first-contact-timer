@@ -8,7 +8,7 @@ export default function LogoBlock({
 }: {
     setupInformation: Game["setupInformation"];
 }) {
-    const {gameName, logo} = setupInformation;
+    const { gameName, logo } = setupInformation;
 
     return (
         <div className="p-8 w-full bg-gradient-to-r from-turn-counter-past-light to-turn-counter-past-dark text-white flex flex-row">

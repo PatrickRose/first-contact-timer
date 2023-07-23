@@ -99,7 +99,7 @@ export default function TurnCounter(props: TurnCounterProps) {
                 Game Timer
             </h3>
             <h1 className="text-4xl lg:text-5xl mt-4 mb-8 uppercase ">
-                {text}
+                Turn {turn}: {text}
             </h1>
             <TurnTimer timestamp={timestamp} active={active} mobile={true} />
             <div className="flex lg:flex-wrap flex-col lg:flex-row  mt-4">
