@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Defcon, DefconComponent, DefconCountry, DefconStatus} from "../types/types";
+import { DefconComponent, DefconCountry, DefconStatus } from "../types/types";
 
 interface DefconProps {
     defcon: DefconComponent["countries"];
@@ -10,7 +10,13 @@ interface CountryDefconProps {
     status: DefconStatus;
 }
 
-export function DefconStateInfo({inner, flex}: { inner: string; flex?: boolean }) {
+export function DefconStateInfo({
+    inner,
+    flex,
+}: {
+    inner: string;
+    flex?: boolean;
+}) {
     return <div className={`pl-4 ${flex ? "flex-1" : ""}`}>{inner}</div>;
 }
 
@@ -53,9 +59,9 @@ export const BACKGROUNDS: Record<
 };
 
 function DefconState({
-                         defconNumber,
-                         active,
-                     }: {
+    defconNumber,
+    active,
+}: {
     defconNumber: DefconStatus;
     active: boolean;
 }) {
@@ -83,7 +89,7 @@ function DefconState({
     );
 }
 
-export function CountryDefcon({country, status}: CountryDefconProps) {
+export function CountryDefcon({ country, status }: CountryDefconProps) {
     if (status == "hidden") {
         return null;
     }
@@ -96,12 +102,12 @@ export function CountryDefcon({country, status}: CountryDefconProps) {
                 <DefconStateInfo inner={country.shortName} />
                 <DefconStateInfo inner={country.countryName} flex={true} />
             </div>
-            <DefconState defconNumber={status} active={true}/>
+            <DefconState defconNumber={status} active={true} />
         </div>
     );
 }
 
-function DisplayDefconStatus({defcon}: DefconProps) {
+function DisplayDefconStatus({ defcon }: DefconProps) {
     const states: Record<DefconStatus, DefconCountry[]> = {
         hidden: [],
         1: [],
@@ -109,7 +115,9 @@ function DisplayDefconStatus({defcon}: DefconProps) {
         3: [],
     };
 
-    Object.values(defcon).forEach((defconStatus) => states[defconStatus.status].push(defconStatus));
+    Object.values(defcon).forEach((defconStatus) =>
+        states[defconStatus.status].push(defconStatus)
+    );
 
     return (
         <div className="flex justify-center mx-1 pb-24 lg:pb-0">
@@ -140,11 +148,11 @@ function DisplayDefconStatus({defcon}: DefconProps) {
     );
 }
 
-export default function DefconStatuses({defcon}: DefconProps) {
+export default function DefconStatuses({ defcon }: DefconProps) {
     return (
         <div className="py-4">
             <div className="block w-full">
-                <DisplayDefconStatus defcon={defcon}/>
+                <DisplayDefconStatus defcon={defcon} />
             </div>
         </div>
     );

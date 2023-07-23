@@ -1,7 +1,7 @@
-import {Collection, Db, MongoClient} from "mongodb";
+import { Collection, Db, MongoClient } from "mongodb";
 import { MakeLeft, MakeRight } from "../lib/io-ts-helpers";
 import { Either } from "fp-ts/Either";
-import {DBUser, Game} from "../types/types";
+import { DBUser, Game } from "../types/types";
 
 export default function initialiseMongo(): Either<string, MongoClient> {
     const host = process.env.MONGO_URL;
@@ -29,10 +29,13 @@ export default function initialiseMongo(): Either<string, MongoClient> {
 }
 
 type CollectionNames = {
-    users: DBUser,
-    games: Game
+    users: DBUser;
+    games: Game;
 };
 
-export function getCollection<T extends keyof CollectionNames>(db: Db, collectionName: T): Collection<CollectionNames[T]> {
+export function getCollection<T extends keyof CollectionNames>(
+    db: Db,
+    collectionName: T
+): Collection<CollectionNames[T]> {
     return db.collection<CollectionNames[T]>(collectionName);
 }

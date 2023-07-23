@@ -1,17 +1,16 @@
-import {ActiveTabs, Game} from "../types/types";
+import { Game } from "../types/types";
 import Image from "next/image";
-import VLHGLogo from "../../public/vlhg-logo.svg";
 import Icon_Game from "../../public/Icon-VLHG.png";
 import Icon_NewsFeed from "../../public/GNNLogo.png";
 import Icon_DefCon from "../../public/Icon-DefCon.png";
 import Icon_Manage from "../../public/Icon-Manage.png";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 
 function DisplayManageTabSwitch({
-                                    activeTab,
-                                    setActiveTab,
-                                    manageTabTitle,
-                                }: {
+    activeTab,
+    setActiveTab,
+    manageTabTitle,
+}: {
     activeTab: string;
     setActiveTab: (newActive: string) => void;
     manageTabTitle: string;
@@ -28,38 +27,37 @@ function DisplayManageTabSwitch({
             }`}
             onClick={() => setActiveTab("manage")}
         >
-            <Image className="mx-auto" src={Icon_Manage} alt="" width={40}/>
+            <Image className="mx-auto" src={Icon_Manage} alt="" width={40} />
             <span>{manageTabTitle}</span>
         </button>
     );
 }
 
 export default function TabSwitcher({
-                                        activeTab,
-                                        setActiveTab,
-                                        manageTabTitle,
-                                        game
-                                    }: {
+    activeTab,
+    setActiveTab,
+    manageTabTitle,
+    game,
+}: {
     activeTab: string;
     setActiveTab: (newActive: string) => void;
     manageTabTitle: string | null;
-    game: Game
+    game: Game;
 }) {
     const activeClass = "bg-zinc-600";
     const baseClass = "flex-1 text-lg transition pt-2";
 
-    useEffect(() => window.scrollTo({top: 0}), [activeTab]);
+    useEffect(() => window.scrollTo({ top: 0 }), [activeTab]);
 
     return (
-        <div
-            className="flex w-full lg:hidden fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black">
+        <div className="flex w-full lg:hidden fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black">
             <button
                 className={`${baseClass} ${
                     activeTab == "home" ? activeClass : ""
                 }`}
                 onClick={() => setActiveTab("home")}
             >
-                <Image className="mx-auto" src={Icon_Game} alt="" width={40}/>
+                <Image className="mx-auto" src={Icon_Game} alt="" width={40} />
                 <span>Game</span>
             </button>
             <button
@@ -76,16 +74,20 @@ export default function TabSwitcher({
                 />
                 <span>News</span>
             </button>
-            {
-                game.components.map((component, key) => {
-                    let innerComponent = null;
-                    switch (component.componentType) {
-                        case "Defcon":
-                            innerComponent = <button
+            {game.components.map((component, key) => {
+                let innerComponent = null;
+                switch (component.componentType) {
+                    case "Defcon":
+                        innerComponent = (
+                            <button
                                 className={`${baseClass} ${
-                                    activeTab == component.componentType ? activeClass : ""
+                                    activeTab == component.componentType
+                                        ? activeClass
+                                        : ""
                                 }`}
-                                onClick={() => setActiveTab(component.componentType)}
+                                onClick={() =>
+                                    setActiveTab(component.componentType)
+                                }
                             >
                                 <Image
                                     className="mx-auto"
@@ -95,13 +97,19 @@ export default function TabSwitcher({
                                 />
                                 <span>Defcon</span>
                             </button>
-                            break;
-                        case "Weather":
-                            innerComponent = <button
+                        );
+                        break;
+                    case "Weather":
+                        innerComponent = (
+                            <button
                                 className={`${baseClass} ${
-                                    activeTab == component.componentType ? activeClass : ""
+                                    activeTab == component.componentType
+                                        ? activeClass
+                                        : ""
                                 }`}
-                                onClick={() => setActiveTab(component.componentType)}
+                                onClick={() =>
+                                    setActiveTab(component.componentType)
+                                }
                             >
                                 <Image
                                     className="mx-auto"
@@ -112,23 +120,21 @@ export default function TabSwitcher({
                                 />
                                 <span>Weather</span>
                             </button>
-                            break;
-                    }
+                        );
+                        break;
+                }
 
-                    return <React.Fragment key={key}>
-                        {innerComponent}
-                    </React.Fragment>
-                })
-            }
-            {
-                manageTabTitle !== null
-                    ? <DisplayManageTabSwitch
-                        activeTab={activeTab}
-                        setActiveTab={setActiveTab}
-                        manageTabTitle={manageTabTitle}
-                    />
-                    : null
-            }
+                return (
+                    <React.Fragment key={key}>{innerComponent}</React.Fragment>
+                );
+            })}
+            {manageTabTitle !== null ? (
+                <DisplayManageTabSwitch
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                    manageTabTitle={manageTabTitle}
+                />
+            ) : null}
         </div>
     );
 }

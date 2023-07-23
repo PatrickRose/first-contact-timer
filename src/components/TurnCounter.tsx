@@ -1,17 +1,15 @@
 import * as React from "react";
-import { SetupInformation} from "../types/types";
-import {
-    lengthOfPhase,
-} from "../server/turn";
-import {isLeft} from "fp-ts/Either";
+import { SetupInformation } from "../types/types";
+import { lengthOfPhase } from "../server/turn";
+import { isLeft } from "fp-ts/Either";
 
 type TurnCounterProps = {
-    turn: number,
-    phase: number,
-    timestamp: number,
-    active: boolean,
-    setupInformation: SetupInformation
-}
+    turn: number;
+    phase: number;
+    timestamp: number;
+    active: boolean;
+    setupInformation: SetupInformation;
+};
 
 const TurnTimer = function TurnTimer(props: {
     timestamp: number;
@@ -22,14 +20,14 @@ const TurnTimer = function TurnTimer(props: {
         minimumIntegerDigits: 2,
     });
 
-    const {timestamp, active, mobile} = props;
+    const { timestamp, active, mobile } = props;
     const minutes = Math.floor(Number(timestamp / 60));
     const seconds = timestamp % 60;
 
     let paused;
 
     if (!active) {
-        const pausedClass = mobile == true ? "lg:hidden" : "hidden lg:block";
+        const pausedClass = mobile ? "lg:hidden" : "hidden lg:block";
 
         paused = (
             <p
@@ -39,13 +37,12 @@ const TurnTimer = function TurnTimer(props: {
             </p>
         );
     } else {
-        paused = <React.Fragment/>;
+        paused = <React.Fragment />;
     }
 
-    const textClass =
-        mobile == true
-            ? "lg:hidden text-6xl py-2"
-            : "hidden lg:block text-8xl py-8";
+    const textClass = mobile
+        ? "lg:hidden text-6xl py-2"
+        : "hidden lg:block text-8xl py-8";
 
     return (
         <React.Fragment>
@@ -57,25 +54,23 @@ const TurnTimer = function TurnTimer(props: {
     );
 };
 
-export function PhaseCount(
-    {
-        thisPhase,
-        phaseLength,
-        activePhase,
-        phaseInformation,
-    }: {
-        thisPhase: number,
-        phaseLength: number,
-        activePhase: number,
-        phaseInformation: SetupInformation["phases"][0],
-    }
-) {
+export function PhaseCount({
+    thisPhase,
+    phaseLength,
+    activePhase,
+    phaseInformation,
+}: {
+    thisPhase: number;
+    phaseLength: number;
+    activePhase: number;
+    phaseInformation: SetupInformation["phases"][0];
+}) {
     const backgroundClass =
         thisPhase == activePhase
             ? "bg-turn-counter-current text-white delay-250 border-yellow-300"
             : thisPhase > activePhase
-                ? "bg-turn-counter-future text-white border-black"
-                : "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
+            ? "bg-turn-counter-future text-white border-black"
+            : "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
 
     const subTextClass = thisPhase == activePhase ? "block" : "hidden";
 
@@ -94,9 +89,9 @@ export function PhaseCount(
 }
 
 export default function TurnCounter(props: TurnCounterProps) {
-    const {turn, phase, timestamp, active, setupInformation} = props;
+    const { turn, phase, timestamp, active, setupInformation } = props;
 
-    const text = setupInformation.phases[phase - 1]?.title
+    const text = setupInformation.phases[phase - 1]?.title;
 
     return (
         <React.Fragment>
@@ -106,24 +101,30 @@ export default function TurnCounter(props: TurnCounterProps) {
             <h1 className="text-4xl lg:text-5xl mt-4 mb-8 uppercase ">
                 {text}
             </h1>
-            <TurnTimer timestamp={timestamp} active={active} mobile={true}/>
+            <TurnTimer timestamp={timestamp} active={active} mobile={true} />
             <div className="flex lg:flex-wrap flex-col lg:flex-row  mt-4">
                 {setupInformation.phases.map((val, key) => {
-                    let phaseLength = lengthOfPhase(key + 1, turn, setupInformation);
+                    let phaseLength = lengthOfPhase(
+                        key + 1,
+                        turn,
+                        setupInformation
+                    );
 
                     if (isLeft(phaseLength)) {
                         throw new Error(phaseLength.left);
                     }
-                    return <PhaseCount
-                        thisPhase={key + 1}
-                        phaseLength={phaseLength.right}
-                        activePhase={phase}
-                        phaseInformation={val}
-                        key={key}
-                    />;
+                    return (
+                        <PhaseCount
+                            thisPhase={key + 1}
+                            phaseLength={phaseLength.right}
+                            activePhase={phase}
+                            phaseInformation={val}
+                            key={key}
+                        />
+                    );
                 })}
             </div>
-            <TurnTimer timestamp={timestamp} active={active} mobile={false}/>
+            <TurnTimer timestamp={timestamp} active={active} mobile={false} />
         </React.Fragment>
     );
 }

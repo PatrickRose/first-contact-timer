@@ -1,20 +1,28 @@
-import {NextRequest, NextResponse} from "next/server";
-import {ApiResponse, ControlAction, ControlAPI, Game} from "../../../../../types/types";
-import {isLeft} from "fp-ts/Either";
-import {getGameRepo} from "../../../../../server/repository/game";
-import {ControlAPIDecode} from "../../../../../types/io-ts-def";
-import {generateNewTurnInformation, toApiResponse} from "../../../../../server/turn";
-import {MakeRight} from "../../../../../lib/io-ts-helpers";
+import { NextRequest, NextResponse } from "next/server";
+import {
+    ApiResponse,
+    ControlAction,
+    ControlAPI,
+    Game,
+} from "../../../../../types/types";
+import { isLeft } from "fp-ts/Either";
+import { getGameRepo } from "../../../../../server/repository/game";
+import { ControlAPIDecode } from "../../../../../types/io-ts-def";
+import {
+    generateNewTurnInformation,
+    toApiResponse,
+} from "../../../../../server/turn";
+import { MakeRight } from "../../../../../lib/io-ts-helpers";
 
 const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
     pause: (game) => {
         return MakeRight({
             active: false,
             frozenTurn: toApiResponse(
-                {...game, active: false, frozenTurn: toApiResponse(game)},
+                { ...game, active: false, frozenTurn: toApiResponse(game) },
                 true
-            )
-        })
+            ),
+        });
     },
     play: (game) => {
         if (game.active) {
@@ -22,28 +30,32 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         }
 
         const phaseEnd = new Date();
-        phaseEnd.setSeconds(phaseEnd.getSeconds() + game.frozenTurn.phaseEnd)
+        phaseEnd.setSeconds(phaseEnd.getSeconds() + game.frozenTurn.phaseEnd);
 
         const turnInformation: Game["turnInformation"] = {
             turnNumber: game.frozenTurn.turnNumber,
             currentPhase: game.frozenTurn.phase,
-            phaseEnd: phaseEnd.toString()
-        }
+            phaseEnd: phaseEnd.toString(),
+        };
 
         return MakeRight({
             active: true,
-            turnInformation
+            turnInformation,
         });
     },
     "back-phase": (game) => {
         const turnInformation = game.turnInformation;
 
         const currentPhase = game.turnInformation.currentPhase;
-        const newPhase = currentPhase == 1
-            ? game.setupInformation.phases.length - 1
-            : currentPhase - 1;
+        const newPhase =
+            currentPhase == 1
+                ? game.setupInformation.phases.length - 1
+                : currentPhase - 1;
 
-        const turnNumber = currentPhase == 1 ? turnInformation.turnNumber - 1 : turnInformation.turnNumber;
+        const turnNumber =
+            currentPhase == 1
+                ? turnInformation.turnNumber - 1
+                : turnInformation.turnNumber;
 
         const newTurnInformation = generateNewTurnInformation(
             newPhase,
@@ -56,7 +68,7 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         }
 
         return MakeRight({
-            turnInformation: newTurnInformation.right
+            turnInformation: newTurnInformation.right,
         });
     },
     "back-turn": (game) => {
@@ -77,15 +89,20 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         }
 
         return MakeRight({
-            turnInformation: newTurnInformation.right
+            turnInformation: newTurnInformation.right,
         });
     },
     "forward-phase": (game) => {
         const turnInformation = game.turnInformation;
 
-        const {newPhase, turnNumber} = turnInformation.currentPhase == (game.setupInformation.phases.length - 1)
-            ? { newPhase: 1, turnNumber: turnInformation.turnNumber + 1 }
-            : { newPhase: turnInformation.turnNumber + 1, turnNumber: turnInformation.turnNumber }
+        const { newPhase, turnNumber } =
+            turnInformation.currentPhase ==
+            game.setupInformation.phases.length - 1
+                ? { newPhase: 1, turnNumber: turnInformation.turnNumber + 1 }
+                : {
+                      newPhase: turnInformation.turnNumber + 1,
+                      turnNumber: turnInformation.turnNumber,
+                  };
 
         const newTurnInformation = generateNewTurnInformation(
             newPhase,
@@ -98,7 +115,7 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         }
 
         return MakeRight({
-            turnInformation: newTurnInformation.right
+            turnInformation: newTurnInformation.right,
         });
     },
     "forward-turn": (game) => {
@@ -118,36 +135,45 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         }
 
         return MakeRight({
-            turnInformation: newTurnInformation.right
+            turnInformation: newTurnInformation.right,
         });
     },
 };
 
-export async function POST(request: NextRequest, {params}: { params: { id: string } }): Promise<NextResponse<ApiResponse|{error: string}>> {
+export async function POST(
+    request: NextRequest,
+    { params }: { params: { id: string } }
+): Promise<NextResponse<ApiResponse | { error: string }>> {
     const id = params.id;
 
     const body = await request.json();
 
     if (!ControlAPIDecode.is(body)) {
-        return NextResponse.json({error: "Incorrect request"}, {status: 400});
+        return NextResponse.json(
+            { error: "Incorrect request" },
+            { status: 400 }
+        );
     }
 
     const gameRepo = getGameRepo();
 
     if (isLeft(gameRepo)) {
-        return NextResponse.json({error: gameRepo.left}, {status: 500});
+        return NextResponse.json({ error: gameRepo.left }, { status: 500 });
     }
 
     const game = await gameRepo.right.get(id);
 
     if (isLeft(game)) {
-        return NextResponse.json({error: "Game not found"}, {status: 404});
+        return NextResponse.json({ error: "Game not found" }, { status: 404 });
     }
 
-    const newGame = await gameRepo.right.runControlAction(game.right, CONTROL_ACTIONS[body.action])
+    const newGame = await gameRepo.right.runControlAction(
+        game.right,
+        CONTROL_ACTIONS[body.action]
+    );
 
     if (isLeft(newGame)) {
-        return NextResponse.json({error: newGame.left}, {status: 500});
+        return NextResponse.json({ error: newGame.left }, { status: 500 });
     }
 
     return NextResponse.json(toApiResponse(newGame.right));

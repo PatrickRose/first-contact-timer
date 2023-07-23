@@ -1,15 +1,19 @@
 "use client";
 
-import {DefconAPIBody, DefconComponent, DefconCountry, DefconStatus} from "../../../../types/types";
-import {ApiResponseDecode} from "../../../../types/io-ts-def";
+import {
+    DefconAPIBody,
+    DefconComponent,
+    DefconCountry,
+    DefconStatus,
+} from "../../../../types/types";
+import { ApiResponseDecode } from "../../../../types/io-ts-def";
 import * as React from "react";
-import {useState} from "react";
+import { useState } from "react";
 import {
     BACKGROUNDS,
-    CountryDefcon as CountryDefconDisplay,
-    DefconStateInfo
+    DefconStateInfo,
 } from "../../../../components/DefconStatuses";
-import {ControlButtonProps, ControlButtonRootProps} from "../../../../components/ControlTools";
+import { ControlButtonRootProps } from "../../../../components/ControlTools";
 
 type CountryDefconProps = {
     stateName: keyof DefconComponent["countries"];
@@ -21,10 +25,10 @@ type CountryDefconProps = {
 };
 
 function DefconState({
-                         defconNumber,
-                         active,
-                         onClick,
-                     }: {
+    defconNumber,
+    active,
+    onClick,
+}: {
     defconNumber: DefconStatus;
     active: boolean;
     onClick: () => void;
@@ -54,13 +58,13 @@ function DefconState({
 }
 
 function CountryDefcon({
-                           stateName,
-                           country,
-                           triggerUpdate,
-                       }: CountryDefconProps) {
+    stateName,
+    country,
+    triggerUpdate,
+}: CountryDefconProps) {
     const [updatingTo, setUpdatingTo] = useState<DefconStatus | null>(null);
 
-    const {status, shortName, countryName} = country;
+    const { status, shortName, countryName } = country;
 
     const onClick = (newStatus: DefconStatus) => {
         setUpdatingTo(newStatus);
@@ -72,8 +76,8 @@ function CountryDefcon({
             <div
                 className={`flex-1 justify-center items-center content-center pt-2 pr-4 border-2 transition duration-500 ${BACKGROUNDS[status].activeBackground}`}
             >
-                <DefconStateInfo inner={country.shortName} />
-                <DefconStateInfo inner={country.countryName} flex={true} />
+                <DefconStateInfo inner={shortName} />
+                <DefconStateInfo inner={countryName} flex={true} />
             </div>
             {updatingTo === null ? (
                 <React.Fragment>
@@ -108,11 +112,11 @@ function CountryDefcon({
 }
 
 export function ControlDefconStatus({
-                                        defcon,
-                                        id,
-                                        setAPIResponse,
-                                        setError,
-                                    }: { defcon: DefconComponent } & ControlButtonRootProps) {
+    defcon,
+    id,
+    setAPIResponse,
+    setError,
+}: { defcon: DefconComponent } & ControlButtonRootProps) {
     const triggerUpdate: CountryDefconProps["triggerUpdate"] = async (
         countryName: CountryDefconProps["stateName"],
         status: DefconStatus

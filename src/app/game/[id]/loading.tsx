@@ -1,5 +1,3 @@
 export default function Loading() {
-    return <div>
-        Loading game state, please wait...
-    </div>
+    return <div>Loading game state, please wait...</div>;
 }

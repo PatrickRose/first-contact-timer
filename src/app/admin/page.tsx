@@ -6,9 +6,7 @@ export default function Page() {
             <h1>Megadmin Admin Page</h1>
 
             <p>
-                <Link href="/admin/game/create">
-                    Create game
-                </Link>
+                <Link href="/admin/game/create">Create game</Link>
             </p>
         </div>
     );

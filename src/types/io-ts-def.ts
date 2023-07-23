@@ -1,9 +1,8 @@
 import * as t from "io-ts";
 
 export let SetWeatherStatusDecode = t.type({
-    newWeatherMessage: t.string
-})
-
+    newWeatherMessage: t.string,
+});
 
 export const PhaseDecode = t.union([
     t.literal(1),
@@ -86,12 +85,12 @@ export const LoginFormValuesDecode = t.type({
 
 export const GameTypeDecode = t.union([
     t.literal("first-contact"),
-    t.literal("aftermath")
-])
+    t.literal("aftermath"),
+]);
 
 export const CreateGameRequestDecode = t.type({
     gameID: t.string,
-    type: GameTypeDecode
+    type: GameTypeDecode,
 });
 
 export const CreateGameResponseDecode = t.union([
@@ -105,47 +104,47 @@ export const CreateGameResponseDecode = t.union([
 ]);
 
 export const ThemeDecode = t.union([
-    t.literal('first-contact'),
-    t.literal('aftermath')
+    t.literal("first-contact"),
+    t.literal("aftermath"),
 ]);
 
 export const DefconCountryDecode = t.type({
     shortName: t.string,
     countryName: t.string,
-    status: DefconStatusDecode
+    status: DefconStatusDecode,
 });
 export const DefconComponentDecode = t.type({
-    componentType: t.literal('Defcon'),
-    countries: t.record(
-        t.string,
-        DefconCountryDecode
-    )
+    componentType: t.literal("Defcon"),
+    countries: t.record(t.string, DefconCountryDecode),
 });
 
 export const WeatherStatusDecode = t.type({
-    componentType: t.literal('Weather'),
-    weatherMessage: t.string
-})
+    componentType: t.literal("Weather"),
+    weatherMessage: t.string,
+});
 
 export const ComponentDecode = t.union([
     DefconComponentDecode,
-    WeatherStatusDecode
+    WeatherStatusDecode,
 ]);
 
 export const SetupInformationDecode = t.type({
-    phases: t.array(t.intersection([
-        t.type({
-            title: t.string,
-            length: t.number,
-            hidden: t.boolean,
-        }),
-        t.partial({
-            extraTime: t.record(t.number, t.number),
-        })
-    ])),
+    phases: t.array(
+        t.intersection([
+            t.type({
+                title: t.string,
+                length: t.number,
+                hidden: t.boolean,
+            }),
+            t.partial({
+                extraTime: t.record(t.number, t.number),
+            }),
+        ])
+    ),
     theme: ThemeDecode,
     breakingNewsBanner: t.boolean,
-    components: t.array(t.union([t.literal('Defcon'), t.literal('Weather')]))
+    components: t.array(t.union([t.literal("Defcon"), t.literal("Weather")])),
+    gameName: t.string,
 });
 
 export const TurnInformationDecode = t.type({
@@ -171,31 +170,29 @@ export const GameDecode = t.intersection([
         components: t.array(ComponentDecode),
     }),
     t.union([
-        t.type({active: t.literal(true)}),
+        t.type({ active: t.literal(true) }),
         t.type({
             active: t.literal(false),
-            frozenTurn: ApiResponseDecode
-        })
-    ])
+            frozenTurn: ApiResponseDecode,
+        }),
+    ]),
 ]);
 
-export const TurnDecode = t.intersection(
-    [
+export const TurnDecode = t.intersection([
+    t.type({
+        _id: t.string,
+        turnNumber: t.number,
+        phase: PhaseDecode,
+        phaseEnd: t.string,
+        breakingNews: t.array(NewsItemDecode),
+        defcon: DefconDecode,
+        frozenTurn: t.union([t.null, ApiResponseDecode]),
+    }),
+    t.union([
+        t.type({ active: t.literal(true) }),
         t.type({
-            _id: t.string,
-            turnNumber: t.number,
-            phase: PhaseDecode,
-            phaseEnd: t.string,
-            breakingNews: t.array(NewsItemDecode),
-            defcon: DefconDecode,
-            frozenTurn: t.union([t.null, ApiResponseDecode]),
+            active: t.literal(false),
+            frozenTurn: ApiResponseDecode,
         }),
-        t.union([
-            t.type({active: t.literal(true)}),
-            t.type({
-                active: t.literal(false),
-                frozenTurn: ApiResponseDecode
-            })
-        ])
-    ]
-);
+    ]),
+]);

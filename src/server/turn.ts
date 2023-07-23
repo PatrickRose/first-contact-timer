@@ -1,31 +1,41 @@
-import {ApiResponse, Game, SetupInformation} from "../types/types";
-import {Either, isLeft} from "fp-ts/Either";
-import {MakeLeft, MakeRight} from "../lib/io-ts-helpers";
+import { ApiResponse, Game, SetupInformation } from "../types/types";
+import { Either, isLeft } from "fp-ts/Either";
+import { MakeLeft, MakeRight } from "../lib/io-ts-helpers";
 
-export function lengthOfPhase(phase: number, turn: number, setupInformation: SetupInformation): Either<string, number> {
+export function lengthOfPhase(
+    phase: number,
+    turn: number,
+    setupInformation: SetupInformation
+): Either<string, number> {
     const phases = setupInformation.phases;
 
     const thisPhaseInfo = getCurrentPhase(phase, setupInformation);
 
     if (isLeft(thisPhaseInfo)) {
-        return MakeLeft(`Tried to get length of phase ${phase}, but there are only ${phases.length} phases`);
+        return MakeLeft(
+            `Tried to get length of phase ${phase}, but there are only ${phases.length} phases`
+        );
     }
 
     let length = thisPhaseInfo.right.length;
 
     if (thisPhaseInfo.right.extraTime?.[turn] !== undefined) {
-        length += thisPhaseInfo.right.extraTime[turn]
+        length += thisPhaseInfo.right.extraTime[turn];
     }
 
     return MakeRight(length);
 }
 
-export function nextDate(phase: number, turn: number, setupInformation: SetupInformation): Either<string, Date> {
+export function nextDate(
+    phase: number,
+    turn: number,
+    setupInformation: SetupInformation
+): Either<string, Date> {
     const date = new Date();
     date.setMilliseconds(0);
     const phaseLength = lengthOfPhase(phase, turn, setupInformation);
     if (isLeft(phaseLength)) {
-        return phaseLength
+        return phaseLength;
     }
 
     date.setMinutes(date.getMinutes() + phaseLength.right);
@@ -36,7 +46,7 @@ export function toApiResponse(
     turn: Game,
     forceRefresh: boolean = false
 ): ApiResponse {
-    if (!turn.active  && !forceRefresh) {
+    if (!turn.active && !forceRefresh) {
         return turn.frozenTurn;
     }
 
@@ -62,28 +72,32 @@ export function toApiResponse(
 export function nextPhase(phase: number, setup: SetupInformation): number {
     const newPhaseNumber = phase + 1;
 
-    return newPhaseNumber >= setup.phases.length
-        ? 1
-        : newPhaseNumber
+    return newPhaseNumber >= setup.phases.length ? 1 : newPhaseNumber;
 }
 
 export function tickTurn(game: Game): Game {
-    const newPhase: number = nextPhase(game.turnInformation.currentPhase, game.setupInformation);
-    const newTurn = newPhase == 1 ? game.turnInformation.turnNumber + 1 : game.turnInformation.turnNumber;
+    const newPhase: number = nextPhase(
+        game.turnInformation.currentPhase,
+        game.setupInformation
+    );
+    const newTurn =
+        newPhase == 1
+            ? game.turnInformation.turnNumber + 1
+            : game.turnInformation.turnNumber;
 
     const turnInformation = generateNewTurnInformation(
         newPhase,
         newTurn,
         game.setupInformation
-    )
+    );
 
     if (isLeft(turnInformation)) {
-        throw new Error('Should not happen');
+        throw new Error("Should not happen");
     }
 
     return {
         ...game,
-        turnInformation: turnInformation.right
+        turnInformation: turnInformation.right,
     };
 }
 
@@ -91,7 +105,11 @@ export function hasFinished(game: Game): boolean {
     return game.active && new Date(game.turnInformation.phaseEnd) < new Date();
 }
 
-export function createGame(id: Game["_id"], setupInformation: Game["setupInformation"], components: Game["components"]): Either<string, Game> {
+export function createGame(
+    id: Game["_id"],
+    setupInformation: Game["setupInformation"],
+    components: Game["components"]
+): Either<string, Game> {
     let date = nextDate(1, 1, setupInformation);
 
     if (isLeft(date)) {
@@ -101,8 +119,8 @@ export function createGame(id: Game["_id"], setupInformation: Game["setupInforma
     const turnInformation: Game["turnInformation"] = {
         turnNumber: 1,
         currentPhase: 1,
-        phaseEnd: date.right.toString()
-    }
+        phaseEnd: date.right.toString(),
+    };
 
     const base: Game = {
         _id: id,
@@ -116,11 +134,14 @@ export function createGame(id: Game["_id"], setupInformation: Game["setupInforma
     return MakeRight({
         ...base,
         active: false,
-        frozenTurn: {...toApiResponse(base), active: false}
+        frozenTurn: { ...toApiResponse(base), active: false },
     });
 }
 
-export function getCurrentPhase(phase: number, setupInformation: SetupInformation):Either<false, SetupInformation["phases"][0]>{
+export function getCurrentPhase(
+    phase: number,
+    setupInformation: SetupInformation
+): Either<false, SetupInformation["phases"][0]> {
     const possible = setupInformation.phases[phase - 1];
 
     if (possible === undefined) {
@@ -130,7 +151,11 @@ export function getCurrentPhase(phase: number, setupInformation: SetupInformatio
     return MakeRight(possible);
 }
 
-export function generateNewTurnInformation(phase: Game["turnInformation"]["currentPhase"], turn: Game["turnInformation"]["turnNumber"], setupInfo: Game["setupInformation"]): Either<string, Game["turnInformation"]> {
+export function generateNewTurnInformation(
+    phase: Game["turnInformation"]["currentPhase"],
+    turn: Game["turnInformation"]["turnNumber"],
+    setupInfo: Game["setupInformation"]
+): Either<string, Game["turnInformation"]> {
     const newPhaseEnd = nextDate(phase, turn, setupInfo);
 
     if (isLeft(newPhaseEnd)) {
@@ -140,6 +165,6 @@ export function generateNewTurnInformation(phase: Game["turnInformation"]["curre
     return MakeRight({
         turnNumber: turn,
         currentPhase: phase,
-        phaseEnd: newPhaseEnd.right.toString()
+        phaseEnd: newPhaseEnd.right.toString(),
     });
 }

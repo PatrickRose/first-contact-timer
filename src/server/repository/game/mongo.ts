@@ -1,16 +1,14 @@
 import GameRepository from "./index";
-import {Either, isLeft} from "fp-ts/Either";
-import {ControlAction, Game} from "../../../types/types";
-import {MakeLeft, MakeRight} from "../../../lib/io-ts-helpers";
-import {MongoClient} from "mongodb";
-import initialiseMongo, {getCollection} from "../../mongo";
-import {tickTurn} from "../../turn";
-import {isRight} from "fp-ts/lib/Either";
+import { Either, isLeft } from "fp-ts/Either";
+import { ControlAction, Game } from "../../../types/types";
+import { MakeLeft, MakeRight } from "../../../lib/io-ts-helpers";
+import { MongoClient } from "mongodb";
+import initialiseMongo, { getCollection } from "../../mongo";
+import { tickTurn } from "../../turn";
+import { isRight } from "fp-ts/lib/Either";
 
 export class MongoRepository implements GameRepository {
-
-    constructor(private readonly mongo: MongoClient) {
-    }
+    constructor(private readonly mongo: MongoClient) {}
 
     static APIInstance(): Either<string, MongoRepository> {
         const client = initialiseMongo();
@@ -28,7 +26,7 @@ export class MongoRepository implements GameRepository {
 
             const database = this.mongo.db();
 
-            const games = getCollection(database, 'games');
+            const games = getCollection(database, "games");
 
             const cursor = games.find<Game>({ _id: id });
 
@@ -53,7 +51,7 @@ export class MongoRepository implements GameRepository {
 
             const database = this.mongo.db();
 
-            const gameCollection = getCollection(database, 'games');
+            const gameCollection = getCollection(database, "games");
 
             await gameCollection.insertOne(game);
 
@@ -65,19 +63,22 @@ export class MongoRepository implements GameRepository {
         }
     }
 
-    async #updateTurn(newFields: Partial<Game>, currentFields: Game): Promise<Either<string, true>> {
+    async #updateTurn(
+        newFields: Partial<Game>,
+        currentFields: Game
+    ): Promise<Either<string, true>> {
         try {
             await this.mongo.connect();
 
             const database = this.mongo.db();
 
-            const gameCollection = getCollection(database, 'games');
+            const gameCollection = getCollection(database, "games");
 
-            const {_id, turnInformation} = currentFields;
+            const { _id, turnInformation } = currentFields;
 
             await gameCollection.updateOne(
-                {_id, turnInformation},
-                {$set: newFields}
+                { _id, turnInformation },
+                { $set: newFields }
             );
 
             return MakeRight(true);
@@ -92,9 +93,9 @@ export class MongoRepository implements GameRepository {
         const tickedTurn = tickTurn(game);
 
         const updateResult = await this.#updateTurn(
-            {turnInformation: tickedTurn.turnInformation},
+            { turnInformation: tickedTurn.turnInformation },
             game
-        )
+        );
 
         if (isLeft(updateResult)) {
             return updateResult;
@@ -105,8 +106,11 @@ export class MongoRepository implements GameRepository {
         return isRight(result) ? result : MakeLeft("Failed to get game?");
     }
 
-    async runControlAction(currentGame: Game, action: ControlAction): Promise<Either<string, Game>> {
-        const tickedTurn = action(currentGame)
+    async runControlAction(
+        currentGame: Game,
+        action: ControlAction
+    ): Promise<Either<string, Game>> {
+        const tickedTurn = action(currentGame);
 
         if (isLeft(tickedTurn)) {
             return tickedTurn;
@@ -126,24 +130,29 @@ export class MongoRepository implements GameRepository {
         return isRight(result) ? result : MakeLeft("Failed to get game?");
     }
 
-    async setBreakingNews({_id, turnInformation}: Game, newBreakingNews: string): Promise<Either<string, Game>> {
+    async setBreakingNews(
+        { _id, turnInformation }: Game,
+        newBreakingNews: string
+    ): Promise<Either<string, Game>> {
         try {
             await this.mongo.connect();
 
             const database = this.mongo.db();
 
-            const gameCollection = getCollection(database, 'games');
+            const gameCollection = getCollection(database, "games");
 
-            const result = await gameCollection.updateOne(
-                {_id},
-                {$push: {
+            await gameCollection.updateOne(
+                { _id },
+                {
+                    $push: {
                         breakingNews: {
                             newsText: newBreakingNews,
                             date: new Date().toISOString(),
                             turn: turnInformation.turnNumber,
                             phase: turnInformation.currentPhase,
                         },
-                    }}
+                    },
+                }
             );
         } catch (e) {
             return MakeLeft((e as Error).message);
@@ -153,8 +162,6 @@ export class MongoRepository implements GameRepository {
 
         const newGame = await this.get(_id);
 
-        return isLeft(newGame)
-            ? MakeLeft("Game does not exist?")
-            : newGame;
+        return isLeft(newGame) ? MakeLeft("Game does not exist?") : newGame;
     }
 }

@@ -1,24 +1,22 @@
 import * as React from "react";
-import { SetupInformation} from "../types/types";
+import { SetupInformation } from "../types/types";
 
 interface CurrentTurnCounterProps {
-    turn: number,
-    phase: number,
-    timestamp: number,
-    active: boolean,
-    phaseInformation: SetupInformation["phases"][0]
+    turn: number;
+    phase: number;
+    timestamp: number;
+    active: boolean;
+    phaseInformation: SetupInformation["phases"][0];
 }
 
 const CurrentTurnTimer = function CurrentTurnTimer(props: {
     timestamp: number;
-    active: boolean;
-    mobile: boolean;
 }) {
     const formatter = new Intl.NumberFormat("en-GB", {
         minimumIntegerDigits: 2,
     });
 
-    const { timestamp, active, mobile } = props;
+    const { timestamp } = props;
     const minutes = Math.floor(Number(timestamp / 60));
     const seconds = timestamp % 60;
 

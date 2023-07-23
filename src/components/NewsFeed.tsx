@@ -2,7 +2,7 @@ import { NewsItem } from "../types/types";
 import Image from "next/image";
 import GNNLogo from "../../public/GNNLogo.png";
 import * as React from "react";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 export function BreakingNewsText({ item }: { item: NewsItem }) {
     return (
@@ -39,10 +39,10 @@ export function NewsFeedNewsText({ item }: { item: NewsItem }) {
 }
 
 function NewsItem({ item }: { item: NewsItem }) {
-    const [formattedDate, setFormattedDate] = useState<string>(item.date)
+    const [formattedDate, setFormattedDate] = useState<string>(item.date);
 
     useEffect(() => {
-        setFormattedDate(new Date(item.date).toLocaleString())
+        setFormattedDate(new Date(item.date).toLocaleString());
     }, [item.date]);
 
     return (
@@ -54,8 +54,7 @@ function NewsItem({ item }: { item: NewsItem }) {
             </div>
             <div className="flex flex-col flex-1 px-2 pt-2">
                 <div className="text-gray-500 text-left text-sm">
-                    Turn {item.turn}, phase {item.phase} |{" "}
-                    {formattedDate}
+                    Turn {item.turn}, phase {item.phase} | {formattedDate}
                 </div>
                 <NewsFeedNewsText item={item} />
             </div>
