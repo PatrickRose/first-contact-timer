@@ -69,17 +69,18 @@ export default function GameWrapper({game, mode}: { game: Game, mode: "Player" |
     }
     const main = mode;
     let child: React.ReactNode = null;
+    let manageTabTitle: string|null = null;
 
     switch (mode) {
         case "Control":
-            child = <ControlTools game={game} apiResponse={apiResponse} setApiResponse={setAPIResponse}/>
+            child = <ControlTools game={game} apiResponse={apiResponse} setApiResponse={setAPIResponse}/>;
+            manageTabTitle = 'Control Tools';
             break;
         case "Press":
             child = <PressForm game={game} apiResponse={apiResponse} setApiResponse={setAPIResponse} />
+            manageTabTitle = 'Press Tools';
             break;
     }
-
-    const manageTabTitle = "MANAGE TAB TITLE";
 
     return <div>
         <div className="fixed top-0 left-0 right-0">
@@ -192,6 +193,7 @@ export default function GameWrapper({game, mode}: { game: Game, mode: "Player" |
             activeTab={activeTab}
             setActiveTab={(newActive: string) => setActiveTab(newActive)}
             manageTabTitle={manageTabTitle}
+            game={game}
         />
     </div>
 }
