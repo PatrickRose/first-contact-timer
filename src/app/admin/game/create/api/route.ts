@@ -64,7 +64,7 @@ const GAME_TYPES: Record<GameType, { setupInformation: Game["setupInformation"],
                 },
             ],
             theme: "first-contact",
-            breakingNewsBanner: false,
+            breakingNewsBanner: true,
             components: ['Defcon'],
         },
         components: [
