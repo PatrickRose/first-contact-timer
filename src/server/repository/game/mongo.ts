@@ -125,4 +125,36 @@ export class MongoRepository implements GameRepository {
 
         return isRight(result) ? result : MakeLeft("Failed to get game?");
     }
+
+    async setBreakingNews({_id, turnInformation}: Game, newBreakingNews: string): Promise<Either<string, Game>> {
+        try {
+            await this.mongo.connect();
+
+            const database = this.mongo.db();
+
+            const gameCollection = getCollection(database, 'games');
+
+            const result = await gameCollection.updateOne(
+                {_id},
+                {$push: {
+                        breakingNews: {
+                            newsText: newBreakingNews,
+                            date: new Date().toISOString(),
+                            turn: turnInformation.turnNumber,
+                            phase: turnInformation.currentPhase,
+                        },
+                    }}
+            );
+        } catch (e) {
+            return MakeLeft((e as Error).message);
+        } finally {
+            await this.mongo.close();
+        }
+
+        const newGame = await this.get(_id);
+
+        return isLeft(newGame)
+            ? MakeLeft("Game does not exist?")
+            : newGame;
+    }
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import {DefconAPIBody, DefconComponent, DefconCountry, DefconStatus} from "../../../../types/types";
 import {ApiResponseDecode} from "../../../../types/io-ts-def";
 import * as React from "react";

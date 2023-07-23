@@ -7,6 +7,7 @@ export default interface GameRepository {
     insert: (game: Game) => Promise<Either<string, true>>;
     nextTurn: (game: Game) => Promise<Either<string, Game>>;
     runControlAction: (currentGame: Game, action: ControlAction) => Promise<Either<string, Game>>;
+    setBreakingNews: (currentGame: Game, breakingNews: string) => Promise<Either<string, Game>>;
 }
 
 export function getGameRepo(): Either<string, GameRepository> {

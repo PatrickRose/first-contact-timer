@@ -14,6 +14,7 @@ import TabSwitcher from "../../../components/TabSwitcher";
 import DefconStatuses from "../../../components/DefconStatuses";
 import {ApiResponseDecode} from "../../../types/io-ts-def";
 import ControlTools from "../../../components/ControlTools";
+import PressForm from "./press/PressForm";
 
 const triggersAudio: (keyof ApiResponse)[] = [
     "active",
@@ -21,7 +22,7 @@ const triggersAudio: (keyof ApiResponse)[] = [
     "phase"
 ]
 
-export default function GameWrapper({game, mode}: { game: Game, mode: "Player" | "Control" }) {
+export default function GameWrapper({game, mode}: { game: Game, mode: "Player" | "Control" | "Press" }) {
     const [apiResponse, setAPIResponse] = useState<ApiResponse>(toApiResponse(game));
     const [activeTab, setActiveTab] = useState<string>("home");
 
@@ -69,8 +70,13 @@ export default function GameWrapper({game, mode}: { game: Game, mode: "Player" |
     const main = mode;
     let child: React.ReactNode = null;
 
-    if (mode == "Control") {
-        child = <ControlTools game={game} apiResponse={apiResponse} setApiResponse={setAPIResponse} />
+    switch (mode) {
+        case "Control":
+            child = <ControlTools game={game} apiResponse={apiResponse} setApiResponse={setAPIResponse}/>
+            break;
+        case "Press":
+            child = <PressForm game={game} apiResponse={apiResponse} setApiResponse={setAPIResponse} />
+            break;
     }
 
     const manageTabTitle = "MANAGE TAB TITLE";
