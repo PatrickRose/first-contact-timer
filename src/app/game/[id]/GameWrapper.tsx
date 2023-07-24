@@ -11,11 +11,11 @@ import LogoBlock from "../../../components/LogoBlock";
 import { NewsFeed } from "../../../components/NewsFeed";
 import BreakingNews from "../../../components/BreakingNews";
 import TabSwitcher from "../../../components/TabSwitcher";
-import DefconStatuses from "../../../components/DefconStatuses";
 import { ApiResponseDecode } from "../../../types/io-ts-def";
 import ControlTools from "../../../components/ControlTools";
 import PressForm from "./press/PressForm";
-import WeatherStatus from "../../../components/WeatherStatus";
+import SideComponents from "../../../components/SideComponents";
+import { ComponentMapper } from "../../../lib/ComponentMapper";
 
 const triggersAudio: (keyof ApiResponse)[] = ["active", "turnNumber", "phase"];
 
@@ -179,27 +179,6 @@ export default function GameWrapper({
                     ) : null}
                 </main>
                 {apiResponse.components.map((component, key) => {
-                    let innerComponent: React.ReactNode = null;
-
-                    switch (component.componentType) {
-                        case "Defcon":
-                            innerComponent = (
-                                <DefconStatuses defcon={component.countries} />
-                            );
-                            break;
-                        case "Weather":
-                            innerComponent = (
-                                <WeatherStatus
-                                    message={component.weatherMessage}
-                                />
-                            );
-                            break;
-                    }
-
-                    if (innerComponent === null) {
-                        return null;
-                    }
-
                     return (
                         <div
                             key={key}
@@ -207,7 +186,7 @@ export default function GameWrapper({
                                 activeTab != component.componentType
                                     ? "hidden"
                                     : ""
-                            } lg:flex flex-col justify-between border-l-4 border-turn-counter-past-light w-full lg:w-auto`}
+                            } lg:hidden flex-col justify-between border-l-4 border-turn-counter-past-light w-full lg:w-auto`}
                         >
                             <div
                                 className={`${
@@ -216,16 +195,15 @@ export default function GameWrapper({
                                         : ""
                                 } lg:block`}
                             >
-                                {innerComponent}
-                            </div>
-                            <div className="hidden lg:block">
-                                <LogoBlock
-                                    setupInformation={game.setupInformation}
-                                />
+                                <ComponentMapper component={component} />
                             </div>
                         </div>
                     );
                 })}
+                <SideComponents
+                    components={apiResponse.components}
+                    setupInformation={game.setupInformation}
+                />
             </div>
             <TabSwitcher
                 activeTab={activeTab}
