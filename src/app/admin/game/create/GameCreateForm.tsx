@@ -60,6 +60,7 @@ export function GameCreateForm() {
         "first-contact": "First Contact: 2035",
         aftermath: "Aftermath",
         "wts-1970": "Watch the Skies: 1970",
+        dow: "Den of Wolves",
     };
 
     return (

@@ -193,6 +193,27 @@ const GAME_TYPES: Record<
         },
         components: [],
     },
+    dow: {
+        setupInformation: {
+            gameName: "Den of Wolves",
+            phases: [
+                {
+                    title: "Action Phase",
+                    length: 18,
+                    hidden: false,
+                },
+                {
+                    title: "Team Phase",
+                    length: 12,
+                    hidden: false,
+                },
+            ],
+            theme: "first-contact",
+            breakingNewsBanner: true,
+            components: [],
+        },
+        components: [],
+    },
 };
 
 export async function POST(
