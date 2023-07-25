@@ -1,30 +1,22 @@
 import * as React from "react";
-import { Phase } from "../types/types";
-import {
-    lengthOfPhase,
-    PHASE_LISTS,
-    isBreatherPhase,
-    PHASE_TITLES,
-    nextPhase,
-} from "../server/turn";
+import { SetupInformation } from "../types/types";
 
 interface CurrentTurnCounterProps {
     turn: number;
-    phase: Phase;
+    phase: number;
     timestamp: number;
     active: boolean;
+    phaseInformation: SetupInformation["phases"][0];
 }
 
 const CurrentTurnTimer = function CurrentTurnTimer(props: {
     timestamp: number;
-    active: boolean;
-    mobile: boolean;
 }) {
     const formatter = new Intl.NumberFormat("en-GB", {
         minimumIntegerDigits: 2,
     });
 
-    const { timestamp, active, mobile } = props;
+    const { timestamp } = props;
     const minutes = Math.floor(Number(timestamp / 60));
     const seconds = timestamp % 60;
 
@@ -38,21 +30,19 @@ const CurrentTurnTimer = function CurrentTurnTimer(props: {
 };
 
 export default function CurrentTurn(props: CurrentTurnCounterProps) {
-    const { turn, phase, timestamp, active } = props;
+    const { turn, phase, timestamp, active, phaseInformation } = props;
 
-    const backgroundClass = isBreatherPhase(phase)
+    const backgroundClass = phaseInformation.hidden
         ? "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark opacity-50"
         : "bg-turn-counter-current";
 
-    const textClass = isBreatherPhase(phase) ? "" : "";
+    const textClass = "";
 
-    const turnText = isBreatherPhase(phase)
+    const turnText = phaseInformation.hidden
         ? `Turn ${turn}, next phase:`
         : `Turn ${turn}, current phase:`;
 
-    const phaseText = isBreatherPhase(phase)
-        ? `${PHASE_TITLES[nextPhase(phase)]}`
-        : `${PHASE_TITLES[phase]}`;
+    const phaseText = phaseInformation.title;
 
     return (
         <React.Fragment>
@@ -68,11 +58,7 @@ export default function CurrentTurn(props: CurrentTurnCounterProps) {
                             {phaseText}
                         </p>
                     </div>
-                    <CurrentTurnTimer
-                        timestamp={timestamp}
-                        active={active}
-                        mobile={true}
-                    />
+                    <CurrentTurnTimer timestamp={timestamp} />
                 </div>
             </div>
         </React.Fragment>
