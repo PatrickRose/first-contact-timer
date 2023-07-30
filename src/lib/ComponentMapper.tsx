@@ -2,7 +2,7 @@ import { Game } from "../types/types";
 import WeatherStatus from "../components/WeatherStatus";
 import DefconStatuses from "../components/DefconStatuses";
 
-export function ComponentMapper({
+export function SideComponentMapper({
     component,
 }: {
     component: Game["components"][0];
