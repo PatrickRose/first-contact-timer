@@ -5,7 +5,9 @@ export function DoWWolfAttack({ inProgress }: WolfAttack) {
     const [audio, setAudio] = useState<HTMLAudioElement>();
 
     useEffect(() => {
-        setAudio(new Audio("/wolf-attack.mp3"));
+        const el = new Audio("/wolf-attack.mp3");
+        el.volume = 0.5;
+        setAudio(el);
     }, []);
 
     useEffect(() => {
