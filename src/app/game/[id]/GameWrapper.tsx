@@ -146,6 +146,7 @@ export default function GameWrapper({
                                 timestamp={apiResponse.phaseEnd}
                                 active={apiResponse.active}
                                 setupInformation={game.setupInformation}
+                                components={apiResponse.components}
                             />
                         </div>
                         <div

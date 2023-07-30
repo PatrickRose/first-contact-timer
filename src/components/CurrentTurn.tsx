@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SetupInformation } from "../types/types";
+import { Game, SetupInformation } from "../types/types";
 
 interface CurrentTurnCounterProps {
     turn: number;

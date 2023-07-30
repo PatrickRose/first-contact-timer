@@ -1,7 +1,8 @@
 import * as React from "react";
-import { SetupInformation } from "../types/types";
+import { Game, SetupInformation } from "../types/types";
 import { lengthOfPhase } from "../server/turn";
 import { isLeft } from "fp-ts/Either";
+import { TurnComponentMapper } from "../lib/ComponentMapper";
 
 type TurnCounterProps = {
     turn: number;
@@ -9,6 +10,7 @@ type TurnCounterProps = {
     timestamp: number;
     active: boolean;
     setupInformation: SetupInformation;
+    components: Game["components"];
 };
 
 const TurnTimer = function TurnTimer(props: {
@@ -98,6 +100,9 @@ export default function TurnCounter(props: TurnCounterProps) {
             <h3 className="lg:hidden text-2xl mt-2 mb-6 uppercase text-center">
                 Game Timer
             </h3>
+            {props.components.map((component, key) => (
+                <TurnComponentMapper key={key} component={component} />
+            ))}
             <h1 className="text-4xl lg:text-5xl mt-4 mb-8 uppercase ">
                 Turn {turn}: {text}
             </h1>
