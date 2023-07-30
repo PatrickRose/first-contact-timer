@@ -29,3 +29,5 @@ export type DefconComponent = t.TypeOf<typeof types.DefconComponentDecode>;
 export type DefconCountry = t.TypeOf<typeof types.DefconCountryDecode>;
 
 export type SetWeatherStatus = t.TypeOf<typeof types.SetWeatherStatusDecode>;
+export type WolfAttack = t.TypeOf<typeof types.WolfAttackDecode>;
+export type SetWolfAttack = t.TypeOf<typeof types.SetWolfAttackDecode>;

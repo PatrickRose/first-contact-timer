@@ -15,7 +15,7 @@ import { ApiResponseDecode } from "../../../types/io-ts-def";
 import ControlTools from "../../../components/ControlTools";
 import PressForm from "./press/PressForm";
 import SideComponents from "../../../components/SideComponents";
-import { ComponentMapper } from "../../../lib/ComponentMapper";
+import { SideComponentMapper } from "../../../lib/ComponentMapper";
 
 const triggersAudio: (keyof ApiResponse)[] = ["active", "turnNumber", "phase"];
 
@@ -146,6 +146,7 @@ export default function GameWrapper({
                                 timestamp={apiResponse.phaseEnd}
                                 active={apiResponse.active}
                                 setupInformation={game.setupInformation}
+                                components={apiResponse.components}
                             />
                         </div>
                         <div
@@ -195,7 +196,7 @@ export default function GameWrapper({
                                         : ""
                                 } lg:block`}
                             >
-                                <ComponentMapper component={component} />
+                                <SideComponentMapper component={component} />
                             </div>
                         </div>
                     );

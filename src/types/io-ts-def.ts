@@ -1,7 +1,11 @@
 import * as t from "io-ts";
 
-export let SetWeatherStatusDecode = t.type({
+export const SetWeatherStatusDecode = t.type({
     newWeatherMessage: t.string,
+});
+
+export const SetWolfAttackDecode = t.type({
+    newStatus: t.boolean,
 });
 
 export const NewsItemDecode = t.type({
@@ -112,9 +116,15 @@ export const WeatherStatusDecode = t.type({
     weatherMessage: t.string,
 });
 
+export const WolfAttackDecode = t.type({
+    componentType: t.literal("DoWWolfAttack"),
+    inProgress: t.boolean,
+});
+
 export const ComponentDecode = t.union([
     DefconComponentDecode,
     WeatherStatusDecode,
+    WolfAttackDecode,
 ]);
 
 export const SetupInformationDecode = t.intersection([

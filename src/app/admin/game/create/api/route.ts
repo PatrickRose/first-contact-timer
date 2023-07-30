@@ -212,7 +212,12 @@ const GAME_TYPES: Record<
             breakingNewsBanner: true,
             components: [],
         },
-        components: [],
+        components: [
+            {
+                componentType: "DoWWolfAttack",
+                inProgress: false,
+            },
+        ],
     },
 };
 

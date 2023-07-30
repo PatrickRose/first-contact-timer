@@ -1,7 +1,7 @@
 import { ApiResponse, Game } from "../types/types";
 import LogoBlock from "./LogoBlock";
 import React, { useState } from "react";
-import { ComponentMapper } from "../lib/ComponentMapper";
+import { SideComponentMapper } from "../lib/ComponentMapper";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import useInterval from "../lib/useInterval";
 
@@ -15,11 +15,11 @@ export default function SideComponents({
     const [activeTabNumber, setActiveTabNumber] = useState(0);
 
     const toShow = components
-        .filter((component) => ComponentMapper({ component }) !== null)
+        .filter((component) => SideComponentMapper({ component }) !== null)
         .map((component) => {
             return {
                 componentType: component.componentType,
-                component: <ComponentMapper component={component} />,
+                component: <SideComponentMapper component={component} />,
             };
         });
 

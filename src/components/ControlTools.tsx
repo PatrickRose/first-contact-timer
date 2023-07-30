@@ -11,8 +11,7 @@ import { faPause } from "@fortawesome/free-solid-svg-icons/faPause";
 import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay";
 import React, { useState } from "react";
 import { ApiResponseDecode } from "../types/io-ts-def";
-import { ControlDefconStatus } from "../app/game/[id]/control/ControlDefconStatus";
-import { ControlWeather } from "./control/ControlWeather";
+import { ControlComponentMapper } from "../lib/ComponentMapper";
 
 type ControlButtonMainProps = {
     icon: FontAwesomeIconProps["icon"];
@@ -205,38 +204,15 @@ export default function ControlTools({
                     </div>
                 ) : null}
             </div>
-            {apiResponse.components.map((component) => {
-                let innerComponent: React.ReactNode = null;
-
-                switch (component.componentType) {
-                    case "Defcon":
-                        innerComponent = (
-                            <ControlDefconStatus
-                                defcon={component}
-                                id={game._id}
-                                setAPIResponse={setApiResponse}
-                                setError={setError}
-                            />
-                        );
-                        break;
-                    case "Weather":
-                        innerComponent = (
-                            <ControlWeather
-                                weatherMessage={component.weatherMessage}
-                                id={game._id}
-                                setAPIResponse={setApiResponse}
-                                setError={setError}
-                            />
-                        );
-                        break;
-                }
-
-                return (
-                    <React.Fragment key={component.componentType}>
-                        {innerComponent}
-                    </React.Fragment>
-                );
-            })}
+            {apiResponse.components.map((component, key) => (
+                <ControlComponentMapper
+                    key={key}
+                    component={component}
+                    id={game._id}
+                    setAPIResponse={setApiResponse}
+                    setError={setError}
+                />
+            ))}
         </div>
     );
 }
