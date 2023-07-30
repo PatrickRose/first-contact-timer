@@ -5,15 +5,12 @@ import {
     DefconComponent,
     DefconCountry,
     DefconStatus,
-} from "../../../../types/types";
-import { ApiResponseDecode } from "../../../../types/io-ts-def";
+} from "../../types/types";
+import { ApiResponseDecode } from "../../types/io-ts-def";
 import * as React from "react";
 import { useState } from "react";
-import {
-    BACKGROUNDS,
-    DefconStateInfo,
-} from "../../../../components/DefconStatuses";
-import { ControlButtonRootProps } from "../../../../components/ControlTools";
+import { BACKGROUNDS, DefconStateInfo } from "../DefconStatuses";
+import { ControlButtonRootProps } from "../ControlTools";
 
 type CountryDefconProps = {
     stateName: keyof DefconComponent["countries"];

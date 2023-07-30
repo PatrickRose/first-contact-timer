@@ -9,12 +9,7 @@ export function ControlWeather({
     id,
 }: {
     setAPIResponse: (apiResponse: ApiResponse) => void;
-    setError: (
-        value:
-            | ((prevState: string | undefined) => string | undefined)
-            | string
-            | undefined
-    ) => void;
+    setError: (value: string | undefined) => void;
     weatherMessage: string;
     id: Game["_id"];
 }) {
