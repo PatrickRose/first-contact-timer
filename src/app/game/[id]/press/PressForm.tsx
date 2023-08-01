@@ -63,6 +63,12 @@ export default function PressForm({
         <div className="container lg:p-4 pb-24 lg:pb-4 lg:bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
             <h2 className="text-3xl mt-2 mb-6 uppercase text-center">
                 Press Tools
+                {Array.isArray(game.setupInformation.press) ? (
+                    <span className="block text-lg normal-case">
+                        Posting as{" "}
+                        {game.setupInformation.press[pressAccount - 1]?.name}
+                    </span>
+                ) : null}
             </h2>
             <div className="flex flex-col">
                 <form onSubmit={submit} className="mt-2">

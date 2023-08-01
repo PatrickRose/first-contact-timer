@@ -3,6 +3,8 @@ import { isLeft } from "fp-ts/Either";
 import { NotFound } from "next/dist/client/components/error";
 import GameWrapper from "../GameWrapper";
 import Link from "next/link";
+import { getIconForPress } from "../../../../lib/press";
+import Image from "next/image";
 
 export default async function Page({ params }: { params: { id: string } }) {
     const gameRepo = getGameRepo();
@@ -28,6 +30,45 @@ export default async function Page({ params }: { params: { id: string } }) {
                         Please return to your main game page
                     </Link>
                 </p>
+            </div>
+        );
+    }
+
+    if (Array.isArray(game.setupInformation.press)) {
+        return (
+            <div className="p-4">
+                <p>
+                    Your game has a multi-press set-up. Please choose the press
+                    team you are playing as:
+                </p>
+                <ul>
+                    {game.setupInformation.press.map((press, key) => {
+                        return (
+                            <li key={key} className="py-2">
+                                <Link
+                                    href={`/game/${game._id}/press/${key + 1}`}
+                                    className="flex"
+                                >
+                                    <div className="flex flex-col px-2">
+                                        <div>
+                                            <Image
+                                                src={getIconForPress(1, [
+                                                    press,
+                                                ])}
+                                                alt=""
+                                                width={60}
+                                                height={60}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col flex-1 px-2 pt-2">
+                                        {press.name}
+                                    </div>
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
             </div>
         );
     }

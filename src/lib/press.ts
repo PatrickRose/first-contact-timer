@@ -17,21 +17,25 @@ export function calculatePressTabIcon(pressInfo: LivePress): ImageProps["src"] {
     return pressInfo.logo === undefined ? Icon_NewsFeed : pressInfo.logo;
 }
 
-export function getIconForPressItem(
-    item: NewsItem,
-    press: LivePress
-): ImageProps["src"] {
-    if (press === undefined) {
-        return Icon_NewsFeed;
-    }
-
+export function getIconForPress(pressNo: number, press: LivePress) {
     if (Array.isArray(press)) {
-        const relevantPress = press[item.pressAccount - 1];
+        const relevantPress = press[pressNo - 1];
 
         return relevantPress?.logo ?? Icon_NewsFeed;
     }
 
+    if (press === undefined) {
+        return Icon_NewsFeed;
+    }
+
     return press.logo ?? Icon_NewsFeed;
+}
+
+export function getIconForPressItem(
+    item: NewsItem,
+    press: LivePress
+): ImageProps["src"] {
+    return getIconForPress(item.pressAccount, press);
 }
 
 export function getTitleForPressItem(
