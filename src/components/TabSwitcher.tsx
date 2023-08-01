@@ -66,20 +66,22 @@ export default function TabSwitcher({
                 />
                 <span>Game</span>
             </button>
-            <button
-                className={`${baseClass} ${
-                    activeTab == "press" ? activeClass : ""
-                }`}
-                onClick={() => setActiveTab("press")}
-            >
-                <Image
-                    className="mx-auto"
-                    src={Icon_NewsFeed}
-                    alt=""
-                    width={40}
-                />
-                <span>News</span>
-            </button>
+            {game.setupInformation.press === false ? null : (
+                <button
+                    className={`${baseClass} ${
+                        activeTab == "press" ? activeClass : ""
+                    }`}
+                    onClick={() => setActiveTab("press")}
+                >
+                    <Image
+                        className="mx-auto"
+                        src={Icon_NewsFeed}
+                        alt=""
+                        width={40}
+                    />
+                    <span>News</span>
+                </button>
+            )}
             {game.components.map((component, key) => {
                 let innerComponent = null;
                 switch (component.componentType) {

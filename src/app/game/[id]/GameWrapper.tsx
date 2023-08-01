@@ -174,13 +174,17 @@ export default function GameWrapper(props: GameWrapperProps) {
                                 {child}
                             </div>
                         ) : null}
-                        <div
-                            className={`${
-                                activeTab != "press" ? "hidden" : ""
-                            } lg:hidden`}
-                        >
-                            <NewsFeed newsItems={apiResponse.breakingNews} />
-                        </div>
+                        {game.setupInformation.press === false ? null : (
+                            <div
+                                className={`${
+                                    activeTab != "press" ? "hidden" : ""
+                                } lg:hidden`}
+                            >
+                                <NewsFeed
+                                    newsItems={apiResponse.breakingNews}
+                                />
+                            </div>
+                        )}
                     </div>
                     {game.setupInformation.breakingNewsBanner ? (
                         <BreakingNews newsItem={apiResponse.breakingNews[0]} />
