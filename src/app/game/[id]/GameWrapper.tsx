@@ -182,6 +182,7 @@ export default function GameWrapper(props: GameWrapperProps) {
                             >
                                 <NewsFeed
                                     newsItems={apiResponse.breakingNews}
+                                    press={game.setupInformation.press}
                                 />
                             </div>
                         )}

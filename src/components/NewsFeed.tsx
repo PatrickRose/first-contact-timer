@@ -1,8 +1,13 @@
-import { NewsItem } from "../types/types";
+import { LivePress, NewsItem } from "../types/types";
 import Image from "next/image";
 import GNNLogo from "../../public/GNNLogo.png";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import {
+    getIconForPressItem,
+    getPressFeedTitle,
+    getTitleForPressItem,
+} from "../lib/press";
 
 export function BreakingNewsText({ item }: { item: NewsItem }) {
     return (
@@ -38,18 +43,27 @@ export function NewsFeedNewsText({ item }: { item: NewsItem }) {
     );
 }
 
-function NewsItem({ item }: { item: NewsItem }) {
-    const [formattedDate, setFormattedDate] = useState<string>(item.date);
+function NewsItem({ item, press }: { item: NewsItem; press: LivePress }) {
+    // Default this to an empty string
+    // We can't trust that it'll be the same when we re-render
+    const [formattedDate, setFormattedDate] = useState<string>("");
 
     useEffect(() => {
         setFormattedDate(new Date(item.date).toLocaleString());
     }, [item.date]);
 
+    const pressName = getTitleForPressItem(item, press);
+
     return (
         <div className="flex pt-1 pb-0">
             <div className="flex flex-col px-2">
                 <div>
-                    <Image src={GNNLogo} alt="" width={60} />
+                    <Image
+                        src={getIconForPressItem(item, press)}
+                        alt=""
+                        width={60}
+                        height={60}
+                    />
                 </div>
             </div>
             <div className="flex flex-col flex-1 px-2 pt-2">
@@ -57,21 +71,34 @@ function NewsItem({ item }: { item: NewsItem }) {
                     Turn {item.turn}, phase {item.phase} | {formattedDate}
                 </div>
                 <NewsFeedNewsText item={item} />
+                {pressName !== null ? (
+                    <div className="text-gray-500 text-left text-sm">
+                        Posted by {pressName}
+                    </div>
+                ) : null}
             </div>
         </div>
     );
 }
 
-export function NewsFeed({ newsItems }: { newsItems: NewsItem[] }) {
+export function NewsFeed({
+    newsItems,
+    press,
+}: {
+    newsItems: NewsItem[];
+    press: LivePress;
+}) {
+    const pressFeedTitle = getPressFeedTitle(press);
+
     return (
         <div className="py-4 pb-24">
             <h3 className="text-2xl mt-2 mb-6 uppercase text-center">
-                GNN News Feed
+                {pressFeedTitle}
             </h3>
             {newsItems.map((item, index) => (
                 <div className="py-2" key={index}>
                     <hr className="border-b-1 border-gray-500" />
-                    <NewsItem item={item} />
+                    <NewsItem item={item} press={press} />
                 </div>
             ))}
         </div>

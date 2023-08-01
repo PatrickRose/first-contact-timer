@@ -237,6 +237,10 @@ const GAME_TYPES: Record<
             theme: "first-contact",
             breakingNewsBanner: true,
             components: [],
+            press: {
+                name: "Test Press",
+                logo: "/MGC.png",
+            },
         },
         components: [],
     },

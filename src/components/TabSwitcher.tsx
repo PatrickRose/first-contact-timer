@@ -1,10 +1,10 @@
-import {Game} from "../types/types";
+import { Game } from "../types/types";
 import Image from "next/image";
 import Icon_Game from "../../public/Icon-VLHG.png";
 import Icon_DefCon from "../../public/Icon-DefCon.png";
 import Icon_Manage from "../../public/Icon-Manage.png";
-import React, {useEffect} from "react";
-import {calculatePressTabIcon} from "../lib/press";
+import React, { useEffect } from "react";
+import { calculatePressTabIcon } from "../lib/press";
 
 function DisplayManageTabSwitch({
     activeTab,
