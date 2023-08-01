@@ -13,6 +13,7 @@ export const NewsItemDecode = t.type({
     date: t.string,
     turn: t.number,
     phase: t.number,
+    pressAccount: t.number,
 });
 
 export const DefconStatusDecode = t.union([
@@ -35,6 +36,7 @@ export const DefconDecode = t.type({
 
 export const SetBreakingNewsDecode = t.type({
     breakingNews: t.string,
+    pressAccount: t.number,
 });
 
 export const ControlAPIDecode = t.type({
@@ -128,6 +130,15 @@ export const ComponentDecode = t.union([
     WolfAttackDecode,
 ]);
 
+export const PressDecode = t.intersection([
+    t.type({
+        name: t.string,
+    }),
+    t.partial({
+        logo: t.string,
+    }),
+]);
+
 export const SetupInformationDecode = t.intersection([
     t.type({
         phases: t.array(
@@ -151,6 +162,9 @@ export const SetupInformationDecode = t.intersection([
     }),
     t.partial({
         logo: t.string,
+    }),
+    t.partial({
+        press: t.union([t.literal(false), t.array(PressDecode), PressDecode]),
     }),
 ]);
 

@@ -8,10 +8,12 @@ export default function PressForm({
     game,
     apiResponse,
     setApiResponse,
+    pressAccount,
 }: {
     game: Game;
     apiResponse: ApiResponse;
     setApiResponse: (apiResponse: ApiResponse) => void;
+    pressAccount: number;
 }) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [breakingNews, setBreakingNews] = useState<string>("");
@@ -26,6 +28,7 @@ export default function PressForm({
 
         const toSend: SetBreakingNews = {
             breakingNews,
+            pressAccount,
         };
 
         return fetch(`/game/${game._id}/press/api/`, {

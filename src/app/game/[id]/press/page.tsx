@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     return (
         <div>
-            <GameWrapper game={game.right} mode="Press" />
+            <GameWrapper game={game.right} mode="Press" pressAccount={0} />
         </div>
     );
 }

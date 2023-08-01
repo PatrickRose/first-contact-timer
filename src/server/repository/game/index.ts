@@ -12,7 +12,8 @@ export default interface GameRepository {
     ) => Promise<Either<string, Game>>;
     setBreakingNews: (
         currentGame: Game,
-        breakingNews: string
+        breakingNews: string,
+        pressAccount: number
     ) => Promise<Either<string, Game>>;
 }
 

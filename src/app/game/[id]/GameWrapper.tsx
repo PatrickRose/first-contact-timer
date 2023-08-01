@@ -19,13 +19,19 @@ import { SideComponentMapper } from "../../../lib/ComponentMapper";
 
 const triggersAudio: (keyof ApiResponse)[] = ["active", "turnNumber", "phase"];
 
-export default function GameWrapper({
-    game,
-    mode,
-}: {
+type GameWrapperProps = {
     game: Game;
-    mode: "Player" | "Control" | "Press";
-}) {
+} & (
+    | {
+          mode: "Player" | "Control";
+      }
+    | {
+          mode: "Press";
+          pressAccount: number;
+      }
+);
+export default function GameWrapper(props: GameWrapperProps) {
+    const { game, mode } = props;
     const [apiResponse, setAPIResponse] = useState<ApiResponse>(
         toApiResponse(game)
     );
@@ -103,6 +109,7 @@ export default function GameWrapper({
                     game={game}
                     apiResponse={apiResponse}
                     setApiResponse={setAPIResponse}
+                    pressAccount={props.pressAccount}
                 />
             );
             manageTabTitle = "Press Tools";
