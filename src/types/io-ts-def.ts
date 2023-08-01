@@ -79,6 +79,7 @@ export const GameTypeDecode = t.union([
     t.literal("aftermath"),
     t.literal("wts-1970"),
     t.literal("dow"),
+    t.literal("dev-test-game"),
 ]);
 
 export const CreateGameRequestDecode = t.type({
