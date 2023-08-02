@@ -132,7 +132,8 @@ export class MongoRepository implements GameRepository {
 
     async setBreakingNews(
         { _id, turnInformation }: Game,
-        newBreakingNews: string
+        newBreakingNews: string,
+        pressAccount: number
     ): Promise<Either<string, Game>> {
         try {
             await this.mongo.connect();
@@ -150,6 +151,7 @@ export class MongoRepository implements GameRepository {
                             date: new Date().toISOString(),
                             turn: turnInformation.turnNumber,
                             phase: turnInformation.currentPhase,
+                            pressAccount,
                         },
                     },
                 }

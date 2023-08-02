@@ -2,6 +2,9 @@ import { getGameRepo } from "../../../../server/repository/game";
 import { isLeft } from "fp-ts/Either";
 import { NotFound } from "next/dist/client/components/error";
 import GameWrapper from "../GameWrapper";
+import Link from "next/link";
+import { getIconForPress } from "../../../../lib/press";
+import Image from "next/image";
 
 export default async function Page({ params }: { params: { id: string } }) {
     const gameRepo = getGameRepo();
@@ -10,15 +13,69 @@ export default async function Page({ params }: { params: { id: string } }) {
         throw new Error("Could not get game repo");
     }
 
-    const game = await gameRepo.right.get(params.id);
+    const maybeGame = await gameRepo.right.get(params.id);
 
-    if (isLeft(game)) {
+    if (isLeft(maybeGame)) {
         return NotFound();
+    }
+
+    const game = maybeGame.right;
+
+    if (game.setupInformation.press === false) {
+        return (
+            <div className="text-center bg-red-500 py-4">
+                <p>Your game has been set up to not have any press at all</p>
+                <p className="pt-4">
+                    <Link href={`/game/${game._id}`} className="underline">
+                        Please return to your main game page
+                    </Link>
+                </p>
+            </div>
+        );
+    }
+
+    if (Array.isArray(game.setupInformation.press)) {
+        return (
+            <div className="p-4">
+                <p>
+                    Your game has a multi-press set-up. Please choose the press
+                    team you are playing as:
+                </p>
+                <ul>
+                    {game.setupInformation.press.map((press, key) => {
+                        return (
+                            <li key={key} className="py-2">
+                                <Link
+                                    href={`/game/${game._id}/press/${key + 1}`}
+                                    className="flex"
+                                >
+                                    <div className="flex flex-col px-2">
+                                        <div>
+                                            <Image
+                                                src={getIconForPress(1, [
+                                                    press,
+                                                ])}
+                                                alt=""
+                                                width={60}
+                                                height={60}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col flex-1 px-2 pt-2">
+                                        {press.name}
+                                    </div>
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
+        );
     }
 
     return (
         <div>
-            <GameWrapper game={game.right} mode="Press" />
+            <GameWrapper game={game} mode="Press" pressAccount={0} />
         </div>
     );
 }

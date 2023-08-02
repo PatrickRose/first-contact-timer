@@ -45,7 +45,8 @@ export async function POST(
 
     const newGame = await gameRepo.right.setBreakingNews(
         game.right,
-        body.breakingNews
+        body.breakingNews,
+        body.pressAccount
     );
 
     if (isLeft(newGame)) {

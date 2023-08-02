@@ -1,10 +1,10 @@
 import { Game } from "../types/types";
 import Image from "next/image";
 import Icon_Game from "../../public/Icon-VLHG.png";
-import Icon_NewsFeed from "../../public/GNNLogo.png";
 import Icon_DefCon from "../../public/Icon-DefCon.png";
 import Icon_Manage from "../../public/Icon-Manage.png";
 import React, { useEffect } from "react";
+import { calculatePressTabIcon } from "../lib/press";
 
 function DisplayManageTabSwitch({
     activeTab,
@@ -66,20 +66,23 @@ export default function TabSwitcher({
                 />
                 <span>Game</span>
             </button>
-            <button
-                className={`${baseClass} ${
-                    activeTab == "press" ? activeClass : ""
-                }`}
-                onClick={() => setActiveTab("press")}
-            >
-                <Image
-                    className="mx-auto"
-                    src={Icon_NewsFeed}
-                    alt=""
-                    width={40}
-                />
-                <span>News</span>
-            </button>
+            {game.setupInformation.press === false ? null : (
+                <button
+                    className={`${baseClass} ${
+                        activeTab == "press" ? activeClass : ""
+                    }`}
+                    onClick={() => setActiveTab("press")}
+                >
+                    <Image
+                        className="mx-auto"
+                        src={calculatePressTabIcon(game.setupInformation.press)}
+                        alt=""
+                        width={40}
+                        height={40}
+                    />
+                    <span>News</span>
+                </button>
+            )}
             {game.components.map((component, key) => {
                 let innerComponent = null;
                 switch (component.componentType) {

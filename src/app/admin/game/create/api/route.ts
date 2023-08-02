@@ -211,6 +211,10 @@ const GAME_TYPES: Record<
             theme: "first-contact",
             breakingNewsBanner: true,
             components: [],
+            press: {
+                name: "INC",
+                logo: "/inc.png",
+            },
         },
         components: [
             {
@@ -218,6 +222,37 @@ const GAME_TYPES: Record<
                 inProgress: false,
             },
         ],
+    },
+    "dev-test-game": {
+        setupInformation: {
+            gameName: "Dev Test Game",
+            phases: [
+                {
+                    title: "Action Phase",
+                    length: 18,
+                    hidden: false,
+                },
+                {
+                    title: "Team Phase",
+                    length: 12,
+                    hidden: false,
+                },
+            ],
+            theme: "first-contact",
+            breakingNewsBanner: true,
+            components: [],
+            press: [
+                {
+                    name: "Test Press",
+                    logo: "/MGC.png",
+                },
+                {
+                    name: "Second Press",
+                    logo: "/Icon-VLHG.png",
+                },
+            ],
+        },
+        components: [],
     },
 };
 
