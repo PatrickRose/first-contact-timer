@@ -211,6 +211,10 @@ const GAME_TYPES: Record<
             theme: "first-contact",
             breakingNewsBanner: true,
             components: [],
+            press: {
+                name: "INC",
+                logo: "/inc.png",
+            },
         },
         components: [
             {
