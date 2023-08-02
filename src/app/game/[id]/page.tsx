@@ -16,9 +16,5 @@ export default async function Page({ params }: { params: { id: string } }) {
         return NotFound();
     }
 
-    return (
-        <div>
-            <GameWrapper game={game.right} mode="Player" />
-        </div>
-    );
+    return <GameWrapper game={game.right} mode="Player" />;
 }
