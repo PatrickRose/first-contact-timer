@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Game, SetupInformation } from "../types/types";
-import { lengthOfPhase } from "../server/turn";
+import { Game, SetupInformation } from "../../../types/types";
+import { lengthOfPhase } from "../../../server/turn";
 import { isLeft } from "fp-ts/Either";
-import { TurnComponentMapper } from "../lib/ComponentMapper";
+import { TurnComponentMapper } from "../../../lib/ComponentMapper";
 
 type TurnCounterProps = {
     turn: number;
