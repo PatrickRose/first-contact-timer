@@ -1,8 +1,8 @@
 import * as React from "react";
-import { NewsItem } from "../types/types";
+import { NewsItem } from "../../../types/types";
 import { BreakingNewsText } from "./NewsFeed";
 import Image from "next/image";
-import GNNLogo from "../../public/GNNLogo.png";
+import GNNLogo from "../../../../public/GNNLogo.png";
 
 export default function BreakingNews({ newsItem }: { newsItem?: NewsItem }) {
     if (!newsItem) {

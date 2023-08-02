@@ -1,7 +1,7 @@
 import * as React from "react";
 import Image from "next/image";
-import VLHGLogo from "../../public/vlhg-logo.svg";
-import { Game } from "../types/types";
+import VLHGLogo from "../../../../public/vlhg-logo.svg";
+import { Game } from "../../../types/types";
 
 export default function LogoBlock({
     setupInformation,

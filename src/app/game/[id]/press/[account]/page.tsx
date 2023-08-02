@@ -57,9 +57,5 @@ export default async function Page({
         );
     }
 
-    return (
-        <div>
-            <GameWrapper game={game} mode="Press" pressAccount={pressAccount} />
-        </div>
-    );
+    return <GameWrapper game={game} mode="Press" pressAccount={pressAccount} />;
 }

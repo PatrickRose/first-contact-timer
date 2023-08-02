@@ -1,13 +1,13 @@
-import { LivePress, NewsItem } from "../types/types";
+import { LivePress, NewsItem } from "../../../types/types";
 import Image from "next/image";
-import GNNLogo from "../../public/GNNLogo.png";
+import GNNLogo from "../../../../public/GNNLogo.png";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import {
     getIconForPressItem,
     getPressFeedTitle,
     getTitleForPressItem,
-} from "../lib/press";
+} from "../../../lib/press";
 
 export function BreakingNewsText({ item }: { item: NewsItem }) {
     return (

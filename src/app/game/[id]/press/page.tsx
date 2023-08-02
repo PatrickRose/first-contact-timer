@@ -73,9 +73,5 @@ export default async function Page({ params }: { params: { id: string } }) {
         );
     }
 
-    return (
-        <div>
-            <GameWrapper game={game} mode="Press" pressAccount={0} />
-        </div>
-    );
+    return <GameWrapper game={game} mode="Press" pressAccount={0} />;
 }

@@ -1,5 +1,5 @@
 import { ApiResponse, Game } from "../types/types";
-import LogoBlock from "./LogoBlock";
+import LogoBlock from "./theme/first-contact/LogoBlock";
 import React, { useState } from "react";
 import { SideComponentMapper } from "../lib/ComponentMapper";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
