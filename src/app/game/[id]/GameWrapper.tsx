@@ -8,6 +8,7 @@ import { ApiResponseDecode } from "../../../types/io-ts-def";
 import ControlTools from "../../../components/ControlTools";
 import PressForm from "./press/PressForm";
 import { FirstContactTheme } from "../../../components/theme/first-contact/FirstContactTheme";
+import { AftermathTheme } from "../../../components/theme/aftermath/FirstContactTheme";
 
 const triggersAudio: (keyof ApiResponse)[] = ["active", "turnNumber", "phase"];
 
@@ -96,6 +97,17 @@ export default function GameWrapper(props: GameWrapperProps) {
             );
             manageTabTitle = "Press Tools";
             break;
+    }
+
+    if (game.setupInformation.theme === "aftermath") {
+        return (
+            <AftermathTheme
+                game={game}
+                apiResponse={apiResponse}
+                childComponent={child}
+                manageTabTitle={manageTabTitle}
+            />
+        );
     }
 
     return (
