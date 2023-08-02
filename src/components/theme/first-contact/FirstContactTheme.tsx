@@ -29,7 +29,7 @@ export function FirstContactTheme({
     }
 
     return (
-        <div>
+        <div className="flex flex-col min-h-screen bg-black text-white flex-1 pt-24 lg:pt-0">
             <div className="fixed top-0 left-0 right-0">
                 <CurrentTurn
                     turn={apiResponse.turnNumber}
@@ -48,7 +48,7 @@ export function FirstContactTheme({
                         activeTab != "press"
                             ? "hidden"
                             : ""
-                    } lg:flex container flex-1 text-center h-screen 
+                    } lg:flex first-contact-container flex-1 text-center h-screen 
                                 flex-col 
                                 justify-between justify-items-stretch items-center
                                 `}
