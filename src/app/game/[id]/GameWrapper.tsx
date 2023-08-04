@@ -32,10 +32,17 @@ export default function GameWrapper(props: GameWrapperProps) {
     const [audio, setAudio] = useState<HTMLAudioElement>();
 
     useEffect(() => setAudio(new Audio("/turn-change.mp3")), []);
+    const [fetching, setFetching] = useState<boolean>(false);
 
     const delay = Math.min(apiResponse.phaseEnd * 1000, 5000);
     useInterval(
         () => {
+            if (fetching) {
+                return;
+            }
+
+            setFetching(true);
+
             fetch(`/game/${game._id}/api`, {
                 cache: "no-cache",
                 headers: { accept: "application/json" },
@@ -56,7 +63,8 @@ export default function GameWrapper(props: GameWrapperProps) {
                         throw new Error("Body did not match API");
                     }
                 })
-                .catch((error) => console.error(error));
+                .catch((error) => console.error(error))
+                .finally(() => setFetching(false));
         },
         delay == 0 ? 100 : delay
     );
@@ -67,6 +75,10 @@ export default function GameWrapper(props: GameWrapperProps) {
         }
 
         const phaseEnd = apiResponse.phaseEnd;
+
+        if (phaseEnd == 0) {
+            return;
+        }
 
         const newPhaseEnd = Math.max(phaseEnd - 1, 0);
         setAPIResponse({ ...apiResponse, phaseEnd: newPhaseEnd });
