@@ -61,8 +61,22 @@ export function toApiResponse(
         secondsLeft = 0;
     }
 
+    const breakingNews = [...turn.breakingNews];
+    breakingNews.sort((a, b) => {
+        if (a.date < b.date) {
+            return 1;
+        }
+
+        if (a.date > b.date) {
+            return -1;
+        }
+
+        return 0;
+    });
+
     return {
         ...turn,
+        breakingNews,
         turnNumber: turn.turnInformation.turnNumber,
         phase: turn.turnInformation.currentPhase,
         phaseEnd: secondsLeft,
