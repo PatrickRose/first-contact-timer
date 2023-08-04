@@ -10,6 +10,7 @@ import { getGameRepo } from "../../../../../server/repository/game";
 import { ControlAPIDecode } from "../../../../../types/io-ts-def";
 import {
     generateNewTurnInformation,
+    nextPhase,
     toApiResponse,
 } from "../../../../../server/turn";
 import { MakeRight } from "../../../../../lib/io-ts-helpers";
@@ -96,11 +97,10 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         const turnInformation = game.turnInformation;
 
         const { newPhase, turnNumber } =
-            turnInformation.currentPhase ==
-            game.setupInformation.phases.length - 1
+            turnInformation.currentPhase == game.setupInformation.phases.length
                 ? { newPhase: 1, turnNumber: turnInformation.turnNumber + 1 }
                 : {
-                      newPhase: turnInformation.turnNumber + 1,
+                      newPhase: turnInformation.currentPhase + 1,
                       turnNumber: turnInformation.turnNumber,
                   };
 
