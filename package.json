@@ -29,7 +29,7 @@
         "swr": "^2.2.0"
     },
     "devDependencies": {
-        "@types/react": "^18.2.16",
+        "@types/react": "^18.2.18",
         "@types/react-transition-group": "^4.4.6",
         "autoprefixer": "^10.4.14",
         "eslint": "^8.46.0",
