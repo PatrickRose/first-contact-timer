@@ -6,7 +6,7 @@ import { hasFinished, toApiResponse } from "../../../../server/turn";
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: { id: string } },
 ): Promise<NextResponse<ApiResponse | { error: string }>> {
     const id = params.id;
 

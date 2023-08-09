@@ -11,7 +11,7 @@ export async function POST(
         params,
     }: {
         params: { id: string };
-    }
+    },
 ): Promise<NextResponse<ApiResponse | { error: string }>> {
     const id = params.id;
 
@@ -20,7 +20,7 @@ export async function POST(
     if (!SetBreakingNewsDecode.is(body)) {
         return NextResponse.json(
             { error: "Incorrect request" },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
@@ -39,14 +39,14 @@ export async function POST(
     if (!game.right.active) {
         return NextResponse.json(
             { error: "Game not active, please wait" },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
     const newGame = await gameRepo.right.setBreakingNews(
         game.right,
         body.breakingNews,
-        body.pressAccount
+        body.pressAccount,
     );
 
     if (isLeft(newGame)) {

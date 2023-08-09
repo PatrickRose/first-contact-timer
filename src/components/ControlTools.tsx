@@ -34,7 +34,7 @@ const CONTROL_BUTTONS: Record<
         props: ControlButtonMainProps;
         visibleForState: (
             game: Game["setupInformation"],
-            apiResponse: ApiResponse
+            apiResponse: ApiResponse,
         ) => boolean;
         order: number;
     }
@@ -76,7 +76,7 @@ const CONTROL_BUTTONS: Record<
         },
         visibleForState: function (
             game: Game["setupInformation"],
-            { phase }: ApiResponse
+            { phase }: ApiResponse,
         ) {
             return phase != game.phases.length;
         },
@@ -162,7 +162,7 @@ export default function ControlTools({
 }) {
     const actions = Object.entries(CONTROL_BUTTONS)
         .filter(([_, val]) =>
-            val.visibleForState(game.setupInformation, apiResponse)
+            val.visibleForState(game.setupInformation, apiResponse),
         )
         .sort(([_, a], [__, b]) => {
             return a.order - b.order;

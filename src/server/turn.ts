@@ -5,7 +5,7 @@ import { MakeLeft, MakeRight } from "../lib/io-ts-helpers";
 export function lengthOfPhase(
     phase: number,
     turn: number,
-    setupInformation: SetupInformation
+    setupInformation: SetupInformation,
 ): Either<string, number> {
     const phases = setupInformation.phases;
 
@@ -13,7 +13,7 @@ export function lengthOfPhase(
 
     if (isLeft(thisPhaseInfo)) {
         return MakeLeft(
-            `Tried to get length of phase ${phase}, but there are only ${phases.length} phases`
+            `Tried to get length of phase ${phase}, but there are only ${phases.length} phases`,
         );
     }
 
@@ -29,7 +29,7 @@ export function lengthOfPhase(
 export function nextDate(
     phase: number,
     turn: number,
-    setupInformation: SetupInformation
+    setupInformation: SetupInformation,
 ): Either<string, Date> {
     const date = new Date();
     date.setMilliseconds(0);
@@ -44,7 +44,7 @@ export function nextDate(
 
 export function toApiResponse(
     turn: Game,
-    forceRefresh: boolean = false
+    forceRefresh: boolean = false,
 ): ApiResponse {
     if (!turn.active && !forceRefresh) {
         return turn.frozenTurn;
@@ -92,7 +92,7 @@ export function nextPhase(phase: number, setup: SetupInformation): number {
 export function tickTurn(game: Game): Game {
     const newPhase: number = nextPhase(
         game.turnInformation.currentPhase,
-        game.setupInformation
+        game.setupInformation,
     );
     const newTurn =
         newPhase == 1
@@ -102,7 +102,7 @@ export function tickTurn(game: Game): Game {
     const turnInformation = generateNewTurnInformation(
         newPhase,
         newTurn,
-        game.setupInformation
+        game.setupInformation,
     );
 
     if (isLeft(turnInformation)) {
@@ -122,7 +122,7 @@ export function hasFinished(game: Game): boolean {
 export function createGame(
     id: Game["_id"],
     setupInformation: Game["setupInformation"],
-    components: Game["components"]
+    components: Game["components"],
 ): Either<string, Game> {
     let date = nextDate(1, 1, setupInformation);
 
@@ -154,7 +154,7 @@ export function createGame(
 
 export function getCurrentPhase(
     phase: number,
-    setupInformation: SetupInformation
+    setupInformation: SetupInformation,
 ): Either<false, SetupInformation["phases"][0]> {
     const possible = setupInformation.phases[phase - 1];
 
@@ -168,7 +168,7 @@ export function getCurrentPhase(
 export function generateNewTurnInformation(
     phase: Game["turnInformation"]["currentPhase"],
     turn: Game["turnInformation"]["turnNumber"],
-    setupInfo: Game["setupInformation"]
+    setupInfo: Game["setupInformation"],
 ): Either<string, Game["turnInformation"]> {
     const newPhaseEnd = nextDate(phase, turn, setupInfo);
 

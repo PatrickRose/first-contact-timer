@@ -112,7 +112,7 @@ export default function TurnCounter(props: TurnCounterProps) {
                     let phaseLength = lengthOfPhase(
                         key + 1,
                         turn,
-                        setupInformation
+                        setupInformation,
                     );
 
                     if (isLeft(phaseLength)) {

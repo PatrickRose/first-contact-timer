@@ -19,7 +19,7 @@ export default function initialiseMongo(): Either<string, MongoClient> {
     if (missing.length) {
         return MakeLeft(
             "Some environment variables were not set: " +
-                missing.map(([envVar]) => envVar).join(", ")
+                missing.map(([envVar]) => envVar).join(", "),
         );
     }
 
@@ -35,7 +35,7 @@ type CollectionNames = {
 
 export function getCollection<T extends keyof CollectionNames>(
     db: Db,
-    collectionName: T
+    collectionName: T,
 ): Collection<CollectionNames[T]> {
     return db.collection<CollectionNames[T]>(collectionName);
 }

@@ -17,7 +17,7 @@ type CountryDefconProps = {
     country: DefconCountry;
     triggerUpdate: (
         countryName: CountryDefconProps["stateName"],
-        status: DefconCountry["status"]
+        status: DefconCountry["status"],
     ) => Promise<void>;
 };
 
@@ -45,7 +45,7 @@ function DefconState({
         <button
             onClick={onClick}
             className={`p-2 text-center items-center flex flex-col transition duration-500 border-4 ${background.join(
-                " "
+                " ",
             )}`}
         >
             <span className="hidden lg:block">Defcon</span>
@@ -116,7 +116,7 @@ export function ControlDefconStatus({
 }: { defcon: DefconComponent } & ControlButtonRootProps) {
     const triggerUpdate: CountryDefconProps["triggerUpdate"] = async (
         countryName: CountryDefconProps["stateName"],
-        status: DefconStatus
+        status: DefconStatus,
     ): Promise<void> => {
         const apiReqBody: DefconAPIBody = {
             newStatus: status,

@@ -65,7 +65,7 @@ export class MongoRepository implements GameRepository {
 
     async #updateTurn(
         newFields: Partial<Game>,
-        currentFields: Game
+        currentFields: Game,
     ): Promise<Either<string, true>> {
         try {
             await this.mongo.connect();
@@ -78,7 +78,7 @@ export class MongoRepository implements GameRepository {
 
             await gameCollection.updateOne(
                 { _id, turnInformation },
-                { $set: newFields }
+                { $set: newFields },
             );
 
             return MakeRight(true);
@@ -94,7 +94,7 @@ export class MongoRepository implements GameRepository {
 
         const updateResult = await this.#updateTurn(
             { turnInformation: tickedTurn.turnInformation },
-            game
+            game,
         );
 
         if (isLeft(updateResult)) {
@@ -108,7 +108,7 @@ export class MongoRepository implements GameRepository {
 
     async runControlAction(
         currentGame: Game,
-        action: ControlAction
+        action: ControlAction,
     ): Promise<Either<string, Game>> {
         const tickedTurn = action(currentGame);
 
@@ -118,7 +118,7 @@ export class MongoRepository implements GameRepository {
 
         const updateResult = await this.#updateTurn(
             tickedTurn.right,
-            currentGame
+            currentGame,
         );
 
         if (isLeft(updateResult)) {
@@ -133,7 +133,7 @@ export class MongoRepository implements GameRepository {
     async setBreakingNews(
         { _id, turnInformation }: Game,
         newBreakingNews: string,
-        pressAccount: number
+        pressAccount: number,
     ): Promise<Either<string, Game>> {
         try {
             await this.mongo.connect();
@@ -154,7 +154,7 @@ export class MongoRepository implements GameRepository {
                             pressAccount,
                         },
                     },
-                }
+                },
             );
         } catch (e) {
             return MakeLeft((e as Error).message);

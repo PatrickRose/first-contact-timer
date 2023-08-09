@@ -8,7 +8,7 @@ import { MakeLeft, MakeRight } from "../../../../../../lib/io-ts-helpers";
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: { id: string } },
 ): Promise<NextResponse<ApiResponse | { error: string }>> {
     const id = params.id;
 
@@ -17,7 +17,7 @@ export async function POST(
     if (!DefconAPIBodyDecode.is(body)) {
         return NextResponse.json(
             { error: "Incorrect request" },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
@@ -40,7 +40,7 @@ export async function POST(
 
             // Find the defcon component
             const defconComponent = newGame.components.find(
-                (val) => val.componentType == "Defcon"
+                (val) => val.componentType == "Defcon",
             );
 
             if (defconComponent?.componentType != "Defcon") {
@@ -51,7 +51,7 @@ export async function POST(
 
             if (!country) {
                 return MakeLeft(
-                    `Defcon component does not include ${body.stateName}`
+                    `Defcon component does not include ${body.stateName}`,
                 );
             }
 
@@ -59,7 +59,7 @@ export async function POST(
 
             if (!newGame.active) {
                 const frozenComponent = newGame.frozenTurn.components.find(
-                    (val) => val.componentType == "Defcon"
+                    (val) => val.componentType == "Defcon",
                 );
 
                 if (frozenComponent?.componentType == "Defcon") {
@@ -69,7 +69,7 @@ export async function POST(
             }
 
             return MakeRight(newGame);
-        }
+        },
     );
 
     if (isLeft(newGame)) {

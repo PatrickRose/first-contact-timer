@@ -21,7 +21,7 @@ export function AftermathTheme({
 
     const currentPhaseInformation = getCurrentPhase(
         apiResponse.phase,
-        game.setupInformation
+        game.setupInformation,
     );
 
     if (isLeft(currentPhaseInformation)) {

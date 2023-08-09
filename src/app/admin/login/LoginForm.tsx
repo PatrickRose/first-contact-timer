@@ -40,7 +40,7 @@ export default function LoginForm() {
                 setError(data.message);
             } else {
                 setError(
-                    "Error sending login request, please wait and try again"
+                    "Error sending login request, please wait and try again",
                 );
             }
             return;
@@ -48,7 +48,7 @@ export default function LoginForm() {
 
         if (!data.isLoggedIn) {
             setError(
-                "Username/password combination was incorrect. Please try again"
+                "Username/password combination was incorrect. Please try again",
             );
         }
 
