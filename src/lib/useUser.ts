@@ -15,7 +15,7 @@ export default function useUser({
 } {
     const { data: user, mutate: mutateUser } = useSWR<User | undefined>(
         "/api/user",
-        fetcher
+        fetcher,
     );
 
     const router = useRouter();

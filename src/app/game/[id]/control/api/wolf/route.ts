@@ -8,7 +8,7 @@ import { MakeLeft, MakeRight } from "../../../../../../lib/io-ts-helpers";
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: { id: string } },
 ): Promise<NextResponse<ApiResponse | { error: string }>> {
     const id = params.id;
 
@@ -17,7 +17,7 @@ export async function POST(
     if (!SetWolfAttackDecode.is(body)) {
         return NextResponse.json(
             { error: "Incorrect request" },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
@@ -40,7 +40,7 @@ export async function POST(
 
             // Find the defcon component
             const defconComponent = newGame.components.find(
-                (val) => val.componentType == "DoWWolfAttack"
+                (val) => val.componentType == "DoWWolfAttack",
             );
 
             if (defconComponent?.componentType != "DoWWolfAttack") {
@@ -51,7 +51,7 @@ export async function POST(
 
             if (!newGame.active) {
                 const frozenComponent = newGame.frozenTurn.components.find(
-                    (val) => val.componentType == "DoWWolfAttack"
+                    (val) => val.componentType == "DoWWolfAttack",
                 );
 
                 if (frozenComponent?.componentType == "DoWWolfAttack") {
@@ -60,7 +60,7 @@ export async function POST(
             }
 
             return MakeRight(newGame);
-        }
+        },
     );
 
     if (isLeft(newGame)) {

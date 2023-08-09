@@ -8,12 +8,12 @@ export default interface GameRepository {
     nextTurn: (game: Game) => Promise<Either<string, Game>>;
     runControlAction: (
         currentGame: Game,
-        action: ControlAction
+        action: ControlAction,
     ) => Promise<Either<string, Game>>;
     setBreakingNews: (
         currentGame: Game,
         breakingNews: string,
-        pressAccount: number
+        pressAccount: number,
     ) => Promise<Either<string, Game>>;
 }
 

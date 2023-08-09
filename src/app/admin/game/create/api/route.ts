@@ -257,7 +257,7 @@ const GAME_TYPES: Record<
 };
 
 export async function POST(
-    request: Request
+    request: Request,
 ): Promise<NextResponse<CreateGameResponse>> {
     const createGameReq = await request.json();
 
@@ -267,7 +267,7 @@ export async function POST(
                 result: false,
                 errors: ["Incorrect request"],
             },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
@@ -281,7 +281,7 @@ export async function POST(
                 result: false,
                 errors: ["Failed to create game", game.left],
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 
@@ -293,7 +293,7 @@ export async function POST(
                 result: false,
                 errors: ["Couldn't get the games repo", gamesRepo.left],
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 
@@ -305,7 +305,7 @@ export async function POST(
                 result: false,
                 errors: ["Failed to insert game", result.left],
             },
-            { status: 500 }
+            { status: 500 },
         );
     }
 

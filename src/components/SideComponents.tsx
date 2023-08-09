@@ -42,7 +42,7 @@ export default function SideComponents({
                                 node.addEventListener(
                                     "transitionend",
                                     done,
-                                    false
+                                    false,
                                 )
                             }
                             classNames={{

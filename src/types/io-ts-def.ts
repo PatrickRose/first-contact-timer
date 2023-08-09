@@ -151,12 +151,12 @@ export const SetupInformationDecode = t.intersection([
                 t.partial({
                     extraTime: t.record(t.number, t.number),
                 }),
-            ])
+            ]),
         ),
         theme: ThemeDecode,
         breakingNewsBanner: t.boolean,
         components: t.array(
-            t.union([t.literal("Defcon"), t.literal("Weather")])
+            t.union([t.literal("Defcon"), t.literal("Weather")]),
         ),
         gameName: t.string,
     }),

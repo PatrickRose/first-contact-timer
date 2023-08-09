@@ -26,7 +26,7 @@ type GameWrapperProps = {
 export default function GameWrapper(props: GameWrapperProps) {
     const { game, mode } = props;
     const [apiResponse, setAPIResponse] = useState<ApiResponse>(
-        toApiResponse(game)
+        toApiResponse(game),
     );
 
     const [audio, setAudio] = useState<HTMLAudioElement>();
@@ -54,7 +54,7 @@ export default function GameWrapper(props: GameWrapperProps) {
 
                         if (
                             triggersAudio.some(
-                                (val) => body[val] != apiResponse[val]
+                                (val) => body[val] != apiResponse[val],
                             )
                         ) {
                             audio?.play().catch((e) => console.log(e));
@@ -66,7 +66,7 @@ export default function GameWrapper(props: GameWrapperProps) {
                 .catch((error) => console.error(error))
                 .finally(() => setFetching(false));
         },
-        delay == 0 ? 100 : delay
+        delay == 0 ? 100 : delay,
     );
 
     useInterval(() => {

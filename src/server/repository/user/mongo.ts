@@ -74,7 +74,7 @@ export class MongoRepository implements UserRepository {
 
     async update(
         username: string,
-        user: DBUser
+        user: DBUser,
     ): Promise<Either<string, true>> {
         try {
             await this.mongo.connect();
@@ -82,12 +82,12 @@ export class MongoRepository implements UserRepository {
             const database = this.mongo.db();
 
             const userCollection = database.collection<DBUser>(
-                this._collectionName
+                this._collectionName,
             );
 
             const result = await userCollection.updateOne(
                 { _id: username },
-                { $set: user }
+                { $set: user },
             );
 
             if (result.matchedCount == 1) {
@@ -97,7 +97,7 @@ export class MongoRepository implements UserRepository {
             console.log(result);
 
             return MakeLeft(
-                `Failed to update - matched ${result.matchedCount} when updating ${username}`
+                `Failed to update - matched ${result.matchedCount} when updating ${username}`,
             );
         } catch (e) {
             return MakeLeft((e as Error).message);

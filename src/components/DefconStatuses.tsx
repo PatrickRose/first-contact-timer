@@ -81,7 +81,7 @@ function DefconState({
     return (
         <div
             className={`p-2 pr-6 text-center items-center flex flex-col transition duration-500 border-0 rounded-r-full ${background.join(
-                " "
+                " ",
             )}`}
         >
             <div className={`text-2xl`}>{defconNumber}</div>
@@ -116,7 +116,7 @@ function DisplayDefconStatus({ defcon }: DefconProps) {
     };
 
     Object.values(defcon).forEach((defconStatus) =>
-        states[defconStatus.status].push(defconStatus)
+        states[defconStatus.status].push(defconStatus),
     );
 
     return (

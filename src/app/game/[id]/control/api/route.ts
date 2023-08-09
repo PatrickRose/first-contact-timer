@@ -21,7 +21,7 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
             active: false,
             frozenTurn: toApiResponse(
                 { ...game, active: false, frozenTurn: toApiResponse(game) },
-                true
+                true,
             ),
         });
     },
@@ -61,7 +61,7 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         const newTurnInformation = generateNewTurnInformation(
             newPhase,
             turnNumber,
-            game.setupInformation
+            game.setupInformation,
         );
 
         if (isLeft(newTurnInformation)) {
@@ -82,7 +82,7 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         const newTurnInformation = generateNewTurnInformation(
             newPhase,
             turnNumber,
-            game.setupInformation
+            game.setupInformation,
         );
 
         if (isLeft(newTurnInformation)) {
@@ -107,7 +107,7 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         const newTurnInformation = generateNewTurnInformation(
             newPhase,
             turnNumber,
-            game.setupInformation
+            game.setupInformation,
         );
 
         if (isLeft(newTurnInformation)) {
@@ -127,7 +127,7 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         const newTurnInformation = generateNewTurnInformation(
             newPhase,
             turnNumber,
-            game.setupInformation
+            game.setupInformation,
         );
 
         if (isLeft(newTurnInformation)) {
@@ -142,7 +142,7 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: { id: string } },
 ): Promise<NextResponse<ApiResponse | { error: string }>> {
     const id = params.id;
 
@@ -151,7 +151,7 @@ export async function POST(
     if (!ControlAPIDecode.is(body)) {
         return NextResponse.json(
             { error: "Incorrect request" },
-            { status: 400 }
+            { status: 400 },
         );
     }
 
@@ -169,7 +169,7 @@ export async function POST(
 
     const newGame = await gameRepo.right.runControlAction(
         game.right,
-        CONTROL_ACTIONS[body.action]
+        CONTROL_ACTIONS[body.action],
     );
 
     if (isLeft(newGame)) {

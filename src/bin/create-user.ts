@@ -27,7 +27,7 @@ async function createUser() {
         }
 
         console.log(
-            `User account created with name ${name} and password ${DEFAULT_PASSWORD}`
+            `User account created with name ${name} and password ${DEFAULT_PASSWORD}`,
         );
     });
 }

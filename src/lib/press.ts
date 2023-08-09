@@ -33,14 +33,14 @@ export function getIconForPress(pressNo: number, press: LivePress) {
 
 export function getIconForPressItem(
     item: NewsItem,
-    press: LivePress
+    press: LivePress,
 ): ImageProps["src"] {
     return getIconForPress(item.pressAccount, press);
 }
 
 export function getTitleForPressItem(
     item: NewsItem,
-    press: LivePress
+    press: LivePress,
 ): string | null {
     if (Array.isArray(press)) {
         const relevantPress = press[item.pressAccount - 1];
