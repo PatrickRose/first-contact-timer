@@ -32,3 +32,6 @@ export type SetWeatherStatus = t.TypeOf<typeof types.SetWeatherStatusDecode>;
 export type WolfAttack = t.TypeOf<typeof types.WolfAttackDecode>;
 export type SetWolfAttack = t.TypeOf<typeof types.SetWolfAttackDecode>;
 export type LivePress = Exclude<SetupInformation["press"], false>;
+
+export type RunningHotCorps = t.TypeOf<typeof types.RunningHotCorpsDecode>;
+export type RunningHotRunners = t.TypeOf<typeof types.RunningHotRunnersDecode>;

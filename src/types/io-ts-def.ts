@@ -81,6 +81,7 @@ export const GameTypeDecode = t.union([
     t.literal("aftermath"),
     t.literal("wts-1970"),
     t.literal("dow"),
+    t.literal("running-hot"),
     t.literal("dev-test-game"),
 ]);
 
@@ -124,10 +125,41 @@ export const WolfAttackDecode = t.type({
     inProgress: t.boolean,
 });
 
+export const RunningHotCorpsDecode = t.type({
+    componentType: t.literal("RunningHotCorp"),
+    sharePrice: t.type({
+        GenEq: t.number,
+        MCM: t.number,
+        Gordon: t.number,
+        ANT: t.number,
+        DTC: t.number,
+    }),
+});
+
+export const GangNamesDecode = t.union([
+    t.literal("Dancers"),
+    t.literal("G33ks"),
+    t.literal("Facers"),
+    t.literal("Gruffsters"),
+]);
+
+export const RunningHotRunnersDecode = t.type({
+    componentType: t.literal("RunningHotRunners"),
+    rep: t.record(
+        t.string,
+        t.type({
+            reputation: t.number,
+            gang: GangNamesDecode,
+        }),
+    ),
+});
+
 export const ComponentDecode = t.union([
     DefconComponentDecode,
     WeatherStatusDecode,
     WolfAttackDecode,
+    RunningHotCorpsDecode,
+    RunningHotRunnersDecode,
 ]);
 
 export const PressDecode = t.intersection([
