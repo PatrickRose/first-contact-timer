@@ -6,6 +6,7 @@ import { ControlButtonRootProps } from "../components/ControlTools";
 import { ControlWeather } from "../components/control/ControlWeather";
 import { ControlDefconStatus } from "../components/control/ControlDefconStatus";
 import { ControlWolfAttack } from "../components/control/ControlWolfAttack";
+import { RunningHotCorps } from "../components/RunningHotCorps";
 
 export function ControlComponentMapper({
     component,
@@ -76,6 +77,13 @@ export function SideComponentMapper({
         case "DoWWolfAttack":
             // No mapped component for WolfAttack here
             return null;
+        case "RunningHotCorp":
+            return (
+                <RunningHotCorps
+                    componentType={"RunningHotCorp"}
+                    sharePrice={component.sharePrice}
+                />
+            );
     }
 
     return null;

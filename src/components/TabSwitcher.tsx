@@ -131,6 +131,29 @@ export default function TabSwitcher({
                             </button>
                         );
                         break;
+                    case "RunningHotCorp":
+                        innerComponent = (
+                            <button
+                                className={`${baseClass} ${
+                                    activeTab == component.componentType
+                                        ? activeClass
+                                        : ""
+                                }`}
+                                onClick={() =>
+                                    setActiveTab(component.componentType)
+                                }
+                            >
+                                <Image
+                                    className="mx-auto"
+                                    // TODO: Update weather Icon
+                                    src={Icon_DefCon}
+                                    alt=""
+                                    width={40}
+                                />
+                                <span>Share Prices</span>
+                            </button>
+                        );
+                        break;
                 }
 
                 return (
