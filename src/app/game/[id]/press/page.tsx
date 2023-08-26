@@ -1,10 +1,10 @@
 import { getGameRepo } from "../../../../server/repository/game";
 import { isLeft } from "fp-ts/Either";
-import { NotFound } from "next/dist/client/components/error";
 import GameWrapper from "../GameWrapper";
 import Link from "next/link";
 import { getIconForPress } from "../../../../lib/press";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {
     const gameRepo = getGameRepo();
@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     const maybeGame = await gameRepo.right.get(params.id);
 
     if (isLeft(maybeGame)) {
-        return NotFound();
+        notFound();
     }
 
     const game = maybeGame.right;
