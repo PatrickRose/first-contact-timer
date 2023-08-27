@@ -32,7 +32,7 @@
         "@types/react": "^18.2.21",
         "@types/react-transition-group": "^4.4.6",
         "autoprefixer": "^10.4.15",
-        "eslint": "^8.47.0",
+        "eslint": "^8.48.0",
         "eslint-config-next": "^13.4.19",
         "husky": "^8.0.3",
         "lint-staged": "^14.0.1",
