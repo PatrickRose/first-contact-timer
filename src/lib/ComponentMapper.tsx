@@ -7,6 +7,7 @@ import { ControlWeather } from "../components/control/ControlWeather";
 import { ControlDefconStatus } from "../components/control/ControlDefconStatus";
 import { ControlWolfAttack } from "../components/control/ControlWolfAttack";
 import { RunningHotCorps } from "../components/RunningHotCorps";
+import { ControlRunningHotCorps } from "../components/control/ControlRunningHotCorps";
 
 export function ControlComponentMapper({
     component,
@@ -42,6 +43,16 @@ export function ControlComponentMapper({
                     id={id}
                     setAPIResponse={setAPIResponse}
                     setError={setError}
+                />
+            );
+        case "RunningHotCorp":
+            return (
+                <ControlRunningHotCorps
+                    sharePrice={component.sharePrice}
+                    id={id}
+                    setAPIResponse={setAPIResponse}
+                    setError={setError}
+                    componentType={component.componentType}
                 />
             );
     }

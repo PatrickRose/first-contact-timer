@@ -125,15 +125,17 @@ export const WolfAttackDecode = t.type({
     inProgress: t.boolean,
 });
 
+const CorpNamesDecode = t.union([
+    t.literal("GenEq"),
+    t.literal("MCM"),
+    t.literal("Gordon"),
+    t.literal("ANT"),
+    t.literal("DTC"),
+]);
+
 export const RunningHotCorpsDecode = t.type({
     componentType: t.literal("RunningHotCorp"),
-    sharePrice: t.type({
-        GenEq: t.number,
-        MCM: t.number,
-        Gordon: t.number,
-        ANT: t.number,
-        DTC: t.number,
-    }),
+    sharePrice: t.record(CorpNamesDecode, t.number),
 });
 
 export const GangNamesDecode = t.union([
@@ -230,3 +232,8 @@ export const GameDecode = t.intersection([
         }),
     ]),
 ]);
+
+export const SetSharePriceDecode = t.type({
+    corpName: CorpNamesDecode,
+    diff: t.number,
+});

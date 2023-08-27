@@ -1,28 +1,6 @@
 import { RunningHotCorps } from "../types/types";
-import Image, { ImageProps } from "next/image";
-import ANT from "./RunningHot/ANT.png";
-import DTC from "./RunningHot/DTC.png";
-import GenEq from "./RunningHot/GenEq.png";
-import Gordon from "./RunningHot/Gordon.png";
-import MCM from "./RunningHot/MCM.png";
-
-const corpNames: Record<keyof RunningHotCorps["sharePrice"], string> = {
-    ANT: "Augmented NucleoTech",
-    DTC: "Digital Tactical Control",
-    MCM: "McCullough Calibrated Mechanical",
-    GenEq: "Genetic Equity",
-    Gordon: "Gordon",
-};
-const corpImages: Record<
-    keyof RunningHotCorps["sharePrice"],
-    ImageProps["src"]
-> = {
-    ANT,
-    DTC,
-    MCM,
-    GenEq,
-    Gordon,
-};
+import Image from "next/image";
+import { corpImages, corpNames } from "./RunningHot/helpers";
 
 export function RunningHotCorps({ sharePrice }: RunningHotCorps) {
     const corps = Object.entries(sharePrice);
