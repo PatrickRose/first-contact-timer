@@ -1,11 +1,21 @@
 import * as React from "react";
-import { NewsItem } from "../../../types/types";
+import { Game, NewsItem } from "../../../types/types";
 import { BreakingNewsText } from "./NewsFeed";
 import Image from "next/image";
-import GNNLogo from "../../../../public/GNNLogo.png";
+import { getIconForPressItem, getTitleForPressItem } from "../../../lib/press";
 
-export default function BreakingNews({ newsItem }: { newsItem?: NewsItem }) {
+export default function BreakingNews({
+    newsItem,
+    press,
+}: {
+    newsItem?: NewsItem;
+    press: Game["setupInformation"]["press"];
+}) {
     if (!newsItem) {
+        return null;
+    }
+
+    if (press == false) {
         return null;
     }
 
@@ -21,8 +31,14 @@ export default function BreakingNews({ newsItem }: { newsItem?: NewsItem }) {
                 </h3>
                 <BreakingNewsText item={newsItem} />
             </div>
-            <div className="w-64 h-64 p-8">
-                <Image className="w-full h-full" src={GNNLogo} alt="" />
+            <div className="p-8">
+                <Image
+                    className="w-full h-full"
+                    src={getIconForPressItem(newsItem, press)}
+                    alt={getTitleForPressItem(newsItem, press) ?? ""}
+                    width={128}
+                    height={128}
+                />
             </div>
         </footer>
     );

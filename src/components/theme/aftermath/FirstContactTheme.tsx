@@ -100,7 +100,10 @@ export function AftermathTheme({
                         )}
                     </div>
                     {game.setupInformation.breakingNewsBanner ? (
-                        <BreakingNews newsItem={apiResponse.breakingNews[0]} />
+                        <BreakingNews
+                            newsItem={apiResponse.breakingNews[0]}
+                            press={game.setupInformation.press}
+                        />
                     ) : null}
                 </main>
                 {apiResponse.components.map((component, key) => {
