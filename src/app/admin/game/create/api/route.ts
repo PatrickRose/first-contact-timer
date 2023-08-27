@@ -283,6 +283,17 @@ const GAME_TYPES: Record<
             breakingNewsBanner: true,
             components: [],
             gameName: "Running Hot",
+            press: [
+                {
+                    name: "Business Times",
+                    logo: "/RunningHot/BusinessTimes.png",
+                },
+                {
+                    name: "Th3 Undergr0und",
+                    logo: "/RunningHot/Th3Underground.png",
+                },
+            ],
+            logo: "/RunningHot/RunningHot.webp",
         },
         components: [
             {
