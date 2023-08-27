@@ -237,3 +237,7 @@ export const SetSharePriceDecode = t.type({
     corpName: CorpNamesDecode,
     diff: t.number,
 });
+export const SetRunnerRepDecode = t.type({
+    runnerName: t.string,
+    diff: t.number,
+});

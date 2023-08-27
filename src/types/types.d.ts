@@ -35,5 +35,7 @@ export type LivePress = Exclude<SetupInformation["press"], false>;
 
 export type RunningHotCorps = t.TypeOf<typeof types.RunningHotCorpsDecode>;
 export type RunningHotRunners = t.TypeOf<typeof types.RunningHotRunnersDecode>;
+export type GangNames = t.TypeOf<typeof types.GangNamesDecode>;
 
 export type SetSharePrice = t.TypeOf<typeof types.SetSharePriceDecode>;
+export type SetRunnerRep = t.TypeOf<typeof types.SetRunnerRepDecode>;
