@@ -48,8 +48,8 @@ export function AftermathTheme({
                         activeTab != "press"
                             ? "hidden"
                             : ""
-                    } lg:flex first-contact-container flex-1 text-center h-screen 
-                                flex-col 
+                    } lg:flex lg:overflow-auto first-contact-container flex-1 text-center h-screen 
+                                flex-col overflow-y-scroll
                                 justify-between justify-items-stretch items-center
                                 `}
                 >
