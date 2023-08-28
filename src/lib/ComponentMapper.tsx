@@ -6,6 +6,10 @@ import { ControlButtonRootProps } from "../components/ControlTools";
 import { ControlWeather } from "../components/control/ControlWeather";
 import { ControlDefconStatus } from "../components/control/ControlDefconStatus";
 import { ControlWolfAttack } from "../components/control/ControlWolfAttack";
+import { RunningHotCorps } from "../components/RunningHotCorps";
+import { ControlRunningHotCorps } from "../components/control/ControlRunningHotCorps";
+import { RunningHotRunners } from "../components/RunningHotRunners";
+import { ControlRunningHotRunners } from "../components/control/ControlRunningHotRunners";
 
 export function ControlComponentMapper({
     component,
@@ -43,6 +47,26 @@ export function ControlComponentMapper({
                     setError={setError}
                 />
             );
+        case "RunningHotCorp":
+            return (
+                <ControlRunningHotCorps
+                    sharePrice={component.sharePrice}
+                    id={id}
+                    setAPIResponse={setAPIResponse}
+                    setError={setError}
+                    componentType={component.componentType}
+                />
+            );
+        case "RunningHotRunners":
+            return (
+                <ControlRunningHotRunners
+                    rep={component.rep}
+                    id={id}
+                    setAPIResponse={setAPIResponse}
+                    setError={setError}
+                    componentType={component.componentType}
+                />
+            );
     }
 
     return null;
@@ -76,6 +100,20 @@ export function SideComponentMapper({
         case "DoWWolfAttack":
             // No mapped component for WolfAttack here
             return null;
+        case "RunningHotCorp":
+            return (
+                <RunningHotCorps
+                    componentType={"RunningHotCorp"}
+                    sharePrice={component.sharePrice}
+                />
+            );
+        case "RunningHotRunners":
+            return (
+                <RunningHotRunners
+                    componentType={component.componentType}
+                    rep={component.rep}
+                />
+            );
     }
 
     return null;

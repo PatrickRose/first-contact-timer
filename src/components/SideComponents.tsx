@@ -32,7 +32,7 @@ export default function SideComponents({
     }, 10000);
 
     return (
-        <div className="hidden lg:flex flex-col justify-between border-l-4 border-turn-counter-past-light w-full lg:w-auto">
+        <div className="hidden lg:flex flex-col justify-between border-l-4 border-turn-counter-past-light w-full lg:w-1/3">
             <div className="lg:block">
                 {toShow.length == 0 ? null : (
                     <SwitchTransition mode="out-in">
