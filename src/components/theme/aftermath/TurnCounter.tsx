@@ -33,7 +33,7 @@ const TurnTimer = function TurnTimer(props: {
 
         paused = (
             <p
-                className={`${pausedClass} py-3 px-6 bg-zinc-600 text-white rounded alert alert-danger text-3xl`}
+                className={`${pausedClass} pt-10 pb-0 px-6 bg-zinc-600 text-white rounded alert alert-danger text-6xl`}
             >
                 GAME PAUSED
             </p>
@@ -44,7 +44,7 @@ const TurnTimer = function TurnTimer(props: {
 
     const textClass = mobile
         ? "lg:hidden text-6xl py-2"
-        : "hidden lg:block text-8xl py-8";
+        : "hidden lg:block text-big-time leading-[12rem] font-semibold py-0";
 
     return (
         <React.Fragment>
@@ -94,42 +94,40 @@ export default function TurnCounter(props: TurnCounterProps) {
     const { turn, phase, timestamp, active, setupInformation } = props;
 
     const text = setupInformation.phases[phase - 1]?.title;
+    const textSize = setupInformation.phases[phase - 1]?.hidden
+        ? "text-4xl lg:text-5xl"
+        : "text-6xl lg:text-8xl";
 
     return (
         <React.Fragment>
-            <h3 className="lg:hidden text-2xl mt-2 mb-6 uppercase text-center">
-                Game Timer
-            </h3>
-            {props.components.map((component, key) => (
-                <TurnComponentMapper key={key} component={component} />
-            ))}
-            <h1 className="text-4xl lg:text-5xl mt-4 mb-8 uppercase ">
-                Turn {turn}: {text}
-            </h1>
-            <TurnTimer timestamp={timestamp} active={active} mobile={true} />
-            <div className="flex lg:flex-wrap flex-col lg:flex-row  mt-4">
-                {setupInformation.phases.map((val, key) => {
-                    let phaseLength = lengthOfPhase(
-                        key + 1,
-                        turn,
-                        setupInformation,
-                    );
-
-                    if (isLeft(phaseLength)) {
-                        throw new Error(phaseLength.left);
-                    }
-                    return (
-                        <PhaseCount
-                            thisPhase={key + 1}
-                            phaseLength={phaseLength.right}
-                            activePhase={phase}
-                            phaseInformation={val}
-                            key={key}
-                        />
-                    );
-                })}
+            <div className="flex flex-col items-center flex-1 ">
+                <h3 className="lg:hidden text-2xl mt-2 mb-6 uppercase text-center">
+                    Game Timer
+                </h3>
+                {props.components.map((component, key) => (
+                    <TurnComponentMapper key={key} component={component} />
+                ))}
+                <div>
+                    <h1 className="text-3xl lg:text-4xl mt-4 mb-4 lg:mb-8 uppercase ">
+                        Aftermath Turn {turn}
+                    </h1>
+                    <h2
+                        className={`font-semibold mt-4 mb-4 uppercase w-7/8 m-auto ${textSize}`}
+                    >
+                        {text}
+                    </h2>
+                    <TurnTimer
+                        timestamp={timestamp}
+                        active={active}
+                        mobile={true}
+                    />
+                    <TurnTimer
+                        timestamp={timestamp}
+                        active={active}
+                        mobile={false}
+                    />
+                </div>
             </div>
-            <TurnTimer timestamp={timestamp} active={active} mobile={false} />
         </React.Fragment>
     );
 }

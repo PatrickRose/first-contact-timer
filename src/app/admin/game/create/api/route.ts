@@ -177,12 +177,12 @@ const GAME_TYPES: Record<
                     hidden: false,
                 },
                 {
-                    title: "Action Phase begins in",
+                    title: "FRB",
                     length: 2,
-                    hidden: true,
+                    hidden: false,
                 },
                 {
-                    title: "Action Phase",
+                    title: "Action",
                     length: 20,
                     hidden: false,
                 },
@@ -190,6 +190,7 @@ const GAME_TYPES: Record<
             theme: "aftermath",
             breakingNewsBanner: false,
             components: ["Weather"],
+            press: false,
         },
         components: [
             {
