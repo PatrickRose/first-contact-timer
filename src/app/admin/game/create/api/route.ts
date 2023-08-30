@@ -190,6 +190,7 @@ const GAME_TYPES: Record<
             theme: "aftermath",
             breakingNewsBanner: false,
             components: ["Weather"],
+            press: false,
         },
         components: [
             {
