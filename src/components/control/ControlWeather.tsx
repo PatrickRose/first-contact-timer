@@ -60,19 +60,19 @@ export function ControlWeather({
     return (
         <div className="first-contact-container lg:p-4 pb-24 lg:pb-4 lg:bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
             <h2 className="text-3xl mt-2 mb-6 uppercase text-center">
-                Weather Status
+                Weather Alerts
             </h2>
-            <h3 className="text-2xl">Current Weather Status</h3>
-            <div className="flex flex-col">
+            <h3 className="text-2xl hidden">Current Weather Status</h3>
+            <div className="flex flex-col hidden">
                 <WeatherStatus
                     message={
                         weatherMessage === ""
-                            ? "No weather message"
+                            ? "No Weather Report"
                             : weatherMessage
                     }
                 />
             </div>
-            <h3 className="text-2xl">New Weather Status</h3>
+            <h3 className="text-2xl hidden">New Weather Alerts</h3>
             <div className="flex flex-col">
                 <form onSubmit={submit} className="mt-2">
                     <label
@@ -80,7 +80,8 @@ export function ControlWeather({
                         className="pb-4 pt-0 block text-xl text-center"
                         htmlFor="breaking-news"
                     >
-                        Enter new weather status here:
+                        Enter new weather alerts here (leave blank to clear the
+                        status):
                     </label>
                     <div className="block">
                         <textarea

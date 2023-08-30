@@ -22,7 +22,7 @@ const CurrentTurnTimer = function CurrentTurnTimer(props: {
 
     return (
         <React.Fragment>
-            <p className="text-4xl py-2 text-right">
+            <p className="text-5xl py-2 text-right">
                 {`${formatter.format(minutes)}:${formatter.format(seconds)}`}
             </p>
         </React.Fragment>
@@ -32,15 +32,14 @@ const CurrentTurnTimer = function CurrentTurnTimer(props: {
 export default function CurrentTurn(props: CurrentTurnCounterProps) {
     const { turn, phase, timestamp, active, phaseInformation } = props;
 
-    const backgroundClass = phaseInformation.hidden
-        ? "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark opacity-50"
-        : "bg-turn-counter-current";
+    const backgroundClass =
+        phaseInformation.hidden && false
+            ? "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark opacity-50"
+            : "bg-aftermath-alert text-aftermath";
 
     const textClass = "";
 
-    const turnText = phaseInformation.hidden
-        ? `Turn ${turn}, next phase:`
-        : `Turn ${turn}, current phase:`;
+    const textSize = phaseInformation.hidden ? "text-xl" : "text-4xl";
 
     const phaseText = phaseInformation.title;
 
@@ -48,13 +47,12 @@ export default function CurrentTurn(props: CurrentTurnCounterProps) {
         <React.Fragment>
             <div className="flex lg:flex-wrap flex-col lg:flex-row mt-0 bg-black">
                 <div
-                    className={`lg:hidden flex flex-1 flex-row items-center justify-between p-3 transition duration-500 text-white delay-250 ${backgroundClass}`}
+                    className={`lg:hidden flex flex-1 flex-row items-center justify-between p-3 transition duration-500 delay-250 ${backgroundClass}`}
                 >
                     <div>
-                        <p className={`pb-0 mb-0 text-xl ${textClass}`}>
-                            {turnText}
-                        </p>
-                        <p className={`pb-0 mb-0 text-2xl ${textClass}`}>
+                        <p
+                            className={`pb-0 mb-0 text-2xl font-semibold uppercase ${textSize}`}
+                        >
                             {phaseText}
                         </p>
                     </div>

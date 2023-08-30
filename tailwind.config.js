@@ -39,6 +39,11 @@ module.exports = {
                 "defcon-2-dark": "#472e0c",
                 "defcon-3-light": "#1a521a",
                 "defcon-3-dark": "#113311",
+                aftermath: "#c20000",
+                "aftermath-alert": "#ffd710",
+            },
+            fontSize: {
+                "big-time": "12em",
             },
         },
     },
