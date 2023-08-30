@@ -63,7 +63,7 @@ export function PhaseArrow({
     thisPhase,
     activePhase,
 }: {
-    firstPhase: bool;
+    firstPhase: boolean;
     thisPhase: number;
     activePhase: number;
 }) {

@@ -132,6 +132,7 @@ export function AftermathTheme({
                         {game.setupInformation.breakingNewsBanner ? (
                             <BreakingNews
                                 newsItem={apiResponse.breakingNews[0]}
+                                press={game.setupInformation.press}
                             />
                         ) : null}
                     </main>

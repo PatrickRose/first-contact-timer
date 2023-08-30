@@ -1,7 +1,6 @@
 import * as React from "react";
 import Image from "next/image";
 import AlertIcon from "../../public/aftermath-alert.svg";
-import { Game } from "../../../types/types";
 
 export default function WeatherStatus({ message }: { message: string }) {
     let textClass = "text-center uppercase text-2xl font-semibold pb-6";
@@ -32,7 +31,7 @@ export default function WeatherStatus({ message }: { message: string }) {
                             alt=""
                         />
                     </div>
-                    <h3 className="text-2xl mt-2 mb-6 uppercase text-center mx-auto uppercase hidden">
+                    <h3 className="text-2xl mt-2 mb-6 uppercase text-center mx-auto hidden">
                         Weather Status
                     </h3>
                     {message.length ? (
