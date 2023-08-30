@@ -1,9 +1,9 @@
 import { getGameRepo } from "../../../../../server/repository/game";
 import { isLeft } from "fp-ts/Either";
-import { NotFound } from "next/dist/client/components/error";
 import GameWrapper from "../../GameWrapper";
 import StandardPressPage from "../page";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export default async function Page({
     params,
@@ -14,7 +14,7 @@ export default async function Page({
     const pressAccount = Number.parseInt(params.account, 10);
 
     if (isNaN(pressAccount)) {
-        return <NotFound />;
+        notFound();
     }
 
     const gameRepo = getGameRepo();
@@ -26,7 +26,7 @@ export default async function Page({
     const maybeGame = await gameRepo.right.get(params.id);
 
     if (isLeft(maybeGame)) {
-        return NotFound();
+        return notFound();
     }
 
     const game = maybeGame.right;

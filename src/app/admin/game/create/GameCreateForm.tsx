@@ -61,6 +61,7 @@ export function GameCreateForm() {
         aftermath: "Aftermath",
         "wts-1970": "Watch the Skies: 1970",
         dow: "Den of Wolves",
+        "running-hot": "Running Hot",
         "dev-test-game": "Dev Test Game",
     };
 
