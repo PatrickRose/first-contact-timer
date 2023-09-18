@@ -32,6 +32,7 @@
     },
     "exclude": ["node_modules"],
     "include": [
+        "__test__/**/*.ts",
         "next-env.d.ts",
         "src/*.ts",
         "src/**/*.ts",
