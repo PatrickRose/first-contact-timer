@@ -86,7 +86,7 @@ export function toApiResponse(
 export function nextPhase(phase: number, setup: SetupInformation): number {
     const newPhaseNumber = phase + 1;
 
-    return newPhaseNumber >= setup.phases.length ? 1 : newPhaseNumber;
+    return newPhaseNumber > setup.phases.length ? 1 : newPhaseNumber;
 }
 
 export function tickTurn(game: Game): Game {
