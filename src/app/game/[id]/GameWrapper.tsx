@@ -5,10 +5,10 @@ import React, { useEffect, useState } from "react";
 import { toApiResponse } from "@fc/server/turn";
 import useInterval from "../../../lib/useInterval";
 import { ApiResponseDecode } from "@fc/types/io-ts-def";
-import ControlTools from "../../../components/ControlTools";
+import ControlTools from "@fc/components/ControlTools";
 import PressForm from "./press/PressForm";
-import { FirstContactTheme } from "../../../components/theme/first-contact/FirstContactTheme";
-import { AftermathTheme } from "../../../components/theme/aftermath/FirstContactTheme";
+import { FirstContactTheme } from "@fc/components/theme/first-contact/FirstContactTheme";
+import { AftermathTheme } from "@fc/components/theme/aftermath/FirstContactTheme";
 
 const triggersAudio: (keyof ApiResponse)[] = ["active", "turnNumber", "phase"];
 
