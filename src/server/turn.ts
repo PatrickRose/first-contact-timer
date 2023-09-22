@@ -108,12 +108,13 @@ export function tickTurn(game: Game): Game {
     );
 
     if (isLeft(turnInformation)) {
+        /* istanbul ignore next */
         throw new Error("Should not happen");
     }
 
     return {
         ...game,
-        turnInformation: turnInformation.right,
+        turnInformation: { ...turnInformation.right },
     };
 }
 
