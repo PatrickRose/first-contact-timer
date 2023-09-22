@@ -71,6 +71,7 @@ export function toApiResponse(
             return -1;
         }
 
+        /* istanbul ignore next */
         return 0;
     });
 
