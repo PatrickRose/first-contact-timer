@@ -1,8 +1,8 @@
 import { ApiResponse, Game } from "@fc/types/types";
 import { NextRequest, NextResponse } from "next/server";
-import { getGameRepo } from "../../../../server/repository/game";
+import { getGameRepo } from "@fc/server/repository/game";
 import { isLeft } from "fp-ts/Either";
-import { hasFinished, toApiResponse } from "../../../../server/turn";
+import { hasFinished, toApiResponse } from "@fc/server/turn";
 
 export async function GET(
     request: NextRequest,

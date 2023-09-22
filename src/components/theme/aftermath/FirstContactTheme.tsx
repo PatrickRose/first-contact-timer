@@ -10,7 +10,7 @@ import TurnCounter from "./TurnCounter";
 import PhaseList from "./PhaseList";
 import CurrentTurn from "./CurrentTurn";
 import AlertSystemFooter from "./AlertSystemFooter";
-import { getCurrentPhase } from "../../../server/turn";
+import { getCurrentPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
 
 export function AftermathTheme({

@@ -1,6 +1,6 @@
-import { getUserRepo } from "../server/repository/user";
+import { getUserRepo } from "@fc/server/repository/user";
 import { isLeft } from "fp-ts/Either";
-import { DEFAULT_PASSWORD } from "../server/repository/user/consts";
+import { DEFAULT_PASSWORD } from "@fc/server/repository/user/consts";
 import { loadEnvConfig } from "@next/env";
 
 async function createUser() {

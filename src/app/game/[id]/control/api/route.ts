@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse, ControlAction, ControlAPI, Game } from "@fc/types/types";
 import { isLeft } from "fp-ts/Either";
-import { getGameRepo } from "../../../../../server/repository/game";
+import { getGameRepo } from "@fc/server/repository/game";
 import { ControlAPIDecode } from "@fc/types/io-ts-def";
 import {
     generateNewTurnInformation,
     nextPhase,
     toApiResponse,
-} from "../../../../../server/turn";
+} from "@fc/server/turn";
 import { MakeRight } from "../../../../../lib/io-ts-helpers";
 
 const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {

@@ -8,7 +8,7 @@ import { NewsFeed } from "./NewsFeed";
 import LogoBlock from "./LogoBlock";
 import TurnCounter from "./TurnCounter";
 import CurrentTurn from "./CurrentTurn";
-import { getCurrentPhase } from "../../../server/turn";
+import { getCurrentPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
 
 export function FirstContactTheme({

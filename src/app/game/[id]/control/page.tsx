@@ -1,4 +1,4 @@
-import { getGameRepo } from "../../../../server/repository/game";
+import { getGameRepo } from "@fc/server/repository/game";
 import { isLeft } from "fp-ts/Either";
 
 import GameWrapper from "../GameWrapper";
