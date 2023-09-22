@@ -20,7 +20,15 @@
             {
                 "name": "next"
             }
-        ]
+        ],
+        "paths": {
+            "@fc/components/*": ["./src/components/*"],
+            "@fc/lib/*": ["./src/lib/*"],
+            "@fc/pages/*": ["./src/pages/*"],
+            "@fc/server/*": ["./src/server/*"],
+            "@fc/types/*": ["./src/types/*"],
+            "@fc/public/*": ["./public/*"]
+        }
     },
     "exclude": ["node_modules"],
     "include": [
