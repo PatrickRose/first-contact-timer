@@ -75,7 +75,8 @@ export function toApiResponse(
     });
 
     return {
-        ...turn,
+        active: turn.active,
+        components: turn.components,
         breakingNews,
         turnNumber: turn.turnInformation.turnNumber,
         phase: turn.turnInformation.currentPhase,
