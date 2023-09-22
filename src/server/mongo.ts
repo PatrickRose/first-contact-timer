@@ -1,5 +1,5 @@
 import { Collection, Db, MongoClient } from "mongodb";
-import { MakeLeft, MakeRight } from "../lib/io-ts-helpers";
+import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 import { Either } from "fp-ts/Either";
 import { DBUser, Game } from "@fc/types/types";
 

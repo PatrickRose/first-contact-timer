@@ -11,7 +11,7 @@ import { faPause } from "@fortawesome/free-solid-svg-icons/faPause";
 import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay";
 import React, { useState } from "react";
 import { ApiResponseDecode } from "@fc/types/io-ts-def";
-import { ControlComponentMapper } from "../lib/ComponentMapper";
+import { ControlComponentMapper } from "@fc/lib/ComponentMapper";
 
 type ControlButtonMainProps = {
     icon: FontAwesomeIconProps["icon"];

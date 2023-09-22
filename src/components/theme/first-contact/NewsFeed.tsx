@@ -7,7 +7,7 @@ import {
     getIconForPressItem,
     getPressFeedTitle,
     getTitleForPressItem,
-} from "../../../lib/press";
+} from "@fc/lib/press";
 
 export function BreakingNewsText({ item }: { item: NewsItem }) {
     return (

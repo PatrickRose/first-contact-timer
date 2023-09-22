@@ -5,7 +5,7 @@ import * as argon2 from "argon2";
 import { isLeft } from "fp-ts/lib/Either";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
-import { sessionOptions } from "../../lib/session";
+import { sessionOptions } from "@fc/lib/session";
 import { getUserRepo } from "@fc/server/repository/user";
 import { hashPassword } from "@fc/server/repository/user/argon";
 import { DEFAULT_PASSWORD } from "@fc/server/repository/user/consts";

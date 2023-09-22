@@ -8,7 +8,7 @@ import {
     nextPhase,
     toApiResponse,
 } from "@fc/server/turn";
-import { MakeRight } from "../../../../../lib/io-ts-helpers";
+import { MakeRight } from "@fc/lib/io-ts-helpers";
 
 const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
     pause: (game) => {

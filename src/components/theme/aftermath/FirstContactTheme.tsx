@@ -2,7 +2,7 @@ import { ThemeProps } from "../theme";
 import { useState } from "react";
 import TabSwitcher from "../../TabSwitcher";
 import SideComponents from "./SideComponentsAftermath";
-import { SideComponentMapper } from "../../../lib/ComponentMapper";
+import { SideComponentMapper } from "@fc/lib/ComponentMapper";
 import BreakingNews from "./BreakingNews";
 import { NewsFeed } from "./NewsFeed";
 import LogoBlock from "./LogoBlock";

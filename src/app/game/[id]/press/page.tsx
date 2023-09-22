@@ -2,7 +2,7 @@ import { getGameRepo } from "@fc/server/repository/game";
 import { isLeft } from "fp-ts/Either";
 import GameWrapper from "../GameWrapper";
 import Link from "next/link";
-import { getIconForPress } from "../../../../lib/press";
+import { getIconForPress } from "@fc/lib/press";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 

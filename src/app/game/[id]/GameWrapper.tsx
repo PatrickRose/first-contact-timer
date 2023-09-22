@@ -3,7 +3,7 @@
 import { ApiResponse, Game } from "@fc/types/types";
 import React, { useEffect, useState } from "react";
 import { toApiResponse } from "@fc/server/turn";
-import useInterval from "../../../lib/useInterval";
+import useInterval from "@fc/lib/useInterval";
 import { ApiResponseDecode } from "@fc/types/io-ts-def";
 import ControlTools from "@fc/components/ControlTools";
 import PressForm from "./press/PressForm";

@@ -4,7 +4,7 @@ import { isLeft } from "fp-ts/Either";
 import { getGameRepo } from "@fc/server/repository/game";
 import { DefconAPIBodyDecode, SetSharePriceDecode } from "@fc/types/io-ts-def";
 import { toApiResponse } from "@fc/server/turn";
-import { MakeLeft, MakeRight } from "../../../../../../lib/io-ts-helpers";
+import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 
 export async function POST(
     request: NextRequest,
