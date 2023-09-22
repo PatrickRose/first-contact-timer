@@ -1,4 +1,4 @@
-import { ApiResponse, Game } from "../../../types/types";
+import { ApiResponse, Game } from "@fc/types/types";
 import LogoBlock from "./LogoBlock";
 import HelpBlock from "./HelpBlock";
 import React, { useState } from "react";

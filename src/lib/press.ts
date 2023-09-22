@@ -1,4 +1,4 @@
-import { LivePress, NewsItem } from "../types/types";
+import { LivePress, NewsItem } from "@fc/types/types";
 
 import Icon_NewsFeed from "../../public/GNNLogo.png";
 import Icon_Press from "../../public/newspaper-regular.svg";

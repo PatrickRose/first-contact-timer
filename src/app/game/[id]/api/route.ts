@@ -1,4 +1,4 @@
-import { ApiResponse, Game } from "../../../../types/types";
+import { ApiResponse, Game } from "@fc/types/types";
 import { NextRequest, NextResponse } from "next/server";
 import { getGameRepo } from "../../../../server/repository/game";
 import { isLeft } from "fp-ts/Either";

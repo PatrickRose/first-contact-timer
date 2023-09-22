@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { LoginFailedDecode, UserDecode } from "../../../types/io-ts-def";
+import { LoginFailedDecode, UserDecode } from "@fc/types/io-ts-def";
 import useUser from "../../../lib/useUser";
 
 export default function LoginForm() {

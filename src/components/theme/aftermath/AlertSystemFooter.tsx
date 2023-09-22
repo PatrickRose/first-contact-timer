@@ -3,7 +3,7 @@ import Image from "next/image";
 import VLHGLogo from "../../../../public/aftermath-logo-vlhg.svg";
 import BBCLogo from "../../../../public/aftermath-logo-bbc.svg";
 import GovLogo from "../../../../public/aftermath-logo-hm-gov.svg";
-import { Game } from "../../../types/types";
+import { Game } from "@fc/types/types";
 
 export default function AlertSystemFooter({}: {}) {
     let textClass = "text-center uppercase text-2xl font-semibold";

@@ -1,9 +1,9 @@
 import { ControlButtonRootProps } from "../ControlTools";
-import { RunningHotCorps, SetSharePrice } from "../../types/types";
+import { RunningHotCorps, SetSharePrice } from "@fc/types/types";
 import { corpImages, corpNames } from "../RunningHot/helpers";
 import Image from "next/image";
 import { useState } from "react";
-import { ApiResponseDecode } from "../../types/io-ts-def";
+import { ApiResponseDecode } from "@fc/types/io-ts-def";
 
 function CorpField({
     id,

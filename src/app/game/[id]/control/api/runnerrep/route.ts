@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ApiResponse } from "../../../../../../types/types";
+import { ApiResponse } from "@fc/types/types";
 import { isLeft } from "fp-ts/Either";
 import { getGameRepo } from "../../../../../../server/repository/game";
-import { SetRunnerRepDecode } from "../../../../../../types/io-ts-def";
+import { SetRunnerRepDecode } from "@fc/types/io-ts-def";
 import { toApiResponse } from "../../../../../../server/turn";
 import { MakeLeft, MakeRight } from "../../../../../../lib/io-ts-helpers";
 

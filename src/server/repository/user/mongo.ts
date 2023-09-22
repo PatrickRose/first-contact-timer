@@ -1,6 +1,6 @@
 import { Either } from "fp-ts/lib/Either";
 import { MongoClient } from "mongodb";
-import { DBUser } from "../../../types/types";
+import { DBUser } from "@fc/types/types";
 import { MakeLeft, MakeRight } from "../../../lib/io-ts-helpers";
 import initialiseMongo from "../../mongo";
 import { hashPassword } from "./argon";

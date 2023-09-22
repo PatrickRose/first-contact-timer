@@ -1,4 +1,4 @@
-import { ApiResponse, ControlAPI, Game } from "../types/types";
+import { ApiResponse, ControlAPI, Game } from "@fc/types/types";
 import {
     FontAwesomeIcon,
     FontAwesomeIconProps,
@@ -10,7 +10,7 @@ import { faFastForward } from "@fortawesome/free-solid-svg-icons/faFastForward";
 import { faPause } from "@fortawesome/free-solid-svg-icons/faPause";
 import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay";
 import React, { useState } from "react";
-import { ApiResponseDecode } from "../types/io-ts-def";
+import { ApiResponseDecode } from "@fc/types/io-ts-def";
 import { ControlComponentMapper } from "../lib/ComponentMapper";
 
 type ControlButtonMainProps = {

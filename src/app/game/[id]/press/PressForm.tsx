@@ -1,8 +1,8 @@
 "use client";
 
-import { ApiResponse, Game, SetBreakingNews } from "../../../../types/types";
+import { ApiResponse, Game, SetBreakingNews } from "@fc/types/types";
 import { FormEvent, useState } from "react";
-import { ApiResponseDecode } from "../../../../types/io-ts-def";
+import { ApiResponseDecode } from "@fc/types/io-ts-def";
 
 export default function PressForm({
     game,

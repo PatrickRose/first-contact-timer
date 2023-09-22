@@ -1,4 +1,4 @@
-import { ControlAction, Game } from "../../../types/types";
+import { ControlAction, Game } from "@fc/types/types";
 import { Either } from "fp-ts/Either";
 import { MongoRepository } from "./mongo";
 

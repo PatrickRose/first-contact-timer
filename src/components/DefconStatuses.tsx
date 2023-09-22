@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DefconComponent, DefconCountry, DefconStatus } from "../types/types";
+import { DefconComponent, DefconCountry, DefconStatus } from "@fc/types/types";
 
 interface DefconProps {
     defcon: DefconComponent["countries"];

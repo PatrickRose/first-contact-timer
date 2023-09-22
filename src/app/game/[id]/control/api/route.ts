@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-    ApiResponse,
-    ControlAction,
-    ControlAPI,
-    Game,
-} from "../../../../../types/types";
+import { ApiResponse, ControlAction, ControlAPI, Game } from "@fc/types/types";
 import { isLeft } from "fp-ts/Either";
 import { getGameRepo } from "../../../../../server/repository/game";
-import { ControlAPIDecode } from "../../../../../types/io-ts-def";
+import { ControlAPIDecode } from "@fc/types/io-ts-def";
 import {
     generateNewTurnInformation,
     nextPhase,

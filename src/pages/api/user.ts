@@ -4,7 +4,7 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import { sessionOptions } from "../../lib/session";
 import { NextApiRequest, NextApiResponse } from "next";
-import { User } from "../../types/types";
+import { User } from "@fc/types/types";
 
 export default withIronSessionApiRoute(userRoute, sessionOptions);
 

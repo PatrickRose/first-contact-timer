@@ -1,5 +1,5 @@
 import { Either } from "fp-ts/lib/Either";
-import { DBUser } from "../../../types/types";
+import { DBUser } from "@fc/types/types";
 import { MongoRepository } from "./mongo";
 
 export default interface UserRepository {

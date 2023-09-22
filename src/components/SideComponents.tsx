@@ -1,4 +1,4 @@
-import { ApiResponse, Game } from "../types/types";
+import { ApiResponse, Game } from "@fc/types/types";
 import LogoBlock from "./theme/first-contact/LogoBlock";
 import React, { useState } from "react";
 import { SideComponentMapper } from "../lib/ComponentMapper";

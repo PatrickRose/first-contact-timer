@@ -9,8 +9,8 @@ import { sessionOptions } from "../../lib/session";
 import { getUserRepo } from "../../server/repository/user";
 import { hashPassword } from "../../server/repository/user/argon";
 import { DEFAULT_PASSWORD } from "../../server/repository/user/consts";
-import { LoginFormValuesDecode } from "../../types/io-ts-def";
-import { LoginFailed, User } from "../../types/types";
+import { LoginFormValuesDecode } from "@fc/types/io-ts-def";
+import { LoginFailed, User } from "@fc/types/types";
 
 export default withIronSessionApiRoute(loginRoute, sessionOptions);
 

@@ -4,11 +4,11 @@ import {
     Game,
     GameType,
     RunningHotRunners,
-} from "../../../../../types/types";
+} from "@fc/types/types";
 import {
     CreateGameRequestDecode,
     RunningHotRunnersDecode,
-} from "../../../../../types/io-ts-def";
+} from "@fc/types/io-ts-def";
 import { NextResponse } from "next/server";
 import { createGame } from "../../../../../server/turn";
 import { isLeft } from "fp-ts/Either";

@@ -1,4 +1,4 @@
-import { ApiResponse, Game } from "../types/types";
+import { ApiResponse, Game } from "@fc/types/types";
 import WeatherStatus from "../components/WeatherStatus";
 import DefconStatuses from "../components/DefconStatuses";
 import { DoWWolfAttack } from "../components/DoWWolfAttack";

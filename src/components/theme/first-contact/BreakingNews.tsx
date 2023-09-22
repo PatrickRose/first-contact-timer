@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Game, NewsItem } from "../../../types/types";
+import { Game, NewsItem } from "@fc/types/types";
 import { BreakingNewsText } from "./NewsFeed";
 import Image from "next/image";
 import { getIconForPressItem, getTitleForPressItem } from "../../../lib/press";

@@ -1,4 +1,4 @@
-import { ApiResponse, Game, SetupInformation } from "../types/types";
+import { ApiResponse, Game, SetupInformation } from "@fc/types/types";
 import { Either, isLeft } from "fp-ts/Either";
 import { MakeLeft, MakeRight } from "../lib/io-ts-helpers";
 

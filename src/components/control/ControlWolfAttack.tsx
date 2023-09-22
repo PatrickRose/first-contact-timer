@@ -1,7 +1,7 @@
 import { ControlButtonRootProps } from "../ControlTools";
 import { useState } from "react";
-import { ApiResponseDecode } from "../../types/io-ts-def";
-import { SetWolfAttack } from "../../types/types";
+import { ApiResponseDecode } from "@fc/types/io-ts-def";
+import { SetWolfAttack } from "@fc/types/types";
 
 export function ControlWolfAttack({
     inProgress,

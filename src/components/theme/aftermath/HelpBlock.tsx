@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Game } from "../../../types/types";
+import { Game } from "@fc/types/types";
 
 export default function HelpBlock({
     setupInformation,

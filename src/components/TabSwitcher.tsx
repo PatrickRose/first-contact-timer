@@ -1,4 +1,4 @@
-import { Game } from "../types/types";
+import { Game } from "@fc/types/types";
 import Image from "next/image";
 import Icon_Game from "../../public/Icon-VLHG.png";
 import Icon_DefCon from "../../public/Icon-DefCon.png";
