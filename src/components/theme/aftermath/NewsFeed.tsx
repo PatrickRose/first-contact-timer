@@ -1,6 +1,6 @@
 import { LivePress, NewsItem } from "@fc/types/types";
 import Image from "next/image";
-import GNNLogo from "../../../../public/GNNLogo.png";
+import GNNLogo from "@fc/public/GNNLogo.png";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import {

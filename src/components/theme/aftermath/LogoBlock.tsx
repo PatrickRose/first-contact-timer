@@ -1,6 +1,6 @@
 import * as React from "react";
 import Image from "next/image";
-import VLHGLogo from "../../../../public/vlhg-logo.svg";
+import VLHGLogo from "@fc/public/vlhg-logo.svg";
 import { Game } from "@fc/types/types";
 
 export default function LogoBlock({

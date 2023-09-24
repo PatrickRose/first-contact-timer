@@ -1,6 +1,6 @@
 import * as React from "react";
 import Image from "next/image";
-import AlertIcon from "../../public/aftermath-alert.svg";
+import AlertIcon from "@fc/public/aftermath-alert.svg";
 
 export default function WeatherStatus({ message }: { message: string }) {
     let textClass = "text-center uppercase text-2xl font-semibold pb-6";

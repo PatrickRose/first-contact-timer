@@ -4,7 +4,7 @@ import { lengthOfPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
 import { TurnComponentMapper } from "@fc/lib/ComponentMapper";
 import Image from "next/image";
-import ArrowIcon from "../../../../public/aftermath-arrow.svg";
+import ArrowIcon from "@fc/public/aftermath-arrow.svg";
 
 type PhaseListProps = {
     turn: number;
