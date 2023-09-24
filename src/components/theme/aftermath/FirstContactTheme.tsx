@@ -2,7 +2,7 @@ import { ThemeProps } from "../theme";
 import { useState } from "react";
 import TabSwitcher from "../../TabSwitcher";
 import SideComponents from "./SideComponentsAftermath";
-import { SideComponentMapper } from "../../../lib/ComponentMapper";
+import { SideComponentMapper } from "@fc/lib/ComponentMapper";
 import BreakingNews from "./BreakingNews";
 import { NewsFeed } from "./NewsFeed";
 import LogoBlock from "./LogoBlock";
@@ -10,7 +10,7 @@ import TurnCounter from "./TurnCounter";
 import PhaseList from "./PhaseList";
 import CurrentTurn from "./CurrentTurn";
 import AlertSystemFooter from "./AlertSystemFooter";
-import { getCurrentPhase } from "../../../server/turn";
+import { getCurrentPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
 
 export function AftermathTheme({

@@ -1,7 +1,7 @@
 import GameRepository from "./index";
 import { Either, isLeft } from "fp-ts/Either";
-import { ControlAction, Game } from "../../../types/types";
-import { MakeLeft, MakeRight } from "../../../lib/io-ts-helpers";
+import { ControlAction, Game } from "@fc/types/types";
+import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 import { MongoClient } from "mongodb";
 import initialiseMongo, { getCollection } from "../../mongo";
 import { tickTurn } from "../../turn";

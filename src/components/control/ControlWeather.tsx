@@ -1,6 +1,6 @@
-import { ApiResponse, Game, SetWeatherStatus } from "../../types/types";
+import { ApiResponse, Game, SetWeatherStatus } from "@fc/types/types";
 import { FormEvent, useState } from "react";
-import { ApiResponseDecode } from "../../types/io-ts-def";
+import { ApiResponseDecode } from "@fc/types/io-ts-def";
 import WeatherStatus from "../WeatherStatus";
 
 export function ControlWeather({

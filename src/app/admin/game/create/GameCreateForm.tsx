@@ -1,8 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { GameType } from "../../../../types/types";
-import { CreateGameResponseDecode } from "../../../../types/io-ts-def";
+import { GameType } from "@fc/types/types";
+import { CreateGameResponseDecode } from "@fc/types/io-ts-def";
 import Link from "next/link";
 
 export function GameCreateForm() {

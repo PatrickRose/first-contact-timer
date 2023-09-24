@@ -1,4 +1,4 @@
-import { WolfAttack } from "../types/types";
+import { WolfAttack } from "@fc/types/types";
 import { useEffect, useState } from "react";
 
 export function DoWWolfAttack({ inProgress }: WolfAttack) {

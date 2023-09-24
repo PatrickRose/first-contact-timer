@@ -1,7 +1,7 @@
-import { LivePress, NewsItem } from "../types/types";
+import { LivePress, NewsItem } from "@fc/types/types";
 
-import Icon_NewsFeed from "../../public/GNNLogo.png";
-import Icon_Press from "../../public/newspaper-regular.svg";
+import Icon_NewsFeed from "@fc/public/GNNLogo.png";
+import Icon_Press from "@fc/public/newspaper-regular.svg";
 import { ImageProps } from "next/image";
 
 export function calculatePressTabIcon(pressInfo: LivePress): ImageProps["src"] {

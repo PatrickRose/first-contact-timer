@@ -5,8 +5,8 @@ import {
     DefconComponent,
     DefconCountry,
     DefconStatus,
-} from "../../types/types";
-import { ApiResponseDecode } from "../../types/io-ts-def";
+} from "@fc/types/types";
+import { ApiResponseDecode } from "@fc/types/io-ts-def";
 import * as React from "react";
 import { useState } from "react";
 import { BACKGROUNDS, DefconStateInfo } from "../DefconStatuses";

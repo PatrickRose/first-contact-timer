@@ -1,10 +1,10 @@
-import { ApiResponse, Game } from "../../../types/types";
+import { ApiResponse, Game } from "@fc/types/types";
 import LogoBlock from "./LogoBlock";
 import HelpBlock from "./HelpBlock";
 import React, { useState } from "react";
-import { SideComponentMapper } from "../../../lib/ComponentMapper";
+import { SideComponentMapper } from "@fc/lib/ComponentMapper";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
-import useInterval from "../../../lib/useInterval";
+import useInterval from "@fc/lib/useInterval";
 
 export default function SideComponentsAftermath({
     components,

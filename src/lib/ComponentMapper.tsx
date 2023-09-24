@@ -1,15 +1,15 @@
-import { ApiResponse, Game } from "../types/types";
-import WeatherStatus from "../components/WeatherStatus";
-import DefconStatuses from "../components/DefconStatuses";
-import { DoWWolfAttack } from "../components/DoWWolfAttack";
-import { ControlButtonRootProps } from "../components/ControlTools";
-import { ControlWeather } from "../components/control/ControlWeather";
-import { ControlDefconStatus } from "../components/control/ControlDefconStatus";
-import { ControlWolfAttack } from "../components/control/ControlWolfAttack";
-import { RunningHotCorps } from "../components/RunningHotCorps";
-import { ControlRunningHotCorps } from "../components/control/ControlRunningHotCorps";
-import { RunningHotRunners } from "../components/RunningHotRunners";
-import { ControlRunningHotRunners } from "../components/control/ControlRunningHotRunners";
+import { ApiResponse, Game } from "@fc/types/types";
+import WeatherStatus from "@fc/components/WeatherStatus";
+import DefconStatuses from "@fc/components/DefconStatuses";
+import { DoWWolfAttack } from "@fc/components/DoWWolfAttack";
+import { ControlButtonRootProps } from "@fc/components/ControlTools";
+import { ControlWeather } from "@fc/components/control/ControlWeather";
+import { ControlDefconStatus } from "@fc/components/control/ControlDefconStatus";
+import { ControlWolfAttack } from "@fc/components/control/ControlWolfAttack";
+import { RunningHotCorps } from "@fc/components/RunningHotCorps";
+import { ControlRunningHotCorps } from "@fc/components/control/ControlRunningHotCorps";
+import { RunningHotRunners } from "@fc/components/RunningHotRunners";
+import { ControlRunningHotRunners } from "@fc/components/control/ControlRunningHotRunners";
 
 export function ControlComponentMapper({
     component,

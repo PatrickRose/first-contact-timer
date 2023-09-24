@@ -1,6 +1,6 @@
-import { ApiResponse, Game, SetupInformation } from "../types/types";
+import { ApiResponse, Game, SetupInformation } from "@fc/types/types";
 import { Either, isLeft } from "fp-ts/Either";
-import { MakeLeft, MakeRight } from "../lib/io-ts-helpers";
+import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 
 export function lengthOfPhase(
     phase: number,
@@ -71,11 +71,13 @@ export function toApiResponse(
             return -1;
         }
 
+        /* istanbul ignore next */
         return 0;
     });
 
     return {
-        ...turn,
+        active: turn.active,
+        components: turn.components,
         breakingNews,
         turnNumber: turn.turnInformation.turnNumber,
         phase: turn.turnInformation.currentPhase,
@@ -106,12 +108,13 @@ export function tickTurn(game: Game): Game {
     );
 
     if (isLeft(turnInformation)) {
+        /* istanbul ignore next */
         throw new Error("Should not happen");
     }
 
     return {
         ...game,
-        turnInformation: turnInformation.right,
+        turnInformation: { ...turnInformation.right },
     };
 }
 

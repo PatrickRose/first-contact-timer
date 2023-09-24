@@ -1,4 +1,4 @@
-import { ApiResponse, Game } from "../../types/types";
+import { ApiResponse, Game } from "@fc/types/types";
 import React from "react";
 
 export type ThemeProps = {

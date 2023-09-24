@@ -1,4 +1,4 @@
-import { GangNames, RunningHotCorps } from "../../types/types";
+import { GangNames, RunningHotCorps } from "@fc/types/types";
 import { ImageProps } from "next/image";
 import ANT from "./ANT.png";
 import DTC from "./DTC.png";

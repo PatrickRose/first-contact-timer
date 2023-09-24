@@ -1,5 +1,5 @@
 import { ControlButtonRootProps } from "../ControlTools";
-import { GangNames, RunningHotRunners, SetRunnerRep } from "../../types/types";
+import { GangNames, RunningHotRunners, SetRunnerRep } from "@fc/types/types";
 import {
     ALL_GANGS,
     corpImages,
@@ -9,7 +9,7 @@ import {
 } from "../RunningHot/helpers";
 import Image from "next/image";
 import { useState } from "react";
-import { ApiResponseDecode } from "../../types/io-ts-def";
+import { ApiResponseDecode } from "@fc/types/io-ts-def";
 
 function GangField({
     id,

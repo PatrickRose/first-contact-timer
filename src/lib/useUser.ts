@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { User } from "../types/types";
+import { User } from "@fc/types/types";
 import useSWR, { SWRResponse } from "swr";
 import { useRouter } from "next/navigation";
 

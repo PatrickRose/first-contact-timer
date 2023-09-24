@@ -1,19 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-    ApiResponse,
-    ControlAction,
-    ControlAPI,
-    Game,
-} from "../../../../../types/types";
+import { ApiResponse, ControlAction, ControlAPI, Game } from "@fc/types/types";
 import { isLeft } from "fp-ts/Either";
-import { getGameRepo } from "../../../../../server/repository/game";
-import { ControlAPIDecode } from "../../../../../types/io-ts-def";
+import { getGameRepo } from "@fc/server/repository/game";
+import { ControlAPIDecode } from "@fc/types/io-ts-def";
 import {
     generateNewTurnInformation,
     nextPhase,
     toApiResponse,
-} from "../../../../../server/turn";
-import { MakeRight } from "../../../../../lib/io-ts-helpers";
+} from "@fc/server/turn";
+import { MakeRight } from "@fc/lib/io-ts-helpers";
 
 const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
     pause: (game) => {

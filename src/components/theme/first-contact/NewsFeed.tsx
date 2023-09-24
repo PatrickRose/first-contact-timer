@@ -1,13 +1,13 @@
-import { LivePress, NewsItem } from "../../../types/types";
+import { LivePress, NewsItem } from "@fc/types/types";
 import Image from "next/image";
-import GNNLogo from "../../../../public/GNNLogo.png";
+import GNNLogo from "@fc/public/GNNLogo.png";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import {
     getIconForPressItem,
     getPressFeedTitle,
     getTitleForPressItem,
-} from "../../../lib/press";
+} from "@fc/lib/press";
 
 export function BreakingNewsText({ item }: { item: NewsItem }) {
     return (
@@ -124,16 +124,11 @@ export function NewsFeed({
                         className="text-black"
                         id="pressSelect"
                         onChange={onChange}
+                        value={filter == null ? "NONE" : filter}
                     >
-                        <option value="NONE" selected={filter === null}>
-                            All Press
-                        </option>
+                        <option value="NONE">All Press</option>
                         {press.map((val, key) => (
-                            <option
-                                key={key}
-                                value={key + 1}
-                                selected={filter === key + 1}
-                            >
+                            <option key={key} value={key + 1}>
                                 {val.name}
                             </option>
                         ))}

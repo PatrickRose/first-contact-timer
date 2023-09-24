@@ -1,4 +1,4 @@
-import { RunningHotCorps } from "../types/types";
+import { RunningHotCorps } from "@fc/types/types";
 import Image from "next/image";
 import { corpImages, corpNames } from "./RunningHot/helpers";
 

@@ -4,15 +4,15 @@ import {
     Game,
     GameType,
     RunningHotRunners,
-} from "../../../../../types/types";
+} from "@fc/types/types";
 import {
     CreateGameRequestDecode,
     RunningHotRunnersDecode,
-} from "../../../../../types/io-ts-def";
+} from "@fc/types/io-ts-def";
 import { NextResponse } from "next/server";
-import { createGame } from "../../../../../server/turn";
+import { createGame } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
-import { getGameRepo } from "../../../../../server/repository/game";
+import { getGameRepo } from "@fc/server/repository/game";
 
 const runningHotGangs: RunningHotRunners["rep"] = {};
 // g33ks

@@ -2,9 +2,9 @@
 // We can't do this until IronSession is updated to handle that
 
 import { withIronSessionApiRoute } from "iron-session/next";
-import { sessionOptions } from "../../lib/session";
+import { sessionOptions } from "@fc/lib/session";
 import { NextApiRequest, NextApiResponse } from "next";
-import { User } from "../../types/types";
+import { User } from "@fc/types/types";
 
 export default withIronSessionApiRoute(userRoute, sessionOptions);
 
