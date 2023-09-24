@@ -124,16 +124,11 @@ export function NewsFeed({
                         className="text-black"
                         id="pressSelect"
                         onChange={onChange}
+                        value={filter == null ? "NONE" : filter}
                     >
-                        <option value="NONE" selected={filter === null}>
-                            All Press
-                        </option>
+                        <option value="NONE">All Press</option>
                         {press.map((val, key) => (
-                            <option
-                                key={key}
-                                value={key + 1}
-                                selected={filter === key + 1}
-                            >
+                            <option key={key} value={key + 1}>
                                 {val.name}
                             </option>
                         ))}
