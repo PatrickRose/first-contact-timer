@@ -18,9 +18,11 @@ export default function PressForm({
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [breakingNews, setBreakingNews] = useState<string>("");
 
-    const buttonMsg = isSubmitting
-        ? "Submitting, please wait..."
-        : "Submit breaking news";
+    const buttonMsg = game.active
+        ? isSubmitting
+            ? "Submitting, please wait..."
+            : "Submit breaking news"
+        : "Game is paused, please wait until active before posting";
 
     const submit = async (ev: FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
