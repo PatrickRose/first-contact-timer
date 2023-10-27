@@ -82,6 +82,7 @@ export const GameTypeDecode = t.union([
     t.literal("wts-1970"),
     t.literal("dow"),
     t.literal("running-hot"),
+    t.literal("AYNOHYEB"),
     t.literal("dev-test-game"),
 ]);
 
