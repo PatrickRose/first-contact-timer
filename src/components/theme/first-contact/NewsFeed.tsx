@@ -82,9 +82,11 @@ function NewsItem({ item, press }: { item: NewsItem; press: LivePress }) {
 export function NewsFeed({
     newsItems,
     press,
+    showPressFilter,
 }: {
     newsItems: NewsItem[];
     press: LivePress;
+    showPressFilter: boolean;
 }) {
     const pressFeedTitle = getPressFeedTitle(press);
 
@@ -114,7 +116,7 @@ export function NewsFeed({
             <h3 className="text-2xl mt-2 mb-6 uppercase text-center">
                 {pressFeedTitle}
             </h3>
-            {Array.isArray(press) ? (
+            {showPressFilter && Array.isArray(press) ? (
                 <div className="flex">
                     <div className="flex-1" />
                     <label htmlFor="pressSelect" className="sr-only">

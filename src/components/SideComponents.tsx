@@ -90,7 +90,11 @@ function SideComponentsWithPress({
                 {activeTab == "components" ? (
                     <SideComponents components={components} />
                 ) : (
-                    <NewsFeed newsItems={breakingNews} press={press} />
+                    <NewsFeed
+                        showPressFilter={false}
+                        newsItems={breakingNews}
+                        press={press}
+                    />
                 )}
             </div>
             <TabSwitcher
@@ -135,6 +139,7 @@ export default function SideComponentWrapper({
                     />
                 ) : (
                     <NewsFeed
+                        showPressFilter={false}
                         newsItems={breakingNews}
                         press={setupInformation.press}
                     />

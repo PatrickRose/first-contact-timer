@@ -95,6 +95,7 @@ export function FirstContactTheme({
                                 <NewsFeed
                                     newsItems={apiResponse.breakingNews}
                                     press={game.setupInformation.press}
+                                    showPressFilter={true}
                                 />
                             </div>
                         )}
