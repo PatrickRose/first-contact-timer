@@ -97,12 +97,14 @@ function SideComponentsWithPress({
                     />
                 )}
             </div>
-            <TabSwitcher
-                activeTab={activeTab}
-                tabs={tabs}
-                setActiveTab={setActiveTab}
-                triggerScroll={false}
-            />
+            <div className="sticky bottom-0">
+                <TabSwitcher
+                    activeTab={activeTab}
+                    tabs={tabs}
+                    setActiveTab={setActiveTab}
+                    triggerScroll={false}
+                />
+            </div>
         </React.Fragment>
     );
 }
@@ -127,7 +129,7 @@ export default function SideComponentWrapper({
 
     return (
         <div className="hidden lg:flex flex-col justify-between border-l-4 border-turn-counter-past-light w-full lg:w-1/3 max-h-screen">
-            <div className="flex flex-col overflow-auto">
+            <div className="flex flex-1 flex-col overflow-auto">
                 {setupInformation.press === false ? (
                     <SideComponents components={toShow} />
                 ) : toShow.length > 0 ? (
@@ -145,7 +147,6 @@ export default function SideComponentWrapper({
                     />
                 )}
             </div>
-            <div className="flex-1"></div>
             <div className="lg:sticky bottom-0">
                 <LogoBlock setupInformation={setupInformation} />
             </div>
