@@ -1,6 +1,6 @@
 import { ThemeProps } from "../theme";
 import { useState } from "react";
-import TabSwitcher from "../../TabSwitcher";
+import { GameTabSwitcher } from "../../TabSwitcher";
 import SideComponents from "./SideComponentsAftermath";
 import { SideComponentMapper } from "@fc/lib/ComponentMapper";
 import BreakingNews from "./BreakingNews";
@@ -173,7 +173,7 @@ export function AftermathTheme({
                     <AlertSystemFooter />
                 </div>
             </div>
-            <TabSwitcher
+            <GameTabSwitcher
                 activeTab={activeTab}
                 setActiveTab={(newActive: string) => setActiveTab(newActive)}
                 manageTabTitle={manageTabTitle}

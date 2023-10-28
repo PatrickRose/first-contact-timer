@@ -1,7 +1,7 @@
 import { ThemeProps } from "../theme";
 import { useState } from "react";
-import TabSwitcher from "../../TabSwitcher";
-import SideComponents from "../../SideComponents";
+import { GameTabSwitcher } from "../../TabSwitcher";
+import SideComponentWrapper from "../../SideComponents";
 import { SideComponentMapper } from "@fc/lib/ComponentMapper";
 import BreakingNews from "./BreakingNews";
 import { NewsFeed } from "./NewsFeed";
@@ -128,12 +128,13 @@ export function FirstContactTheme({
                         </div>
                     );
                 })}
-                <SideComponents
+                <SideComponentWrapper
                     components={apiResponse.components}
                     setupInformation={game.setupInformation}
+                    breakingNews={apiResponse.breakingNews}
                 />
             </div>
-            <TabSwitcher
+            <GameTabSwitcher
                 activeTab={activeTab}
                 setActiveTab={(newActive: string) => setActiveTab(newActive)}
                 manageTabTitle={manageTabTitle}

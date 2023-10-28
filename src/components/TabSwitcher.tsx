@@ -1,5 +1,5 @@
 import { Game } from "@fc/types/types";
-import Image from "next/image";
+import Image, { ImageProps } from "next/image";
 import Icon_Game from "@fc/public/Icon-VLHG.png";
 import Icon_DefCon from "@fc/public/Icon-DefCon.png";
 import Icon_Manage from "@fc/public/Icon-Manage.png";
@@ -33,7 +33,7 @@ function DisplayManageTabSwitch({
     );
 }
 
-export default function TabSwitcher({
+export function GameTabSwitcher({
     activeTab,
     setActiveTab,
     manageTabTitle,
@@ -49,147 +49,124 @@ export default function TabSwitcher({
 
     useEffect(() => window.scrollTo({ top: 0 }), [activeTab]);
 
+    const tabs: Record<string, TabInfo> = {
+        home: {
+            title: "Game",
+            image: game.setupInformation.logo ?? Icon_Game,
+        },
+    };
+
+    if (game.setupInformation.press !== false) {
+        tabs["press"] = {
+            title: "Press",
+            image: calculatePressTabIcon(game.setupInformation.press),
+        };
+    }
+
+    game.components.forEach((component) => {
+        switch (component.componentType) {
+            case "Defcon":
+                tabs[component.componentType] = {
+                    title: "Defcon",
+                    image: Icon_DefCon,
+                };
+                break;
+            case "Weather":
+                tabs[component.componentType] = {
+                    title: "Weather",
+                    // TODO: Update weather Icon
+                    image: Icon_DefCon,
+                };
+                break;
+            case "RunningHotCorp":
+                tabs[component.componentType] = {
+                    title: "Share Prices",
+                    // TODO: Update weather Icon
+                    image: Icon_DefCon,
+                };
+                break;
+            case "RunningHotRunners":
+                tabs[component.componentType] = {
+                    title: "Runner Rep",
+                    // TODO: Update weather Icon
+                    image: Icon_DefCon,
+                };
+                break;
+        }
+    });
+
+    if (manageTabTitle !== null) {
+        tabs["manage"] = {
+            title: manageTabTitle,
+            image: Icon_Manage,
+        };
+    }
+
     return (
-        <div className="flex w-full lg:hidden fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black">
-            <button
-                className={`${baseClass} ${
-                    activeTab == "home" ? activeClass : ""
-                }`}
-                onClick={() => setActiveTab("home")}
-            >
-                <Image
-                    className="mx-auto"
-                    src={game.setupInformation.logo ?? Icon_Game}
-                    alt=""
-                    width={40}
-                    height={40}
-                />
-                <span>Game</span>
-            </button>
-            {game.setupInformation.press === false ? null : (
-                <button
-                    className={`${baseClass} ${
-                        activeTab == "press" ? activeClass : ""
-                    }`}
-                    onClick={() => setActiveTab("press")}
-                >
-                    <Image
-                        className="mx-auto"
-                        src={calculatePressTabIcon(game.setupInformation.press)}
-                        alt=""
-                        width={40}
-                        height={40}
-                    />
-                    <span>News</span>
-                </button>
-            )}
-            {game.components.map((component, key) => {
-                let innerComponent = null;
-                switch (component.componentType) {
-                    case "Defcon":
-                        innerComponent = (
-                            <button
-                                className={`${baseClass} ${
-                                    activeTab == component.componentType
-                                        ? activeClass
-                                        : ""
-                                }`}
-                                onClick={() =>
-                                    setActiveTab(component.componentType)
-                                }
-                            >
-                                <Image
-                                    className="mx-auto"
-                                    src={Icon_DefCon}
-                                    alt=""
-                                    width={40}
-                                />
-                                <span>Defcon</span>
-                            </button>
-                        );
-                        break;
-                    case "Weather":
-                        innerComponent = (
-                            <button
-                                className={`${baseClass} ${
-                                    activeTab == component.componentType
-                                        ? activeClass
-                                        : ""
-                                }`}
-                                onClick={() =>
-                                    setActiveTab(component.componentType)
-                                }
-                            >
-                                <Image
-                                    className="mx-auto"
-                                    // TODO: Update weather Icon
-                                    src={Icon_DefCon}
-                                    alt=""
-                                    width={40}
-                                />
-                                <span>Weather</span>
-                            </button>
-                        );
-                        break;
-                    case "RunningHotCorp":
-                        innerComponent = (
-                            <button
-                                className={`${baseClass} ${
-                                    activeTab == component.componentType
-                                        ? activeClass
-                                        : ""
-                                }`}
-                                onClick={() =>
-                                    setActiveTab(component.componentType)
-                                }
-                            >
-                                <Image
-                                    className="mx-auto"
-                                    // TODO: Update weather Icon
-                                    src={Icon_DefCon}
-                                    alt=""
-                                    width={40}
-                                />
-                                <span>Share Prices</span>
-                            </button>
-                        );
-                        break;
-                    case "RunningHotRunners":
-                        innerComponent = (
-                            <button
-                                className={`${baseClass} ${
-                                    activeTab == component.componentType
-                                        ? activeClass
-                                        : ""
-                                }`}
-                                onClick={() =>
-                                    setActiveTab(component.componentType)
-                                }
-                            >
-                                <Image
-                                    className="mx-auto"
-                                    // TODO: Update weather Icon
-                                    src={Icon_DefCon}
-                                    alt=""
-                                    width={40}
-                                />
-                                <span>Runner Rep</span>
-                            </button>
-                        );
-                        break;
-                }
+        <div className="lg:hidden fixed bottom-0 left-0 right-0">
+            <TabSwitcher
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                tabs={tabs}
+                triggerScroll={true}
+            />
+        </div>
+    );
+}
+
+export type TabInfo = {
+    title: string;
+    image: ImageProps["src"];
+};
+export default function TabSwitcher<
+    TabNames extends string,
+    Tabs extends Record<TabNames, TabInfo>,
+>({
+    activeTab,
+    tabs,
+    setActiveTab,
+    triggerScroll,
+}: {
+    activeTab: TabNames;
+    tabs: Tabs;
+    setActiveTab: (newActive: TabNames) => void;
+    triggerScroll: boolean;
+}) {
+    const activeClass = "bg-zinc-600";
+    const baseClass = "flex-1 text-lg transition pt-2";
+
+    useEffect(() => {
+        if (triggerScroll) {
+            window.scrollTo({ top: 0 });
+        }
+    }, [triggerScroll, activeTab]);
+
+    return (
+        <div className="h-24 flex w-full bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black">
+            {Object.entries(tabs).map(([key, value]) => {
+                // Cast to the type
+                const tabName = key as TabNames;
+                const tabInfo = value as Tabs[typeof tabName];
 
                 return (
-                    <React.Fragment key={key}>{innerComponent}</React.Fragment>
+                    <button
+                        className={`${baseClass} ${
+                            activeTab == key ? activeClass : ""
+                        }`}
+                        onClick={() => setActiveTab(tabName)}
+                        key={key}
+                    >
+                        <Image
+                            className="mx-auto"
+                            src={tabInfo.image}
+                            alt=""
+                            width={40}
+                            height={40}
+                        />
+                        <span>{tabInfo.title}</span>
+                    </button>
                 );
             })}
-            {manageTabTitle !== null ? (
-                <DisplayManageTabSwitch
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                    manageTabTitle={manageTabTitle}
-                />
-            ) : null}
         </div>
     );
 }
