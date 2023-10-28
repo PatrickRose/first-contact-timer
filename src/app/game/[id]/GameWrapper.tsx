@@ -8,7 +8,7 @@ import { ApiResponseDecode } from "@fc/types/io-ts-def";
 import ControlTools from "@fc/components/ControlTools";
 import PressForm from "./press/PressForm";
 import { FirstContactTheme } from "@fc/components/theme/first-contact/FirstContactTheme";
-import { AftermathTheme } from "@fc/components/theme/aftermath/FirstContactTheme";
+import { AftermathTheme } from "@fc/components/theme/aftermath/AftermathTheme";
 
 const triggersAudio: (keyof ApiResponse)[] = ["active", "turnNumber", "phase"];
 
