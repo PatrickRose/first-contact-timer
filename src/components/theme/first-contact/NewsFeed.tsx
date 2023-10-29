@@ -55,7 +55,7 @@ function NewsItem({ item, press }: { item: NewsItem; press: LivePress }) {
     const pressName = getTitleForPressItem(item, press);
 
     return (
-        <div className="flex pt-1 pb-0">
+        <div className="flex pt-1">
             <div className="flex flex-col px-2 justify-center">
                 <Image
                     src={getIconForPressItem(item, press)}
@@ -82,9 +82,11 @@ function NewsItem({ item, press }: { item: NewsItem; press: LivePress }) {
 export function NewsFeed({
     newsItems,
     press,
+    showPressFilter,
 }: {
     newsItems: NewsItem[];
     press: LivePress;
+    showPressFilter: boolean;
 }) {
     const pressFeedTitle = getPressFeedTitle(press);
 
@@ -110,11 +112,11 @@ export function NewsFeed({
     };
 
     return (
-        <div className="py-4 pb-24">
+        <div className="py-4">
             <h3 className="text-2xl mt-2 mb-6 uppercase text-center">
                 {pressFeedTitle}
             </h3>
-            {Array.isArray(press) ? (
+            {showPressFilter && Array.isArray(press) ? (
                 <div className="flex">
                     <div className="flex-1" />
                     <label htmlFor="pressSelect" className="sr-only">

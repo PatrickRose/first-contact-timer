@@ -33,7 +33,7 @@ const TurnTimer = function TurnTimer(props: {
 
         paused = (
             <p
-                className={`${pausedClass} pt-10 pb-0 px-6 bg-zinc-600 text-white rounded alert alert-danger text-6xl`}
+                className={`${pausedClass} pt-10 px-6 bg-zinc-600 text-white rounded alert alert-danger text-6xl`}
             >
                 GAME PAUSED
             </p>

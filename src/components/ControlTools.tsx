@@ -171,11 +171,11 @@ export default function ControlTools({
     const [error, setError] = useState<string>();
 
     return (
-        <div className="first-contact-container py-4 lg:p-4 pb-24 lg:pb-4 lg:bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
+        <div className="first-contact-container py-4 lg:p-4 lg:bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
             <h2 className="text-2xl mt-2 mb-6 uppercase text-center">
                 Control Tools
             </h2>
-            <div className="flex w-full pb-4 justify-around">
+            <div className="flex w-full justify-around">
                 {actions.map(([key, { props }]) => {
                     return (
                         <ControlButton
