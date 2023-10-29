@@ -62,7 +62,7 @@ export default function PressForm({
     };
 
     return (
-        <div className="first-contact-container lg:p-4 pb-24 lg:pb-4 lg:bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
+        <div className="first-contact-container lg:p-4 lg:bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
             <h2 className="text-3xl mt-2 mb-6 uppercase text-center">
                 Press Tools
                 {Array.isArray(game.setupInformation.press) ? (

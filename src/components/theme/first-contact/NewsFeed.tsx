@@ -55,7 +55,7 @@ function NewsItem({ item, press }: { item: NewsItem; press: LivePress }) {
     const pressName = getTitleForPressItem(item, press);
 
     return (
-        <div className="flex pt-1 pb-0">
+        <div className="flex pt-1">
             <div className="flex flex-col px-2 justify-center">
                 <Image
                     src={getIconForPressItem(item, press)}
@@ -112,7 +112,7 @@ export function NewsFeed({
     };
 
     return (
-        <div className="py-4 pb-24">
+        <div className="py-4">
             <h3 className="text-2xl mt-2 mb-6 uppercase text-center">
                 {pressFeedTitle}
             </h3>

@@ -34,9 +34,9 @@ export function AftermathTheme({
 
     return (
         <div
-            className={`flex flex-col min-h-screen text-white flex-1 pt-24 lg:pt-0 font-medium ${pageBG}`}
+            className={`flex flex-col h-screen overflow-y-auto text-white flex-1 font-medium ${pageBG}`}
         >
-            <div className="fixed top-0 left-0 right-0">
+            <div className="sticky top-0">
                 <CurrentTurn
                     turn={apiResponse.turnNumber}
                     phase={apiResponse.phase}
@@ -45,8 +45,8 @@ export function AftermathTheme({
                     phaseInformation={currentPhaseInformation.right}
                 />
             </div>
-            <div className="flex flex-col lg:h-screen content-between">
-                <div className="flex flex-row flex-1 ">
+            <div className="flex flex-col content-between h-screen overflow-y-auto">
+                <div className="flex flex-row flex-1">
                     <div className="hidden lg:flex flex-row items-center w-full max-w-[25%] p-6">
                         <div className="">
                             <PhaseList
@@ -67,7 +67,7 @@ export function AftermathTheme({
                             activeTab != "press"
                                 ? "hidden"
                                 : ""
-                        } lg:flex first-contact-container flex-1 text-center  flex-row justify-between justify-items-stretch items-center`}
+                        } lg:flex first-contact-container flex-1 text-center  flex-row justify-between justify-items-stretch items-center py-8`}
                     >
                         <div className="w-full">
                             <div
@@ -101,7 +101,7 @@ export function AftermathTheme({
                             <div
                                 className={`${
                                     activeTab != "home" ? "hidden" : "block"
-                                } lg:hidden pb-24 `}
+                                } lg:hidden`}
                             >
                                 <LogoBlock
                                     setupInformation={game.setupInformation}
@@ -168,7 +168,7 @@ export function AftermathTheme({
                 <div
                     className={`${
                         activeTab != "home" ? "hidden" : ""
-                    } lg:block`}
+                    } lg:block lg:sticky lg:bottom-0`}
                 >
                     <AlertSystemFooter />
                 </div>

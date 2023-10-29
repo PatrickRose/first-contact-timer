@@ -29,7 +29,7 @@ export function FirstContactTheme({
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-black text-white flex-1 pt-24 lg:pt-0">
+        <div className="flex flex-col h-screen bg-black text-white flex-1 pt-24 lg:pt-0">
             <div className="fixed top-0 left-0 right-0">
                 <CurrentTurn
                     turn={apiResponse.turnNumber}
@@ -48,8 +48,8 @@ export function FirstContactTheme({
                         activeTab != "press"
                             ? "hidden"
                             : ""
-                    } lg:flex lg:overflow-auto first-contact-container flex-1 text-center h-screen 
-                                flex-col overflow-y-scroll
+                    } lg:flex lg:overflow-auto first-contact-container flex-1 text-center max-h-screen 
+                                flex-col
                                 justify-between justify-items-stretch items-center
                                 `}
                 >
@@ -71,7 +71,7 @@ export function FirstContactTheme({
                         <div
                             className={`${
                                 activeTab != "home" ? "hidden" : "block"
-                            } lg:hidden pb-24 `}
+                            } lg:hidden`}
                         >
                             <LogoBlock
                                 setupInformation={game.setupInformation}

@@ -6,33 +6,6 @@ import Icon_Manage from "@fc/public/Icon-Manage.png";
 import React, { useEffect } from "react";
 import { calculatePressTabIcon } from "@fc/lib/press";
 
-function DisplayManageTabSwitch({
-    activeTab,
-    setActiveTab,
-    manageTabTitle,
-}: {
-    activeTab: string;
-    setActiveTab: (newActive: string) => void;
-    manageTabTitle: string;
-}) {
-    const activeClass = "bg-zinc-600";
-    const baseClass = "flex-1 text-lg transition pt-2";
-
-    if (manageTabTitle == "") return null;
-
-    return (
-        <button
-            className={`${baseClass} ${
-                activeTab == "manage" ? activeClass : ""
-            }`}
-            onClick={() => setActiveTab("manage")}
-        >
-            <Image className="mx-auto" src={Icon_Manage} alt="" width={40} />
-            <span>{manageTabTitle}</span>
-        </button>
-    );
-}
-
 export function GameTabSwitcher({
     activeTab,
     setActiveTab,
@@ -44,9 +17,6 @@ export function GameTabSwitcher({
     manageTabTitle: string | null;
     game: Game;
 }) {
-    const activeClass = "bg-zinc-600";
-    const baseClass = "flex-1 text-lg transition pt-2";
-
     useEffect(() => window.scrollTo({ top: 0 }), [activeTab]);
 
     const tabs: Record<string, TabInfo> = {
@@ -103,7 +73,7 @@ export function GameTabSwitcher({
     }
 
     return (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0">
+        <div className="lg:hidden sticky bottom-0">
             <TabSwitcher
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
