@@ -110,8 +110,8 @@ export function NewsFeed({
     };
 
     return (
-        <div className="py-4">
-            <h3 className="text-2xl mt-2 mb-6 uppercase text-center">
+        <div>
+            <h3 className="text-2xl mt-2 uppercase text-center">
                 {pressFeedTitle}
             </h3>
             {Array.isArray(press) ? (
