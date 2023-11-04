@@ -29,8 +29,8 @@ export function FirstContactTheme({
     }
 
     return (
-        <div className="flex flex-col h-screen bg-black text-white flex-1 pt-24 lg:pt-0">
-            <div className="fixed top-0 left-0 right-0">
+        <div className="flex flex-col h-screen bg-black text-white flex-1">
+            <div className="sticky top-0 left-0 right-0">
                 <CurrentTurn
                     turn={apiResponse.turnNumber}
                     phase={apiResponse.phase}
@@ -39,7 +39,7 @@ export function FirstContactTheme({
                     phaseInformation={currentPhaseInformation.right}
                 />
             </div>
-            <div className="flex flex-row flex-1">
+            <div className="flex flex-row flex-1 max-h-full overflow-y-auto">
                 <main
                     role="main"
                     className={`${
@@ -48,8 +48,7 @@ export function FirstContactTheme({
                         activeTab != "press"
                             ? "hidden"
                             : ""
-                    } lg:flex lg:overflow-auto first-contact-container flex-1 text-center max-h-screen 
-                                flex-col
+                    } lg:flex first-contact-container flex-1 text-center flex-col
                                 justify-between justify-items-stretch items-center
                                 `}
                 >
