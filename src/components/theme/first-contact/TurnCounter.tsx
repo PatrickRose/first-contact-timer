@@ -71,8 +71,8 @@ export function PhaseCount({
         thisPhase == activePhase
             ? "bg-turn-counter-current text-white delay-250 border-yellow-300"
             : thisPhase > activePhase
-            ? "bg-turn-counter-future text-white border-black"
-            : "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
+              ? "bg-turn-counter-future text-white border-black"
+              : "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
 
     const subTextClass = thisPhase == activePhase ? "block" : "hidden";
 
