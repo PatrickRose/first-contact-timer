@@ -30,8 +30,8 @@ export function PhaseCount({
         thisPhase == activePhase
             ? "bg-aftermath-alert text-aftermath delay-250 border-aftermath-alert"
             : thisPhase > activePhase
-            ? "text-white border-white"
-            : "opacity-40 text-white border-white";
+              ? "text-white border-white"
+              : "opacity-40 text-white border-white";
 
     const subTextClass = thisPhase == activePhase ? "block" : "hidden";
 
