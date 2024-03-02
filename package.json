@@ -18,7 +18,7 @@
         "@fortawesome/react-fontawesome": "^0.2.0",
         "@headlessui/react": "^1.7.17",
         "@tailwindcss/forms": "^0.5.7",
-        "argon2": "^0.31.2",
+        "argon2": "^0.40.1",
         "fp-ts": "^2.16.1",
         "io-ts": "^2.2.20",
         "iron-session": "^8.0.1",
