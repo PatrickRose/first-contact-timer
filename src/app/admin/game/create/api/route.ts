@@ -108,6 +108,7 @@ const GAME_TYPES: Record<
             theme: "first-contact",
             breakingNewsBanner: true,
             components: ["Defcon"],
+            hidePressInSidebar: true,
         },
         components: [
             {
