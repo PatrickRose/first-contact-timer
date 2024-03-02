@@ -3,18 +3,16 @@
 
 import * as argon2 from "argon2";
 import { isLeft } from "fp-ts/lib/Either";
-import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
-import { sessionOptions } from "@fc/lib/session";
+import { sessionOptions, SessionType } from "@fc/lib/session";
 import { getUserRepo } from "@fc/server/repository/user";
 import { hashPassword } from "@fc/server/repository/user/argon";
 import { DEFAULT_PASSWORD } from "@fc/server/repository/user/consts";
 import { LoginFormValuesDecode } from "@fc/types/io-ts-def";
 import { LoginFailed, User } from "@fc/types/types";
+import { getIronSession } from "iron-session";
 
-export default withIronSessionApiRoute(loginRoute, sessionOptions);
-
-async function loginRoute(
+export default async function loginRoute(
     req: NextApiRequest,
     res: NextApiResponse<User | LoginFailed>,
 ) {
@@ -88,10 +86,12 @@ async function loginRoute(
           }
         : { isLoggedIn: false, login: "", passwordNeedsReset: false };
 
+    const session = await getIronSession<SessionType>(req, res, sessionOptions);
+
     try {
         if (loggedIn) {
-            req.session.user = userSession;
-            await req.session.save();
+            session.user = userSession;
+            await session.save();
         } else {
             res.status(401);
         }

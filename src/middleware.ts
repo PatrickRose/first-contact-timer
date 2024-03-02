@@ -1,14 +1,18 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getIronSession } from "iron-session/edge";
-import { sessionOptions } from "./lib/session";
+import { sessionOptions, SessionType } from "./lib/session";
+import { getIronSession } from "iron-session";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname;
     if (path.startsWith("/admin")) {
         const res = NextResponse.next();
-        const session = await getIronSession(request, res, sessionOptions);
+        const session = await getIronSession<SessionType>(
+            request,
+            res,
+            sessionOptions,
+        );
 
         const hasSession: boolean = !!session.user;
 
