@@ -200,6 +200,7 @@ export const SetupInformationDecode = t.intersection([
     }),
     t.partial({
         press: t.union([t.literal(false), t.array(PressDecode), PressDecode]),
+        hidePressInSidebar: t.boolean,
     }),
 ]);
 

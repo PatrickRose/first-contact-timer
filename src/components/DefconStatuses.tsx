@@ -95,7 +95,7 @@ export function CountryDefcon({ country, status }: CountryDefconProps) {
     }
 
     return (
-        <div className="flex mx-auto lg:mx-4 w-[320px] max-w-[100%]">
+        <div className="flex mx-auto lg:w-full w-[320px] max-w-full">
             <div
                 className={`flex-1 flex items-center content-center justify-center text-2xl border-0 transition duration-500 rounded-l-full ${BACKGROUNDS[status].activeBackground}`}
             >
@@ -121,7 +121,7 @@ function DisplayDefconStatus({ defcon }: DefconProps) {
 
     return (
         <div className="flex justify-center mx-1">
-            <div className="w-full w-max-[400px]">
+            <div className="w-full">
                 <h3 className="text-2xl mt-2 mb-6 uppercase text-center lg:w-1/2 mx-auto">
                     DEFCON Levels
                 </h3>
@@ -129,7 +129,7 @@ function DisplayDefconStatus({ defcon }: DefconProps) {
                     return (
                         <div
                             key={state}
-                            className="pt-8 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4"
+                            className="pt-8 px-4 w-full xl:w-4/4 grid grid-cols-1 lg:grid-cols-1 gap-4"
                         >
                             {countries.map((country, key) => {
                                 return (
