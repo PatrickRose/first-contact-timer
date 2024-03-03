@@ -9,7 +9,7 @@
         "lint": "next lint",
         "ts:watch": "tsc --noEmit --incremental --watch",
         "create-user": "tsx src/bin/create-user.ts",
-        "prepare": "husky install",
+        "prepare": "husky",
         "test": "jest"
     },
     "dependencies": {
