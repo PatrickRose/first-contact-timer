@@ -13,3 +13,20 @@
         @apply text-black;
     }
 }
+@layer base {
+    .circular-progress:before {
+        @apply bg-black;
+        @apply transition-[transform];
+        box-sizing: border-box;
+        content: "";
+        border-radius: 0 100% 100% 0 / 50%;
+        display: block;
+        height: 100%;
+        margin-left: 50%;
+        transform-origin: left;
+    }
+
+    .circular-progress-50:before {
+        @apply bg-white;
+    }
+}

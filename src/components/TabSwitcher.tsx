@@ -62,6 +62,11 @@ export function GameTabSwitcher({
                     image: Icon_DefCon,
                 };
                 break;
+            case "Trackers":
+                tabs[component.componentType] = {
+                    title: "Trackers",
+                    image: Icon_DefCon,
+                };
         }
     });
 

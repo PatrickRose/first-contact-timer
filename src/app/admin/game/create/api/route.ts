@@ -343,7 +343,23 @@ const GAME_TYPES: Record<
                 },
             ],
         },
-        components: [],
+        components: [
+            {
+                componentType: "Trackers",
+                trackers: [
+                    {
+                        label: "Bar",
+                        value: 0,
+                        type: "bar",
+                    },
+                    {
+                        label: "Circle",
+                        value: 0,
+                        type: "circle",
+                    },
+                ],
+            },
+        ],
     },
     AYNOHYEB: {
         setupInformation: {

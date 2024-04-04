@@ -10,6 +10,7 @@ import { RunningHotCorps } from "@fc/components/RunningHotCorps";
 import { ControlRunningHotCorps } from "@fc/components/control/ControlRunningHotCorps";
 import { RunningHotRunners } from "@fc/components/RunningHotRunners";
 import { ControlRunningHotRunners } from "@fc/components/control/ControlRunningHotRunners";
+import Trackers from "@fc/components/Trackers";
 
 export function ControlComponentMapper({
     component,
@@ -114,6 +115,8 @@ export function SideComponentMapper({
                     rep={component.rep}
                 />
             );
+        case "Trackers":
+            return <Trackers {...component} />;
     }
 
     return null;
