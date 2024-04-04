@@ -1,4 +1,8 @@
-import { GangNames, RunningHotCorps, RunningHotRunners } from "@fc/types/types";
+import type {
+    GangNames,
+    RunningHotCorps,
+    RunningHotRunners,
+} from "@fc/types/types";
 import Image from "next/image";
 import { gangImages, gangNames } from "./RunningHot/helpers";
 
