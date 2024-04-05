@@ -1,24 +1,29 @@
 import type { Trackers } from "@fc/types/types";
 import { useId } from "react";
 
-function BarProgressBar({ value }: { value: number }) {
+function BarProgressBar({ value, max }: { value: number; max: number }) {
     return (
         <div className="h-64 border-2 flex">
             <div
                 className="bg-white transition-[width]"
-                style={{ width: `${value}%` }}
-            />
+                style={{ width: `${(100 * value) / max}%` }}
+            >
+                <span className="sr-only">
+                    {value} / {max}
+                </span>
+            </div>
         </div>
     );
 }
 
-function CircleProgressBar({ value }: { value: number }) {
+function CircleProgressBar({ value, max }: { value: number; max: number }) {
     const id = useId();
+    const percent = (100 * value) / max;
 
     const style =
-        value <= 50
-            ? `rotate(${(value / 100) * 360}deg)`
-            : `rotate(${((100 - value) / 100) * 360}deg)`;
+        percent <= 50
+            ? `rotate(${(percent / 100) * 360}deg)`
+            : `rotate(${(percent / 100) * 180}deg)`;
 
     return (
         <>
@@ -28,22 +33,26 @@ function CircleProgressBar({ value }: { value: number }) {
             <div
                 id={id}
                 data-progress={value}
-                className={`border-2 h-64 w-64 rounded-full bg-gradient-to-r from-black to-white from-50% to-50% circular-progress ${value > 50 ? "circular-progress-50" : ""}`}
-            ></div>
+                className={`border-2 h-64 w-64 rounded-full bg-gradient-to-r from-black to-white from-50% to-50% circular-progress ${percent > 50 ? "circular-progress-50" : ""}`}
+            >
+                <span className="sr-only">
+                    {value} / {max}
+                </span>
+            </div>
         </>
     );
 }
 
-function Tracker(props: Trackers["trackers"][0]) {
+function Tracker(props: Trackers["trackers"][0] & { label: string }) {
     let component = null;
-    const value = Math.max(0, Math.min(100, props.value));
+    const value = Math.max(0, Math.min(props.max, props.value));
 
     switch (props.type) {
         case "bar":
-            component = <BarProgressBar value={value} />;
+            component = <BarProgressBar value={value} max={props.max} />;
             break;
         case "circle":
-            component = <CircleProgressBar value={value} />;
+            component = <CircleProgressBar value={value} max={props.max} />;
             break;
     }
 
@@ -58,8 +67,8 @@ function Tracker(props: Trackers["trackers"][0]) {
 export default function Trackers(props: Trackers) {
     return (
         <div className="grid grid-flow-row auto-rows-max">
-            {props.trackers.map((tracker, key) => (
-                <Tracker key={key} {...tracker} />
+            {Object.entries(props.trackers).map(([key, tracker]) => (
+                <Tracker key={key} label={key} {...tracker} />
             ))}
         </div>
     );

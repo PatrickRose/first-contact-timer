@@ -346,18 +346,18 @@ const GAME_TYPES: Record<
         components: [
             {
                 componentType: "Trackers",
-                trackers: [
-                    {
-                        label: "Bar",
+                trackers: {
+                    Bar: {
                         value: 0,
                         type: "bar",
+                        max: 10,
                     },
-                    {
-                        label: "Circle",
+                    Circle: {
                         value: 0,
                         type: "circle",
+                        max: 35,
                     },
-                ],
+                },
             },
         ],
     },

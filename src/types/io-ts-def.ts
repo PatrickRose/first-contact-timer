@@ -141,11 +141,12 @@ export const RunningHotCorpsDecode = t.type({
 
 export const TrackersDecode = t.type({
     componentType: t.literal("Trackers"),
-    trackers: t.array(
+    trackers: t.record(
+        t.string,
         t.type({
             value: t.number,
-            label: t.string,
             type: t.union([t.literal("bar"), t.literal("circle")]),
+            max: t.number,
         }),
     ),
 });
