@@ -139,16 +139,14 @@ export const RunningHotCorpsDecode = t.type({
     sharePrice: t.record(CorpNamesDecode, t.number),
 });
 
+export const TrackerDecode = t.type({
+    value: t.number,
+    type: t.union([t.literal("bar"), t.literal("circle")]),
+    max: t.number,
+});
 export const TrackersDecode = t.type({
     componentType: t.literal("Trackers"),
-    trackers: t.record(
-        t.string,
-        t.type({
-            value: t.number,
-            type: t.union([t.literal("bar"), t.literal("circle")]),
-            max: t.number,
-        }),
-    ),
+    trackers: t.record(t.string, TrackerDecode),
 });
 
 export const GangNamesDecode = t.union([
@@ -260,4 +258,8 @@ export const SetRunnerRepDecode = t.type({
 export const SetTrackerDecode = t.type({
     tracker: t.string,
     value: t.number,
+});
+export const AddTrackerDecode = t.type({
+    tracker: t.string,
+    trackerDefinition: TrackerDecode,
 });
