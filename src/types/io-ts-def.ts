@@ -256,3 +256,8 @@ export const SetRunnerRepDecode = t.type({
     runnerName: t.string,
     diff: t.number,
 });
+
+export const SetTrackerDecode = t.type({
+    tracker: t.string,
+    value: t.number,
+});

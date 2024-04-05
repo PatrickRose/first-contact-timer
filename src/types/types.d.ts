@@ -41,3 +41,4 @@ export type SetSharePrice = t.TypeOf<typeof types.SetSharePriceDecode>;
 export type SetRunnerRep = t.TypeOf<typeof types.SetRunnerRepDecode>;
 
 export type Trackers = t.TypeOf<typeof types.TrackersDecode>;
+export type SetTracker = t.TypeOf<typeof types.SetTrackerDecode>;

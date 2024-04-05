@@ -11,6 +11,7 @@ import { ControlRunningHotCorps } from "@fc/components/control/ControlRunningHot
 import { RunningHotRunners } from "@fc/components/RunningHotRunners";
 import { ControlRunningHotRunners } from "@fc/components/control/ControlRunningHotRunners";
 import Trackers from "@fc/components/Trackers";
+import ControlTrackers from "@fc/components/control/ControlTrackers";
 
 export function ControlComponentMapper({
     component,
@@ -62,6 +63,16 @@ export function ControlComponentMapper({
             return (
                 <ControlRunningHotRunners
                     rep={component.rep}
+                    id={id}
+                    setAPIResponse={setAPIResponse}
+                    setError={setError}
+                    componentType={component.componentType}
+                />
+            );
+        case "Trackers":
+            return (
+                <ControlTrackers
+                    {...component}
                     id={id}
                     setAPIResponse={setAPIResponse}
                     setError={setError}
