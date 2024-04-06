@@ -63,6 +63,7 @@ export function GameCreateForm() {
         dow: "Den of Wolves",
         "running-hot": "Running Hot",
         AYNOHYEB: "Are you now...",
+        DeedsAndDestiny: "Deeds & Destiny",
         "dev-test-game": "Dev Test Game",
     };
 
