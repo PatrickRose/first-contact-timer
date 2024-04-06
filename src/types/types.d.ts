@@ -39,3 +39,8 @@ export type GangNames = t.TypeOf<typeof types.GangNamesDecode>;
 
 export type SetSharePrice = t.TypeOf<typeof types.SetSharePriceDecode>;
 export type SetRunnerRep = t.TypeOf<typeof types.SetRunnerRepDecode>;
+
+export type Trackers = t.TypeOf<typeof types.TrackersDecode>;
+export type SetTracker = t.TypeOf<typeof types.SetTrackerDecode>;
+export type AddTracker = t.TypeOf<typeof types.AddTrackerDecode>;
+export type DeleteTracker = t.TypeOf<typeof types.DeleteTrackerDecode>;

@@ -139,6 +139,16 @@ export const RunningHotCorpsDecode = t.type({
     sharePrice: t.record(CorpNamesDecode, t.number),
 });
 
+export const TrackerDecode = t.type({
+    value: t.number,
+    type: t.union([t.literal("bar"), t.literal("circle")]),
+    max: t.number,
+});
+export const TrackersDecode = t.type({
+    componentType: t.literal("Trackers"),
+    trackers: t.record(t.string, TrackerDecode),
+});
+
 export const GangNamesDecode = t.union([
     t.literal("Dancers"),
     t.literal("G33ks"),
@@ -163,6 +173,7 @@ export const ComponentDecode = t.union([
     WolfAttackDecode,
     RunningHotCorpsDecode,
     RunningHotRunnersDecode,
+    TrackersDecode,
 ]);
 
 export const PressDecode = t.intersection([
@@ -242,4 +253,17 @@ export const SetSharePriceDecode = t.type({
 export const SetRunnerRepDecode = t.type({
     runnerName: t.string,
     diff: t.number,
+});
+
+export const SetTrackerDecode = t.type({
+    tracker: t.string,
+    value: t.number,
+});
+export const AddTrackerDecode = t.type({
+    tracker: t.string,
+    trackerDefinition: TrackerDecode,
+});
+export const DeleteTrackerDecode = t.type({
+    tracker: t.string,
+    action: t.literal("delete"),
 });
