@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AddTracker, ApiResponse, Game, SetTracker } from "@fc/types/types";
+import {
+    AddTracker,
+    ApiResponse,
+    DeleteTracker,
+    Game,
+    SetTracker,
+} from "@fc/types/types";
 import { isLeft } from "fp-ts/Either";
 import GameRepository, { getGameRepo } from "@fc/server/repository/game";
-import { AddTrackerDecode, SetTrackerDecode } from "@fc/types/io-ts-def";
+import {
+    AddTrackerDecode,
+    DeleteTrackerDecode,
+    SetTrackerDecode,
+} from "@fc/types/io-ts-def";
 import { toApiResponse } from "@fc/server/turn";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 
@@ -104,6 +114,52 @@ async function SetTrackerAction(
 
     return NextResponse.json(toApiResponse(newGame.right));
 }
+async function DeleteTrackerAction(
+    body: DeleteTracker,
+    game: Game,
+    gameRepo: GameRepository,
+): Promise<NextResponse<ApiResponse | { error: string }>> {
+    const newGame = await gameRepo.runControlAction(game, (game) => {
+        const newGame = { ...game };
+
+        // Find the tracker component
+        const tracker = newGame.components.find(
+            (val) => val.componentType == "Trackers",
+        );
+
+        if (tracker?.componentType != "Trackers") {
+            return MakeLeft(
+                `No Trackers component component for game ${game._id}`,
+            );
+        }
+
+        if (tracker.trackers[body.tracker] === undefined) {
+            return MakeLeft(
+                `No ${body.tracker} tracker found for game ${game._id}`,
+            );
+        }
+
+        delete tracker.trackers[body.tracker];
+
+        if (!newGame.active) {
+            const frozenComponent = newGame.frozenTurn.components.find(
+                (val) => val.componentType == "Trackers",
+            );
+
+            if (frozenComponent?.componentType == "Trackers") {
+                delete frozenComponent.trackers[body.tracker];
+            }
+        }
+
+        return MakeRight(newGame);
+    });
+
+    if (isLeft(newGame)) {
+        return NextResponse.json({ error: newGame.left }, { status: 500 });
+    }
+
+    return NextResponse.json(toApiResponse(newGame.right));
+}
 
 export async function POST(
     request: NextRequest,
@@ -131,6 +187,10 @@ export async function POST(
 
     if (AddTrackerDecode.is(body)) {
         return AddTrackerAction(body, game.right, gameRepo.right);
+    }
+
+    if (DeleteTrackerDecode.is(body)) {
+        return DeleteTrackerAction(body, game.right, gameRepo.right);
     }
 
     return NextResponse.json({ error: "Incorrect request" }, { status: 400 });

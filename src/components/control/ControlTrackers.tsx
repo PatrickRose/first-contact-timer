@@ -1,7 +1,12 @@
 import { ControlButtonRootProps } from "@fc/components/ControlTools";
-import { AddTracker, SetTracker, Trackers } from "@fc/types/types";
+import {
+    AddTracker,
+    DeleteTracker,
+    SetTracker,
+    Trackers,
+} from "@fc/types/types";
 import { useId, useState } from "react";
-import { ApiResponseDecode } from "@fc/types/io-ts-def";
+import { ApiResponseDecode, SetTrackerDecode } from "@fc/types/io-ts-def";
 
 function TrackerWrapper(
     props: ControlButtonRootProps & Trackers["trackers"][0] & { label: string },
@@ -12,13 +17,8 @@ function TrackerWrapper(
     const htmlId = useId();
     const [updating, setUpdating] = useState(false);
 
-    const triggerClick = () => {
+    const sendUpdate = (toSend: SetTracker | DeleteTracker) => {
         setUpdating(true);
-
-        const toSend: SetTracker = {
-            tracker: props.label,
-            value: newValue,
-        };
 
         return fetch(`/game/${props.id}/control/api/trackers`, {
             method: "POST",
@@ -52,6 +52,24 @@ function TrackerWrapper(
             });
     };
 
+    const triggerClick = async () => {
+        const toSend: SetTracker = {
+            tracker: props.label,
+            value: newValue,
+        };
+
+        await sendUpdate(toSend);
+    };
+
+    const triggerDelete = async () => {
+        const toSend: DeleteTracker = {
+            tracker: props.label,
+            action: "delete",
+        };
+
+        await sendUpdate(toSend);
+    };
+
     return (
         <div className="flex-col p-2 border-2 m-1 my-3 rounded-lg">
             <div className="flex justify-center text-center">
@@ -63,7 +81,10 @@ function TrackerWrapper(
                 </div>
             </div>
             <div className="flex py-2">
-                <label htmlFor={htmlId} className="px-2 flex items-center">
+                <label
+                    htmlFor={htmlId}
+                    className="px-2 flex items-center w-1/4 justify-end"
+                >
                     New value for {props.label}
                 </label>
                 <input
@@ -84,6 +105,14 @@ function TrackerWrapper(
                     className={`border-2 p-4 ${updating ? "text-gray-300" : ""}`}
                 >
                     {updating ? "Updating" : "Update value"}
+                </button>
+                <button
+                    type="button"
+                    onClick={triggerDelete}
+                    disabled={updating}
+                    className={`border-2 p-4 ${updating ? "text-gray-300" : ""}`}
+                >
+                    {updating ? "Updating" : "Delete tracker"}
                 </button>
             </div>
         </div>

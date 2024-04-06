@@ -263,3 +263,7 @@ export const AddTrackerDecode = t.type({
     tracker: t.string,
     trackerDefinition: TrackerDecode,
 });
+export const DeleteTrackerDecode = t.type({
+    tracker: t.string,
+    action: t.literal("delete"),
+});
