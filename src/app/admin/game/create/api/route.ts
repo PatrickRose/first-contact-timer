@@ -361,6 +361,64 @@ const GAME_TYPES: Record<
             },
         ],
     },
+    DeedsAndDestiny: {
+        setupInformation: {
+            gameName: "Deeds & Destiny",
+            phases: [
+                {
+                    title: "Morning",
+                    length: 5,
+                    hidden: false,
+                },
+                {
+                    title: "Day",
+                    length: 15,
+                    hidden: false,
+                },
+                {
+                    title: "Evening",
+                    length: 5,
+                    hidden: false,
+                },
+                {
+                    title: "Night",
+                    length: 5,
+                    hidden: false,
+                },
+            ],
+            theme: "first-contact",
+            breakingNewsBanner: true,
+            components: [],
+            hidePressInSidebar: true,
+        },
+        components: [
+            {
+                componentType: "Trackers",
+                trackers: {
+                    "Threat 1": {
+                        value: 0,
+                        max: 24,
+                        type: "circle",
+                    },
+                    "Threat 2": {
+                        value: 0,
+                        max: 24,
+                        type: "circle",
+                    },
+                    "Threat 3": {
+                        value: 0,
+                        max: 24,
+                        type: "circle",
+                    },
+                    "Threat 4": {
+                        value: 0,
+                        max: 24,
+                        type: "circle",
+                    },
+                },
+            },
+        ],
+    },
     AYNOHYEB: {
         setupInformation: {
             gameName: "Are You Now Or Have You Ever Been...",
