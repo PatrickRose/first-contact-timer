@@ -386,6 +386,9 @@ const GAME_TYPES: Record<
                     hidden: false,
                 },
             ],
+            press: {
+                name: "Town Crier",
+            },
             theme: "first-contact",
             breakingNewsBanner: true,
             components: [],
