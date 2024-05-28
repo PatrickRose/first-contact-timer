@@ -186,20 +186,23 @@ export const PressDecode = t.intersection([
     }),
 ]);
 
+export const SetupInformationPhaseDecode = t.intersection([
+    t.type({
+        title: t.string,
+        length: t.number,
+        hidden: t.boolean,
+    }),
+    t.partial({
+        extraTime: t.record(t.number, t.number),
+    }),
+    t.partial({
+        phaseInformation: t.union([t.string, t.array(t.string)]),
+    }),
+]);
+
 export const SetupInformationDecode = t.intersection([
     t.type({
-        phases: t.array(
-            t.intersection([
-                t.type({
-                    title: t.string,
-                    length: t.number,
-                    hidden: t.boolean,
-                }),
-                t.partial({
-                    extraTime: t.record(t.number, t.number),
-                }),
-            ]),
-        ),
+        phases: t.array(SetupInformationPhaseDecode),
         theme: ThemeDecode,
         breakingNewsBanner: t.boolean,
         components: t.array(

@@ -10,6 +10,7 @@ import TurnCounter from "./TurnCounter";
 import CurrentTurn from "./CurrentTurn";
 import { getCurrentPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
+import PhaseInformation from "@fc/components/PhaseInformation";
 
 export function FirstContactTheme({
     apiResponse,
@@ -48,57 +49,59 @@ export function FirstContactTheme({
                         activeTab != "press"
                             ? "hidden"
                             : ""
-                    } lg:flex first-contact-container flex-1 text-center flex-col
-                                justify-between justify-items-stretch items-center
+                    } flex first-contact-container flex-1 text-center flex-col
+                                justify-between justify-items-stretch items-stretch
                                 `}
                 >
-                    <div>
-                        <div
-                            className={`${
-                                activeTab != "home" ? "hidden" : ""
-                            } lg:block py-4 lg:p-8 flex flex-col items-center flex-1`}
-                        >
-                            <TurnCounter
-                                turn={apiResponse.turnNumber}
-                                phase={apiResponse.phase}
-                                timestamp={apiResponse.phaseEnd}
-                                active={apiResponse.active}
-                                setupInformation={game.setupInformation}
-                                components={apiResponse.components}
+                    <div
+                        className={`${
+                            activeTab != "home" ? "hidden" : ""
+                        } py-4 lg:p-8 flex flex-col items-center flex-1`}
+                    >
+                        <TurnCounter
+                            turn={apiResponse.turnNumber}
+                            phase={apiResponse.phase}
+                            timestamp={apiResponse.phaseEnd}
+                            active={apiResponse.active}
+                            setupInformation={game.setupInformation}
+                            components={apiResponse.components}
+                        />
+                        <div className="py-2 flex flex-1 justify-center items-center text-left lg:text-4xl">
+                            <PhaseInformation
+                                game={game}
+                                apiResponse={apiResponse}
                             />
                         </div>
+                    </div>
+                    <div
+                        className={`${
+                            activeTab != "home" ? "hidden" : "block"
+                        } lg:hidden`}
+                    >
+                        <LogoBlock setupInformation={game.setupInformation} />
+                    </div>
+                    {childComponent ? (
                         <div
                             className={`${
-                                activeTab != "home" ? "hidden" : "block"
+                                activeTab != "manage" ? "hidden" : ""
+                            } lg:block`}
+                        >
+                            {childComponent}
+                        </div>
+                    ) : null}
+                    {game.setupInformation.press === false ? null : (
+                        <div
+                            className={`${
+                                activeTab != "press" ? "hidden" : ""
                             } lg:hidden`}
                         >
-                            <LogoBlock
-                                setupInformation={game.setupInformation}
+                            <NewsFeed
+                                newsItems={apiResponse.breakingNews}
+                                press={game.setupInformation.press}
+                                showPressFilter={true}
                             />
                         </div>
-                        {childComponent ? (
-                            <div
-                                className={`${
-                                    activeTab != "manage" ? "hidden" : ""
-                                } lg:block`}
-                            >
-                                {childComponent}
-                            </div>
-                        ) : null}
-                        {game.setupInformation.press === false ? null : (
-                            <div
-                                className={`${
-                                    activeTab != "press" ? "hidden" : ""
-                                } lg:hidden`}
-                            >
-                                <NewsFeed
-                                    newsItems={apiResponse.breakingNews}
-                                    press={game.setupInformation.press}
-                                    showPressFilter={true}
-                                />
-                            </div>
-                        )}
-                    </div>
+                    )}
                     {game.setupInformation.breakingNewsBanner ? (
                         <BreakingNews
                             newsItem={apiResponse.breakingNews[0]}
