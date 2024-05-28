@@ -386,38 +386,14 @@ const GAME_TYPES: Record<
                     hidden: false,
                 },
             ],
+            press: {
+                name: "Town Crier",
+            },
             theme: "first-contact",
             breakingNewsBanner: true,
             components: [],
-            hidePressInSidebar: true,
         },
-        components: [
-            {
-                componentType: "Trackers",
-                trackers: {
-                    "Threat 1": {
-                        value: 0,
-                        max: 24,
-                        type: "circle",
-                    },
-                    "Threat 2": {
-                        value: 0,
-                        max: 24,
-                        type: "circle",
-                    },
-                    "Threat 3": {
-                        value: 0,
-                        max: 24,
-                        type: "circle",
-                    },
-                    "Threat 4": {
-                        value: 0,
-                        max: 24,
-                        type: "circle",
-                    },
-                },
-            },
-        ],
+        components: [],
     },
     AYNOHYEB: {
         setupInformation: {
