@@ -16,7 +16,7 @@
         "@fortawesome/fontawesome-svg-core": "^6.5.2",
         "@fortawesome/free-solid-svg-icons": "^6.5.2",
         "@fortawesome/react-fontawesome": "^0.2.2",
-        "@headlessui/react": "^2.0.3",
+        "@headlessui/react": "^2.0.4",
         "@tailwindcss/forms": "^0.5.7",
         "argon2": "^0.40.1",
         "fp-ts": "^2.16.6",
