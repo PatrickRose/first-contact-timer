@@ -49,6 +49,15 @@ export function PhaseCount({
             <div
                 className={`md:flex flex-1 flex-col p-4 mb-4 text-3xl transition duration-500 border-2 text-center uppercase font-semibold w-[250px] ${backgroundClass}`}
             >
+                {phaseInformation.logo ? (
+                    <Image
+                        src={phaseInformation.logo}
+                        alt={phaseInformation.title}
+                        height={50}
+                        width={50}
+                        style={{ height: "auto", width: "auto" }}
+                    />
+                ) : null}
                 {phaseInformation.title}
                 <p className={`${subTextClass} lg:block text-lg font-medium`}>
                     {phaseLength} minutes

@@ -3,6 +3,7 @@ import { Game, SetupInformation } from "@fc/types/types";
 import { lengthOfPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
 import { TurnComponentMapper } from "@fc/lib/ComponentMapper";
+import Image from "next/image";
 
 type TurnCounterProps = {
     turn: number;
@@ -84,6 +85,15 @@ export function PhaseCount({
         <div
             className={`md:flex flex-1 flex-col  p-3 transition duration-500 border-4 ${backgroundClass}`}
         >
+            {phaseInformation.logo ? (
+                <Image
+                    src={phaseInformation.logo}
+                    alt={phaseInformation.title}
+                    height={100}
+                    width={100}
+                    style={{ height: "auto", width: "auto" }}
+                />
+            ) : null}
             {phaseInformation.title}
             <p className={`${subTextClass} lg:block`}>{phaseLength} minutes</p>
         </div>

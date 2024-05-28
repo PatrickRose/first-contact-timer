@@ -196,6 +196,9 @@ export const SetupInformationPhaseDecode = t.intersection([
         extraTime: t.record(t.number, t.number),
     }),
     t.partial({
+        logo: t.string,
+    }),
+    t.partial({
         phaseInformation: t.union([t.string, t.array(t.string)]),
     }),
 ]);
