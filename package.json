@@ -10,7 +10,8 @@
         "ts:watch": "tsc --noEmit --incremental --watch",
         "create-user": "tsx src/bin/create-user.ts",
         "prepare": "husky",
-        "test": "jest"
+        "test": "jest",
+        "postinstall": "npm rebuild argon2 --build-from-source"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^6.5.2",
