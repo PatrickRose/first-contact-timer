@@ -57,23 +57,58 @@ const TurnTimer = function TurnTimer(props: {
     );
 };
 
+function getClassFromStyles(
+    timerStyles: SetupInformation["timerStyles"],
+    thisPhase: number,
+    activePhase: number,
+): string {
+    const timerStyle: SetupInformation["timerStyles"] = timerStyles ?? {
+        activePhase: {
+            background: "bg-turn-counter-current",
+            border: "border-yellow-300",
+            text: "text-white",
+        },
+        futurePhase: {
+            background: "bg-turn-counter-future ",
+            border: "border-black",
+            text: "text-white",
+        },
+        pastPhase: {
+            background:
+                "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark",
+            border: "border-black",
+            text: "text-white",
+        },
+    };
+
+    const styles =
+        activePhase == thisPhase
+            ? timerStyle.activePhase
+            : activePhase < thisPhase
+              ? timerStyle.futurePhase
+              : timerStyle.pastPhase;
+
+    return `${styles.border} ${styles.text} ${styles.background} ${activePhase == thisPhase ? "delay-500" : ""}`;
+}
+
 export function PhaseCount({
     thisPhase,
     phaseLength,
     activePhase,
     phaseInformation,
+    timerStyles,
 }: {
     thisPhase: number;
     phaseLength: number;
     activePhase: number;
     phaseInformation: SetupInformation["phases"][0];
+    timerStyles: SetupInformation["timerStyles"];
 }) {
-    const backgroundClass =
-        thisPhase == activePhase
-            ? "bg-turn-counter-current text-white delay-250 border-yellow-300"
-            : thisPhase > activePhase
-              ? "bg-turn-counter-future text-white border-black"
-              : "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
+    const backgroundClass = getClassFromStyles(
+        timerStyles,
+        thisPhase,
+        activePhase,
+    );
 
     const subTextClass = thisPhase == activePhase ? "block" : "hidden";
 
@@ -83,7 +118,7 @@ export function PhaseCount({
 
     return (
         <div
-            className={`md:flex flex-1 flex-col  p-3 transition duration-500 border-4 ${backgroundClass}`}
+            className={`md:flex flex-1 flex-col p-3 transition duration-500 border-4 ${backgroundClass}`}
         >
             {phaseInformation.logo ? (
                 <Image
@@ -117,7 +152,7 @@ export default function TurnCounter(props: TurnCounterProps) {
                 Turn {turn}: {text}
             </h1>
             <TurnTimer timestamp={timestamp} active={active} mobile={true} />
-            <div className="flex lg:flex-wrap flex-col lg:flex-row  mt-4">
+            <div className="flex lg:flex-wrap flex-row  mt-4">
                 {setupInformation.phases.map((val, key) => {
                     let phaseLength = lengthOfPhase(
                         key + 1,
@@ -135,6 +170,7 @@ export default function TurnCounter(props: TurnCounterProps) {
                             activePhase={phase}
                             phaseInformation={val}
                             key={key}
+                            timerStyles={props.setupInformation.timerStyles}
                         />
                     );
                 })}

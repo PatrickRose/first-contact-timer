@@ -203,6 +203,11 @@ export const SetupInformationPhaseDecode = t.intersection([
     }),
 ]);
 
+const PhaseStyleDecode = t.type({
+    background: t.string,
+    text: t.string,
+    border: t.string,
+});
 export const SetupInformationDecode = t.intersection([
     t.type({
         phases: t.array(SetupInformationPhaseDecode),
@@ -219,6 +224,13 @@ export const SetupInformationDecode = t.intersection([
     t.partial({
         press: t.union([t.literal(false), t.array(PressDecode), PressDecode]),
         hidePressInSidebar: t.boolean,
+    }),
+    t.partial({
+        timerStyles: t.type({
+            activePhase: PhaseStyleDecode,
+            futurePhase: PhaseStyleDecode,
+            pastPhase: PhaseStyleDecode,
+        }),
     }),
 ]);
 
