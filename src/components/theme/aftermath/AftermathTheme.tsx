@@ -12,6 +12,7 @@ import CurrentTurn from "./CurrentTurn";
 import AlertSystemFooter from "./AlertSystemFooter";
 import { getCurrentPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
+import PhaseInformation from "@fc/components/PhaseInformation";
 
 export function AftermathTheme({
     apiResponse,
@@ -83,6 +84,12 @@ export function AftermathTheme({
                                     setupInformation={game.setupInformation}
                                     components={apiResponse.components}
                                 />
+                                <div className="py-2 flex flex-1 justify-center items-center text-left lg:text-4xl">
+                                    <PhaseInformation
+                                        game={game}
+                                        apiResponse={apiResponse}
+                                    />
+                                </div>
                             </div>
                             <div
                                 className={`${

@@ -186,20 +186,31 @@ export const PressDecode = t.intersection([
     }),
 ]);
 
+export const SetupInformationPhaseDecode = t.intersection([
+    t.type({
+        title: t.string,
+        length: t.number,
+        hidden: t.boolean,
+    }),
+    t.partial({
+        extraTime: t.record(t.number, t.number),
+    }),
+    t.partial({
+        logo: t.string,
+    }),
+    t.partial({
+        phaseInformation: t.union([t.string, t.array(t.string)]),
+    }),
+]);
+
+const PhaseStyleDecode = t.type({
+    background: t.string,
+    text: t.string,
+    border: t.string,
+});
 export const SetupInformationDecode = t.intersection([
     t.type({
-        phases: t.array(
-            t.intersection([
-                t.type({
-                    title: t.string,
-                    length: t.number,
-                    hidden: t.boolean,
-                }),
-                t.partial({
-                    extraTime: t.record(t.number, t.number),
-                }),
-            ]),
-        ),
+        phases: t.array(SetupInformationPhaseDecode),
         theme: ThemeDecode,
         breakingNewsBanner: t.boolean,
         components: t.array(
@@ -213,6 +224,13 @@ export const SetupInformationDecode = t.intersection([
     t.partial({
         press: t.union([t.literal(false), t.array(PressDecode), PressDecode]),
         hidePressInSidebar: t.boolean,
+    }),
+    t.partial({
+        timerStyles: t.type({
+            activePhase: PhaseStyleDecode,
+            futurePhase: PhaseStyleDecode,
+            pastPhase: PhaseStyleDecode,
+        }),
     }),
 ]);
 
