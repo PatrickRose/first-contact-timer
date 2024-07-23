@@ -20,7 +20,7 @@
         "@headlessui/react": "^2.1.0",
         "@tailwindcss/forms": "^0.5.7",
         "argon2": "^0.40.3",
-        "fp-ts": "^2.16.6",
+        "fp-ts": "^2.16.8",
         "io-ts": "^2.2.21",
         "iron-session": "^8.0.2",
         "mongodb": "^6.8.0",
