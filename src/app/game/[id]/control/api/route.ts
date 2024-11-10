@@ -137,8 +137,9 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: { id: string } },
+    props: { params: Promise<{ id: string }> },
 ): Promise<NextResponse<ApiResponse | { error: string }>> {
+    const params = await props.params;
     const id = params.id;
 
     const body = await request.json();

@@ -5,11 +5,10 @@ import StandardPressPage from "../page";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function Page({
-    params,
-}: {
-    params: { id: string; account: string };
+export default async function Page(props: {
+    params: Promise<{ id: string; account: string }>;
 }) {
+    const params = await props.params;
     // First, verify that the account is a number
     const pressAccount = Number.parseInt(params.account, 10);
 
@@ -34,7 +33,7 @@ export default async function Page({
     if (!Array.isArray(game.setupInformation.press)) {
         // Then the user should be using the base press page
         // For ease, just show that component
-        return <StandardPressPage params={{ id: params.id }} />;
+        return <StandardPressPage params={props.params} />;
     }
 
     if (pressAccount > game.setupInformation.press.length) {
