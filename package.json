@@ -33,7 +33,7 @@
     "devDependencies": {
         "@testing-library/jest-dom": "^6.6.3",
         "@testing-library/react": "^16.1.0",
-        "@types/react": "19.0.2",
+        "@types/react": "19.0.7",
         "@types/react-transition-group": "^4.4.12",
         "autoprefixer": "^10.4.20",
         "eslint": "^9.17.0",
