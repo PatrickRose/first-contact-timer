@@ -1,7 +1,7 @@
 import { ApiResponse, Game } from "@fc/types/types";
 import LogoBlock from "./LogoBlock";
 import HelpBlock from "./HelpBlock";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { SideComponentMapper } from "@fc/lib/ComponentMapper";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import useInterval from "@fc/lib/useInterval";
@@ -14,6 +14,7 @@ export default function SideComponentsAftermath({
     setupInformation: Game["setupInformation"];
 }) {
     const [activeTabNumber, setActiveTabNumber] = useState(0);
+    const nodeRef = useRef(null);
 
     const toShow = components
         .filter((component) => SideComponentMapper({ component }) !== null)
@@ -39,6 +40,7 @@ export default function SideComponentsAftermath({
                     <SwitchTransition mode="out-in">
                         <CSSTransition
                             key={activeTabNumber}
+                            nodeRef={nodeRef}
                             addEndListener={(node, done) =>
                                 node.addEventListener(
                                     "transitionend",
