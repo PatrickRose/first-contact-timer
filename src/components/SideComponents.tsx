@@ -6,7 +6,7 @@ import {
 } from "@fc/types/types";
 import Icon_Game from "@fc/public/Icon-VLHG.png";
 import LogoBlock from "./theme/first-contact/LogoBlock";
-import React, { useState } from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 import { SideComponentMapper } from "@fc/lib/ComponentMapper";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import useInterval from "@fc/lib/useInterval";
@@ -22,6 +22,7 @@ type SideComponentsToShow = {
 
 function SideComponents({ components }: { components: SideComponentsToShow }) {
     const [activeTabNumber, setActiveTabNumber] = useState(0);
+    const nodeRef = useRef(null);
 
     useInterval(() => {
         if (components.length == 0) {
@@ -39,6 +40,7 @@ function SideComponents({ components }: { components: SideComponentsToShow }) {
         <SwitchTransition mode="out-in">
             <CSSTransition
                 key={activeTabNumber}
+                nodeRef={nodeRef}
                 addEndListener={(node, done) =>
                     node.addEventListener("transitionend", done, false)
                 }
