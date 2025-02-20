@@ -23,7 +23,7 @@ export function RunningHotCorps({ sharePrice }: RunningHotCorps) {
                             key={key}
                             className="flex justify-center text-center p-2 border-2 m-1 rounded-lg"
                         >
-                            <div className="flex-0">
+                            <div className="flex justify-center items-center">
                                 <Image
                                     src={image}
                                     alt={corpName}
