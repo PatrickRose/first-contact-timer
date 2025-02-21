@@ -36,22 +36,19 @@ export const BACKGROUNDS: Record<
         inactiveBorder: "",
     },
     1: {
-        activeBackground:
-            "bg-gradient-to-l from-defcon-1-light to-defcon-1-dark",
+        activeBackground: "bg-linear-to-l from-defcon-1-light to-defcon-1-dark",
         background: "bg-defcon-1-light",
         activeBorder: "border-red-500",
         inactiveBorder: "border-red-300",
     },
     2: {
-        activeBackground:
-            "bg-gradient-to-l from-defcon-2-light to-defcon-2-dark",
+        activeBackground: "bg-linear-to-l from-defcon-2-light to-defcon-2-dark",
         background: "bg-defcon-2-light",
         activeBorder: "border-orange-300",
         inactiveBorder: "border-orange-100",
     },
     3: {
-        activeBackground:
-            "bg-gradient-to-l from-defcon-3-light to-defcon-3-dark",
+        activeBackground: "bg-linear-to-l from-defcon-3-light to-defcon-3-dark",
         background: "bg-defcon-3-light",
         activeBorder: "border-green-300",
         inactiveBorder: "border-green-100",

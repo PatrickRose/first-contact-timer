@@ -33,7 +33,7 @@ export default function CurrentTurn(props: CurrentTurnCounterProps) {
     const { turn, phase, timestamp, active, phaseInformation } = props;
 
     const backgroundClass = phaseInformation.hidden
-        ? "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark opacity-50"
+        ? "bg-linear-to-b from-turn-counter-past-light to-turn-counter-past-dark opacity-50"
         : "bg-turn-counter-current";
 
     const textClass = "";

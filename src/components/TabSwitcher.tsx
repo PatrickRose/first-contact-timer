@@ -117,7 +117,7 @@ export default function TabSwitcher<
     }, [triggerScroll, activeTab]);
 
     return (
-        <div className="h-24 flex w-full bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black">
+        <div className="h-24 flex w-full bg-linear-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black">
             {Object.entries(tabs).map(([key, value]) => {
                 // Cast to the type
                 const tabName = key as TabNames;

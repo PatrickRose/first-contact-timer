@@ -33,7 +33,7 @@ function CircleProgressBar({ value, max }: { value: number; max: number }) {
             <div
                 id={id}
                 data-progress={value}
-                className={`border-2 h-64 w-64 rounded-full bg-gradient-to-r from-black to-white from-50% to-50% circular-progress ${percent > 50 ? "circular-progress-50" : ""}`}
+                className={`border-2 h-64 w-64 rounded-full bg-linear-to-r from-black to-white from-50% to-50% circular-progress ${percent > 50 ? "circular-progress-50" : ""}`}
             >
                 <span className="sr-only">
                     {value} / {max}

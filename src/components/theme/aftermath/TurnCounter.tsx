@@ -33,7 +33,7 @@ const TurnTimer = function TurnTimer(props: {
 
         paused = (
             <p
-                className={`${pausedClass} pt-10 px-6 bg-zinc-600 text-white rounded alert alert-danger text-6xl`}
+                className={`${pausedClass} pt-10 px-6 bg-zinc-600 text-white rounded-sm alert alert-danger text-6xl`}
             >
                 GAME PAUSED
             </p>
@@ -72,7 +72,7 @@ export function PhaseCount({
             ? "bg-turn-counter-current text-white delay-250 border-yellow-300"
             : thisPhase > activePhase
               ? "bg-turn-counter-future text-white border-black"
-              : "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
+              : "bg-linear-to-b from-turn-counter-past-light to-turn-counter-past-dark text-white border-black";
 
     const subTextClass = thisPhase == activePhase ? "block" : "hidden";
 

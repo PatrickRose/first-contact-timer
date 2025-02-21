@@ -20,7 +20,7 @@ export default function BreakingNews({
     }
 
     return (
-        <footer className="sticky bottom-0 w-full bg-gradient-to-r from-red-700 to-red-900 text-white mt-4 hidden lg:flex flex-row justify-between">
+        <footer className="sticky bottom-0 w-full bg-linear-to-r from-red-700 to-red-900 text-white mt-4 hidden lg:flex flex-row justify-between">
             <div className="p-8">
                 <h3 className="uppercase translate-y-0 text-5xl m-0 font-bold text-left">
                     Breaking news

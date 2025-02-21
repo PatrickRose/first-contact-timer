@@ -34,7 +34,7 @@ const TurnTimer = function TurnTimer(props: {
 
         paused = (
             <p
-                className={`${pausedClass} py-3 px-6 bg-zinc-600 text-white rounded alert alert-danger text-3xl`}
+                className={`${pausedClass} py-3 px-6 bg-zinc-600 text-white rounded-sm alert alert-danger text-3xl`}
             >
                 GAME PAUSED
             </p>
@@ -75,7 +75,7 @@ function getClassFromStyles(
         },
         pastPhase: {
             background:
-                "bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark",
+                "bg-linear-to-b from-turn-counter-past-light to-turn-counter-past-dark",
             border: "border-black",
             text: "text-white",
         },

@@ -430,7 +430,7 @@ const GAME_TYPES: Record<
                 },
                 pastPhase: {
                     background:
-                        "bg-gradient-to-b from-neutral-100 to-neutral-400",
+                        "bg-linear-to-b from-neutral-100 to-neutral-400",
                     text: "text-black",
                     border: "border-black",
                 },

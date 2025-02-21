@@ -13,7 +13,7 @@ export default function LogoBlock({
     return null;
 
     return (
-        <div className="p-8 w-full bg-gradient-to-r from-turn-counter-past-light to-turn-counter-past-dark text-white flex flex-row ">
+        <div className="p-8 w-full bg-linear-to-r from-turn-counter-past-light to-turn-counter-past-dark text-white flex flex-row ">
             <h2 className="text-3xl uppercase text-left m-0 opacity-50 w-2/3">
                 {gameName}
             </h2>

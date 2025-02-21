@@ -22,7 +22,7 @@ export default function BreakingNews({
     return (
         <footer
             className={
-                "w-full bg-gradient-to-r from-red-700 to-red-900 text-white mt-4 overflow-hidden hidden lg:flex flex-row justify-between"
+                "w-full bg-linear-to-r from-red-700 to-red-900 text-white mt-4 overflow-hidden hidden lg:flex flex-row justify-between"
             }
         >
             <div className="p-8">

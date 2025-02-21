@@ -140,7 +140,7 @@ function ControlButton({
     return (
         <button
             type="button"
-            className="bg-turn-counter-future border-black hover:bg-turn-counter-current hover:border-yellow-300  border-4 rounded p-3 px-5 disabled:opacity-75 "
+            className="bg-turn-counter-future border-black hover:bg-turn-counter-current hover:border-yellow-300  border-4 rounded-sm p-3 px-5 disabled:opacity-75 "
             onClick={handleClick}
             title={title}
             disabled={buttonPressed}
@@ -171,7 +171,7 @@ export default function ControlTools({
     const [error, setError] = useState<string>();
 
     return (
-        <div className="first-contact-container py-4 lg:p-4 lg:bg-gradient-to-b from-turn-counter-past-light to-turn-counter-past-dark">
+        <div className="first-contact-container py-4 lg:p-4 lg:bg-linear-to-b from-turn-counter-past-light to-turn-counter-past-dark">
             <h2 className="text-2xl mt-2 mb-6 uppercase text-center">
                 Control Tools
             </h2>
