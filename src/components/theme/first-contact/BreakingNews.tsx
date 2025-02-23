@@ -29,7 +29,6 @@ export default function BreakingNews({
             </div>
             <div className="p-8">
                 <Image
-                    className="w-full h-full"
                     src={getIconForPressItem(newsItem, press)}
                     alt={getTitleForPressItem(newsItem, press) ?? ""}
                     width={128}
