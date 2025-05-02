@@ -27,12 +27,12 @@ export default function BreakingNews({
                 </h3>
                 <BreakingNewsText item={newsItem} />
             </div>
-            <div className="p-8">
+            <div className="p-8 max-w-1/4">
                 <Image
                     src={getIconForPressItem(newsItem, press)}
                     alt={getTitleForPressItem(newsItem, press) ?? ""}
-                    width={128}
-                    height={128}
+                    width={1024}
+                    height={1024}
                 />
             </div>
         </footer>

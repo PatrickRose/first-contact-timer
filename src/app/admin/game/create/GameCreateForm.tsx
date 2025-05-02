@@ -64,6 +64,7 @@ export function GameCreateForm() {
         "running-hot": "Running Hot",
         AYNOHYEB: "Are you now...",
         DeedsAndDestiny: "Deeds & Destiny",
+        "faes-anatomy": "Fae's Anatomy",
         "dev-test-game": "Dev Test Game",
     };
 
