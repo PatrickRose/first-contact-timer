@@ -84,6 +84,7 @@ export const GameTypeDecode = t.union([
     t.literal("running-hot"),
     t.literal("AYNOHYEB"),
     t.literal("DeedsAndDestiny"),
+    t.literal("faes-anatomy"),
     t.literal("dev-test-game"),
 ]);
 
