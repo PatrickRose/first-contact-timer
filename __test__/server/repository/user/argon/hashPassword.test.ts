@@ -22,7 +22,7 @@ describe("hashPassword", () => {
         );
 
         expect(await hashPassword("test password")).toBe("HASHED PASSWORD");
-        expect(hash).toBeCalledWith("test password", {
+        expect(hash).toHaveBeenCalledWith("test password", {
             type: argon2id,
             timeCost: 5,
         });
