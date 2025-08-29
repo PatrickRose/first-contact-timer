@@ -71,7 +71,7 @@ describe("initialiseMongo", () => {
             return;
         }
 
-        expect(MongoClient).toBeCalledWith(
+        expect(MongoClient).toHaveBeenCalledWith(
             `mongodb+srv://MONGO_USERNAME:MONGO_PASSWORD@MONGO_URL/MONGO_DB?retryWrites=true&w=majority`,
         );
     });
