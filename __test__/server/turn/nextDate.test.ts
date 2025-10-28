@@ -23,7 +23,7 @@ describe("nextDate", () => {
     });
 
     test("Unknown phase returns error message", () => {
-        let result = nextDate(1, 1, setupInformation);
+        const result = nextDate(1, 1, setupInformation);
 
         expect(isLeft(result)).toBe(true);
     });
@@ -32,7 +32,7 @@ describe("nextDate", () => {
         test(`Index ${index + 1} should return a date ${
             phase.length
         } minutes in the future`, () => {
-            let result = nextDate(index + 1, 1, {
+            const result = nextDate(index + 1, 1, {
                 ...setupInformation,
                 phases: testPhases,
             });
@@ -56,7 +56,7 @@ describe("nextDate", () => {
         [5, 1],
     ].forEach(([turnNumber, expected]) => {
         test(`Turn ${turnNumber} should return ${expected} minutes in the future`, () => {
-            let result = nextDate(1, turnNumber, {
+            const result = nextDate(1, turnNumber, {
                 ...setupInformation,
                 phases,
             });

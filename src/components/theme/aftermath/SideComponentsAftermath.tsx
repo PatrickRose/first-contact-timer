@@ -1,5 +1,4 @@
 import { ApiResponse, Game } from "@fc/types/types";
-import LogoBlock from "./LogoBlock";
 import HelpBlock from "./HelpBlock";
 import React, { useRef, useState } from "react";
 import { SideComponentMapper } from "@fc/lib/ComponentMapper";
@@ -8,7 +7,6 @@ import useInterval from "@fc/lib/useInterval";
 
 export default function SideComponentsAftermath({
     components,
-    setupInformation,
 }: {
     components: ApiResponse["components"];
     setupInformation: Game["setupInformation"];
@@ -66,7 +64,7 @@ export default function SideComponentsAftermath({
                 )}
             </div>
             <div className="lg:block">
-                <HelpBlock setupInformation={setupInformation} />
+                <HelpBlock />
             </div>
         </div>
     );

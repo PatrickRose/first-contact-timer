@@ -1,8 +1,4 @@
-import type {
-    GangNames,
-    RunningHotCorps,
-    RunningHotRunners,
-} from "@fc/types/types";
+import type { GangNames, RunningHotRunners } from "@fc/types/types";
 import Image from "next/image";
 import { gangImages, gangNames } from "./RunningHot/helpers";
 
@@ -18,7 +14,7 @@ export function RunningHotRunners(runners: RunningHotRunners) {
         gangs[gang] += reputation;
     });
 
-    const allGangs = Object.entries(gangs).sort(([_, a], [__, b]) => b - a);
+    const allGangs = Object.entries(gangs).sort((a, b) => b[1] - a[1]);
 
     return (
         <div className="mt-4">

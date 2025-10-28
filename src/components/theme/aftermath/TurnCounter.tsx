@@ -1,7 +1,5 @@
 import * as React from "react";
 import { Game, SetupInformation } from "@fc/types/types";
-import { lengthOfPhase } from "@fc/server/turn";
-import { isLeft } from "fp-ts/Either";
 import { TurnComponentMapper } from "@fc/lib/ComponentMapper";
 
 type TurnCounterProps = {

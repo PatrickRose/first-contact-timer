@@ -154,7 +154,7 @@ export default function TurnCounter(props: TurnCounterProps) {
             <TurnTimer timestamp={timestamp} active={active} mobile={true} />
             <div className="flex lg:flex-wrap flex-row  mt-4">
                 {setupInformation.phases.map((val, key) => {
-                    let phaseLength = lengthOfPhase(
+                    const phaseLength = lengthOfPhase(
                         key + 1,
                         turn,
                         setupInformation,

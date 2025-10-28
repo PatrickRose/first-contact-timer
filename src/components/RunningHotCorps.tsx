@@ -6,7 +6,7 @@ export function RunningHotCorps({ sharePrice }: RunningHotCorps) {
     const corps = Object.entries(sharePrice);
 
     // Sort the corps so that higher share price appears at the top
-    corps.sort(([_, a], [__, b]) => b - a);
+    corps.sort((a, b) => b[1] - a[1]);
 
     return (
         <div className="mt-4">

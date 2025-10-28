@@ -3,11 +3,8 @@ import Image from "next/image";
 import VLHGLogo from "@fc/public/aftermath-logo-vlhg.svg";
 import BBCLogo from "@fc/public/aftermath-logo-bbc.svg";
 import GovLogo from "@fc/public/aftermath-logo-hm-gov.svg";
-import { Game } from "@fc/types/types";
 
-export default function AlertSystemFooter({}: {}) {
-    let textClass = "text-center uppercase text-2xl font-semibold";
-
+export default function AlertSystemFooter() {
     return (
         <div className="block lg:flex flex-row justify-between bg-white text-aftermath font-semibold text-center pt-12 lg:py-4 px-6 ">
             <div className="w-2/3 mx-auto py-0 lg:mx-0 lg:h-24 lg:w-1/3 lg:py-3">

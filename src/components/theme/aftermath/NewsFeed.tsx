@@ -1,6 +1,5 @@
 import type { LivePress, NewsItem } from "@fc/types/types";
 import Image from "next/image";
-import GNNLogo from "@fc/public/GNNLogo.png";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import {
@@ -49,6 +48,9 @@ function NewsItem({ item, press }: { item: NewsItem; press: LivePress }) {
     const [formattedDate, setFormattedDate] = useState<string>("");
 
     useEffect(() => {
+        // We do it this way to make sure we don't have a mismatch
+        // when rendering
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setFormattedDate(new Date(item.date).toLocaleString());
     }, [item.date]);
 

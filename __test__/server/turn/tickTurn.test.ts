@@ -6,7 +6,7 @@ import {
     jest,
     test,
 } from "@jest/globals";
-import { phases, setupInformation } from "./helpers";
+import { setupInformation } from "./helpers";
 import { Game, SetupInformation } from "@fc/types/types";
 import { tickTurn } from "@fc/server/turn";
 

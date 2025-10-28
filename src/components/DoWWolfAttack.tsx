@@ -7,6 +7,8 @@ export function DoWWolfAttack({ inProgress }: WolfAttack) {
     useEffect(() => {
         const el = new Audio("/wolf-attack.mp3");
         el.volume = 0.5;
+        // Intentionally done, so it happens on the client
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setAudio(el);
     }, []);
 

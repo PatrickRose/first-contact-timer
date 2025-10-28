@@ -2,7 +2,6 @@ import * as React from "react";
 import { Game, SetupInformation } from "@fc/types/types";
 import { lengthOfPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
-import { TurnComponentMapper } from "@fc/lib/ComponentMapper";
 import Image from "next/image";
 import ArrowIcon from "@fc/public/aftermath-arrow.svg";
 
@@ -68,7 +67,6 @@ export function PhaseCount({
 }
 
 export function PhaseArrow({
-    firstPhase,
     thisPhase,
     activePhase,
 }: {
@@ -98,15 +96,13 @@ export function PhaseArrow({
 }
 
 export default function PhaseList(props: PhaseListProps) {
-    const { turn, phase, timestamp, active, setupInformation } = props;
-
-    const text = setupInformation.phases[phase - 1]?.title;
+    const { turn, phase, setupInformation } = props;
 
     return (
         <React.Fragment>
             <div className="flex-1 mt-4 ">
                 {setupInformation.phases.map((val, key) => {
-                    let phaseLength = lengthOfPhase(
+                    const phaseLength = lengthOfPhase(
                         key + 1,
                         turn,
                         setupInformation,

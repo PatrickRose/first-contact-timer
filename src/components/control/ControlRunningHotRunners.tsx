@@ -1,12 +1,6 @@
 import { ControlButtonRootProps } from "../ControlTools";
 import { GangNames, RunningHotRunners, SetRunnerRep } from "@fc/types/types";
-import {
-    ALL_GANGS,
-    corpImages,
-    corpNames,
-    gangImages,
-    gangNames,
-} from "../RunningHot/helpers";
+import { ALL_GANGS, gangImages, gangNames } from "../RunningHot/helpers";
 import Image from "next/image";
 import { useState } from "react";
 import { ApiResponseDecode } from "@fc/types/io-ts-def";

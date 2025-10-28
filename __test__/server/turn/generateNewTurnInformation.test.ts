@@ -24,7 +24,7 @@ describe("generateNewTurnInformation", () => {
     });
 
     test("Unknown phase returns error message", () => {
-        let result = generateNewTurnInformation(1, 1, setupInformation);
+        const result = generateNewTurnInformation(1, 1, setupInformation);
 
         expect(isLeft(result)).toBe(true);
     });
@@ -33,7 +33,7 @@ describe("generateNewTurnInformation", () => {
         test(`Index ${index + 1} should return a date ${
             phase.length
         } minutes in the future`, () => {
-            let result = generateNewTurnInformation(index + 1, 1, {
+            const result = generateNewTurnInformation(index + 1, 1, {
                 ...setupInformation,
                 phases: testPhases,
             });
@@ -63,7 +63,7 @@ describe("generateNewTurnInformation", () => {
         [5, 1],
     ].forEach(([turnNumber, length]) => {
         test(`Turn ${turnNumber} should return ${length} minutes in the future`, () => {
-            let result = generateNewTurnInformation(1, turnNumber, {
+            const result = generateNewTurnInformation(1, turnNumber, {
                 ...setupInformation,
                 phases,
             });

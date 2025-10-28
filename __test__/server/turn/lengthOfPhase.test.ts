@@ -5,14 +5,14 @@ import { isLeft } from "fp-ts/Either";
 
 describe("lengthOfPhase", () => {
     test("Unknown phase returns error message", () => {
-        let result = lengthOfPhase(1, 1, setupInformation);
+        const result = lengthOfPhase(1, 1, setupInformation);
 
         expect(isLeft(result)).toBe(true);
     });
 
     testPhases.forEach((phase, index) => {
         test(`Index ${index + 1} should return ${phase.length}`, () => {
-            let result = lengthOfPhase(index + 1, 1, {
+            const result = lengthOfPhase(index + 1, 1, {
                 ...setupInformation,
                 phases: testPhases,
             });
@@ -32,7 +32,7 @@ describe("lengthOfPhase", () => {
         [5, 1],
     ].forEach(([turnNumber, expected]) => {
         test(`Turn ${turnNumber} should return ${expected}`, () => {
-            let result = lengthOfPhase(1, turnNumber, {
+            const result = lengthOfPhase(1, turnNumber, {
                 ...setupInformation,
                 phases,
             });

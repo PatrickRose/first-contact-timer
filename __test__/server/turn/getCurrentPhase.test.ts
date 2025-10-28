@@ -22,8 +22,6 @@ describe("getCurrentPhase", () => {
         };
 
         for (let phaseToCheck = 1; phaseToCheck <= numPhases; phaseToCheck++) {
-            const expected = phases[phaseToCheck - 1];
-
             test(`Get phase ${phaseToCheck} from ${numPhases} game`, () => {
                 const expected: Right<SetupInformation["phases"][0]> = {
                     _tag: "Right",

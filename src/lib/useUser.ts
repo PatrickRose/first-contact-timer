@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { User } from "@fc/types/types";
-import useSWR, { SWRResponse } from "swr";
+import useSWR from "swr";
 import { useRouter } from "next/navigation";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -11,7 +11,7 @@ export default function useUser({
     forcePasswordChange = true,
 } = {}): {
     user: User | undefined;
-    mutateUser: SWRResponse<User | undefined, any>["mutate"];
+    mutateUser: ReturnType<typeof useSWR<User | undefined>>["mutate"];
 } {
     const { data: user, mutate: mutateUser } = useSWR<User | undefined>(
         "/api/user",

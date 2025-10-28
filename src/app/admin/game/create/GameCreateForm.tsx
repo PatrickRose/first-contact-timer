@@ -30,11 +30,13 @@ export function GameCreateForm() {
         try {
             data = await response.json();
         } catch (e) {
+            console.error(e);
             const errors = ["Server responded with bad data?"];
 
             try {
                 errors.push(await response.text());
             } catch (e) {
+                console.error(e);
                 errors.push("Could not get response result");
             }
 

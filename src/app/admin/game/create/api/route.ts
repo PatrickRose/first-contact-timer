@@ -1,4 +1,3 @@
-import { Request } from "next/dist/compiled/@edge-runtime/primitives";
 import {
     CreateGameResponse,
     Game,
@@ -6,7 +5,7 @@ import {
     RunningHotRunners,
 } from "@fc/types/types";
 import { CreateGameRequestDecode } from "@fc/types/io-ts-def";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createGame } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
 import { getGameRepo } from "@fc/server/repository/game";
@@ -516,7 +515,7 @@ const GAME_TYPES: Record<
 };
 
 export async function POST(
-    request: Request,
+    request: NextRequest,
 ): Promise<NextResponse<CreateGameResponse>> {
     const createGameReq = await request.json();
 

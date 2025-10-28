@@ -6,7 +6,6 @@ import { SetWolfAttack } from "@fc/types/types";
 export function ControlWolfAttack({
     inProgress,
     setAPIResponse,
-    setError,
     id,
 }: { inProgress: boolean } & ControlButtonRootProps) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
