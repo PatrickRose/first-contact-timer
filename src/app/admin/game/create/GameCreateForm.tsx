@@ -67,6 +67,7 @@ export function GameCreateForm() {
         AYNOHYEB: "Are you now...",
         DeedsAndDestiny: "Deeds & Destiny",
         "faes-anatomy": "Fae's Anatomy",
+        "dead-britannia": "Dead Britannia",
         "dev-test-game": "Dev Test Game",
     };
 
