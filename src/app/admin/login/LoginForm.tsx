@@ -32,6 +32,7 @@ export default function LoginForm() {
         try {
             data = await response.json();
         } catch (e) {
+            console.error(e);
             data = false;
         }
 

@@ -3,11 +3,11 @@ import Image from "next/image";
 import AlertIcon from "@fc/public/aftermath-alert.svg";
 
 export default function WeatherStatus({ message }: { message: string }) {
-    let textClass = "text-center uppercase text-2xl font-semibold";
+    const textClass = "text-center uppercase text-2xl font-semibold";
 
-    let iconClass = message.length ? "" : "opacity-30";
+    const iconClass = message.length ? "" : "opacity-30";
 
-    let bgClass = message.length
+    const bgClass = message.length
         ? "border-aftermath-alert bg-aftermath-alert text-aftermath"
         : "border-white";
 

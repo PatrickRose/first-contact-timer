@@ -2,7 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 
 describe("io-ts-helpers", () => {
-    const testParams: Record<string, any> = {
+    const testParams: Record<string, unknown> = {
         false: false,
         true: true,
         number: 1,

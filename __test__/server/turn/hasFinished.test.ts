@@ -91,7 +91,7 @@ describe("hasfinished", () => {
         });
     });
 
-    testCases.forEach(({ name, difference, expected }) => {
+    testCases.forEach(({ name, difference }) => {
         test(`${name} - when inactive forced to false`, () => {
             const newDate = new Date(
                 mockCurrentDate.getTime() + difference * 1000,

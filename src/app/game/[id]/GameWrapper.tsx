@@ -31,6 +31,8 @@ export default function GameWrapper(props: GameWrapperProps) {
 
     const [audio, setAudio] = useState<HTMLAudioElement>();
 
+    // Intentionally done in an effect so we can force this to happen in the client
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     useEffect(() => setAudio(new Audio("/turn-change.mp3")), []);
     const [fetching, setFetching] = useState<boolean>(false);
 

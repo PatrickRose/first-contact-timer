@@ -4,7 +4,7 @@ import { sessionOptions, SessionType } from "./lib/session";
 import { getIronSession } from "iron-session";
 
 // This function can be marked `async` if using `await` inside
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const path = request.nextUrl.pathname;
     if (path.startsWith("/admin")) {
         const res = NextResponse.next();

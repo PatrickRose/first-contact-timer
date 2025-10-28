@@ -127,7 +127,7 @@ export function createGame(
     setupInformation: Game["setupInformation"],
     components: Game["components"],
 ): Either<string, Game> {
-    let date = nextDate(1, 1, setupInformation);
+    const date = nextDate(1, 1, setupInformation);
 
     if (isLeft(date)) {
         return date;

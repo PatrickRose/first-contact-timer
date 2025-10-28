@@ -6,7 +6,7 @@ import {
     Trackers,
 } from "@fc/types/types";
 import { useId, useState } from "react";
-import { ApiResponseDecode, SetTrackerDecode } from "@fc/types/io-ts-def";
+import { ApiResponseDecode } from "@fc/types/io-ts-def";
 
 function TrackerWrapper(
     props: ControlButtonRootProps & Trackers["trackers"][0] & { label: string },

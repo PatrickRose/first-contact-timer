@@ -31,7 +31,7 @@ export function AftermathTheme({
         throw new Error("Unknown current phase information");
     }
 
-    let pageBG = apiResponse.active ? "bg-aftermath" : "bg-zinc-600";
+    const pageBG = apiResponse.active ? "bg-aftermath" : "bg-zinc-600";
 
     return (
         <div

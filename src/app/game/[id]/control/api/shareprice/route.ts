@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@fc/types/types";
 import { isLeft } from "fp-ts/Either";
 import { getGameRepo } from "@fc/server/repository/game";
-import { DefconAPIBodyDecode, SetSharePriceDecode } from "@fc/types/io-ts-def";
+import { SetSharePriceDecode } from "@fc/types/io-ts-def";
 import { toApiResponse } from "@fc/server/turn";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 

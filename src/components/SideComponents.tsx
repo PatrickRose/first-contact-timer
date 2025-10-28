@@ -6,14 +6,13 @@ import {
 } from "@fc/types/types";
 import Icon_Game from "@fc/public/Icon-VLHG.png";
 import LogoBlock from "./theme/first-contact/LogoBlock";
-import React, { createRef, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { SideComponentMapper } from "@fc/lib/ComponentMapper";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import useInterval from "@fc/lib/useInterval";
-import BreakingNews from "@fc/components/theme/first-contact/BreakingNews";
 import { NewsFeed } from "@fc/components/theme/first-contact/NewsFeed";
 import TabSwitcher, { TabInfo } from "@fc/components/TabSwitcher";
-import { calculatePressTabIcon, getIconForPress } from "@fc/lib/press";
+import { calculatePressTabIcon } from "@fc/lib/press";
 
 type SideComponentsToShow = {
     componentType: ApiResponse["components"][0]["componentType"];

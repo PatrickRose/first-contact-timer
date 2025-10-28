@@ -3,11 +3,7 @@ import { ApiResponse, ControlAction, ControlAPI, Game } from "@fc/types/types";
 import { isLeft } from "fp-ts/Either";
 import { getGameRepo } from "@fc/server/repository/game";
 import { ControlAPIDecode } from "@fc/types/io-ts-def";
-import {
-    generateNewTurnInformation,
-    nextPhase,
-    toApiResponse,
-} from "@fc/server/turn";
+import { generateNewTurnInformation, toApiResponse } from "@fc/server/turn";
 import { MakeRight } from "@fc/lib/io-ts-helpers";
 
 const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {

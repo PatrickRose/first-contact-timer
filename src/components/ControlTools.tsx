@@ -161,11 +161,11 @@ export default function ControlTools({
     setApiResponse: (apiResponse: ApiResponse) => void;
 }) {
     const actions = Object.entries(CONTROL_BUTTONS)
-        .filter(([_, val]) =>
-            val.visibleForState(game.setupInformation, apiResponse),
+        .filter((val) =>
+            val[1].visibleForState(game.setupInformation, apiResponse),
         )
-        .sort(([_, a], [__, b]) => {
-            return a.order - b.order;
+        .sort((a, b) => {
+            return a[1].order - b[1].order;
         });
 
     const [error, setError] = useState<string>();

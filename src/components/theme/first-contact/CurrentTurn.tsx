@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Game, SetupInformation } from "@fc/types/types";
+import { SetupInformation } from "@fc/types/types";
 
 interface CurrentTurnCounterProps {
     turn: number;
@@ -30,7 +30,7 @@ const CurrentTurnTimer = function CurrentTurnTimer(props: {
 };
 
 export default function CurrentTurn(props: CurrentTurnCounterProps) {
-    const { turn, phase, timestamp, active, phaseInformation } = props;
+    const { turn, timestamp, phaseInformation } = props;
 
     const backgroundClass = phaseInformation.hidden
         ? "bg-linear-to-b from-turn-counter-past-light to-turn-counter-past-dark opacity-50"
