@@ -14,7 +14,7 @@
         "postinstall": "npm rebuild argon2 -- --build-from-source"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-svg-core": "^7.0.0",
+        "@fortawesome/fontawesome-svg-core": "^7.1.0",
         "@fortawesome/free-solid-svg-icons": "^7.0.0",
         "@fortawesome/react-fontawesome": "^3.1.1",
         "@headlessui/react": "^2.2.2",
