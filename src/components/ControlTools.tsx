@@ -10,6 +10,7 @@ import { faFastForward } from "@fortawesome/free-solid-svg-icons/faFastForward";
 import { faPause } from "@fortawesome/free-solid-svg-icons/faPause";
 import { faPlay } from "@fortawesome/free-solid-svg-icons/faPlay";
 import React, { useState } from "react";
+import QRCode from "react-qr-code";
 import { ApiResponseDecode } from "@fc/types/io-ts-def";
 import { ControlComponentMapper } from "@fc/lib/ComponentMapper";
 
@@ -169,6 +170,12 @@ export default function ControlTools({
         });
 
     const [error, setError] = useState<string>();
+    const [showQR, setShowQR] = useState<boolean>(false);
+    const [playerUrl] = useState<string>(() =>
+        typeof window !== "undefined"
+            ? `${window.location.origin}/game/${game._id}`
+            : "",
+    );
 
     return (
         <div className="first-contact-container py-4 lg:p-4 lg:bg-linear-to-b from-turn-counter-past-light to-turn-counter-past-dark">
@@ -189,6 +196,26 @@ export default function ControlTools({
                         />
                     );
                 })}
+            </div>
+            <div className="flex flex-col items-center w-full p-4">
+                <button
+                    type="button"
+                    className="bg-turn-counter-future border-black hover:bg-turn-counter-current hover:border-yellow-300 border-4 rounded-sm p-2 px-4"
+                    onClick={() => setShowQR((prev) => !prev)}
+                    aria-expanded={showQR}
+                >
+                    {showQR ? "Hide QR code" : "Show QR code"}
+                </button>
+                {showQR && playerUrl !== "" ? (
+                    <div className="mt-4 max-w-xs mx-auto flex flex-col items-center">
+                        <div className="bg-white p-4">
+                            <QRCode value={playerUrl} />
+                        </div>
+                        <code className="mt-2 bg-black text-white px-2 py-1 text-sm break-all text-center">
+                            {playerUrl}
+                        </code>
+                    </div>
+                ) : null}
             </div>
             <div className="flex w-full p-4 justify-around">
                 {error !== undefined ? (
