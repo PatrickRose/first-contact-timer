@@ -87,6 +87,7 @@ export const GameTypeDecode = t.union([
     t.literal("faes-anatomy"),
     t.literal("dead-britannia"),
     t.literal("dev-test-game"),
+    t.literal("touched-by-darkness"),
 ]);
 
 export const CreateGameRequestDecode = t.type({
@@ -124,10 +125,19 @@ export const WeatherStatusDecode = t.type({
     weatherMessage: t.string,
 });
 
-export const WolfAttackDecode = t.type({
-    componentType: t.literal("DoWWolfAttack"),
-    inProgress: t.boolean,
-});
+export const WolfAttackDecode = t.intersection([
+    t.type({
+        componentType: t.literal("DoWWolfAttack"),
+        inProgress: t.boolean,
+    }),
+    t.partial({
+        alert: t.type({
+            text: t.string,
+            label: t.string,
+            emoji: t.string,
+        }),
+    }),
+]);
 
 const CorpNamesDecode = t.union([
     t.literal("GenEq"),
@@ -140,6 +150,16 @@ const CorpNamesDecode = t.union([
 export const RunningHotCorpsDecode = t.type({
     componentType: t.literal("RunningHotCorp"),
     sharePrice: t.record(CorpNamesDecode, t.number),
+});
+
+export const LightLevelDecode = t.type({
+    componentType: t.literal("LightLevel"),
+    value: t.number,
+    max: t.number,
+});
+
+export const SetLightLevelDecode = t.type({
+    value: t.number,
 });
 
 export const TrackerDecode = t.type({
@@ -177,6 +197,7 @@ export const ComponentDecode = t.union([
     RunningHotCorpsDecode,
     RunningHotRunnersDecode,
     TrackersDecode,
+    LightLevelDecode,
 ]);
 
 export const PressDecode = t.intersection([

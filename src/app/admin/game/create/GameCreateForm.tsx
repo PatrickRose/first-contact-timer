@@ -69,6 +69,7 @@ export function GameCreateForm() {
         "faes-anatomy": "Fae's Anatomy",
         "dead-britannia": "Dead Britannia",
         "dev-test-game": "Dev Test Game",
+        "touched-by-darkness": "Touched By Darkness",
     };
 
     return (

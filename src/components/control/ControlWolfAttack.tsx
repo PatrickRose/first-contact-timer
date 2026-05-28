@@ -5,10 +5,16 @@ import { SetWolfAttack } from "@fc/types/types";
 
 export function ControlWolfAttack({
     inProgress,
+    alert,
     setAPIResponse,
     id,
-}: { inProgress: boolean } & ControlButtonRootProps) {
+}: {
+    inProgress: boolean;
+    alert?: { text: string; label: string; emoji: string };
+} & ControlButtonRootProps) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const label = alert?.label ?? "Wolf attack";
+    const emoji = alert?.emoji ?? "🐺";
 
     const submit = async () => {
         setIsSubmitting(true);
@@ -48,14 +54,14 @@ export function ControlWolfAttack({
     return (
         <div className="first-contact-container lg:p-4 lg:bg-linear-to-b from-turn-counter-past-light to-turn-counter-past-dark">
             <h2 className="text-3xl mt-2 mb-6 uppercase text-center">
-                🐺Wolf Attack🐺
+                {emoji} {label} {emoji}
             </h2>
             <div className="flex flex-col">
                 {isSubmitting ? (
-                    <p>Updating wolf attack status...</p>
+                    <p>Updating {label.toLowerCase()} status...</p>
                 ) : (
                     <button className="w-full border-2 p-4" onClick={submit}>
-                        {inProgress ? "End wolf attack" : "Begin wolf attack"}
+                        {inProgress ? "End" : "Begin"} {label.toLowerCase()}
                     </button>
                 )}
             </div>

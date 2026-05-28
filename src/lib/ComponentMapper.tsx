@@ -12,6 +12,8 @@ import { RunningHotRunners } from "@fc/components/RunningHotRunners";
 import { ControlRunningHotRunners } from "@fc/components/control/ControlRunningHotRunners";
 import Trackers from "@fc/components/Trackers";
 import ControlTrackers from "@fc/components/control/ControlTrackers";
+import LightLevel from "@fc/components/LightLevel";
+import ControlLightLevel from "@fc/components/control/ControlLightLevel";
 
 export function ControlComponentMapper({
     component,
@@ -44,6 +46,7 @@ export function ControlComponentMapper({
             return (
                 <ControlWolfAttack
                     inProgress={component.inProgress}
+                    alert={component.alert}
                     id={id}
                     setAPIResponse={setAPIResponse}
                     setError={setError}
@@ -77,6 +80,16 @@ export function ControlComponentMapper({
                     setAPIResponse={setAPIResponse}
                     setError={setError}
                     componentType={component.componentType}
+                />
+            );
+        case "LightLevel":
+            return (
+                <ControlLightLevel
+                    value={component.value}
+                    max={component.max}
+                    id={id}
+                    setAPIResponse={setAPIResponse}
+                    setError={setError}
                 />
             );
     }
@@ -128,6 +141,8 @@ export function SideComponentMapper({
             );
         case "Trackers":
             return <Trackers {...component} />;
+        case "LightLevel":
+            return <LightLevel {...component} />;
     }
 
     return null;

@@ -1,7 +1,7 @@
 import { WolfAttack } from "@fc/types/types";
 import { useEffect, useState } from "react";
 
-export function DoWWolfAttack({ inProgress }: WolfAttack) {
+export function DoWWolfAttack({ inProgress, alert }: WolfAttack) {
     const [audio, setAudio] = useState<HTMLAudioElement>();
 
     useEffect(() => {
@@ -24,7 +24,9 @@ export function DoWWolfAttack({ inProgress }: WolfAttack) {
 
     return (
         <div className="text-4xl font-extrabold bg-red-800 w-full">
-            <p className="uppercase my-8 p-4">Wolf attack in progress</p>
+            <p className="uppercase my-8 p-4">
+                {alert?.text ?? "Wolf attack in progress"}
+            </p>
         </div>
     );
 }
