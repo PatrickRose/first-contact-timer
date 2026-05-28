@@ -41,6 +41,8 @@ export type SetSharePrice = t.TypeOf<typeof types.SetSharePriceDecode>;
 export type SetRunnerRep = t.TypeOf<typeof types.SetRunnerRepDecode>;
 
 export type Trackers = t.TypeOf<typeof types.TrackersDecode>;
+export type LightLevel = t.TypeOf<typeof types.LightLevelDecode>;
+export type SetLightLevel = t.TypeOf<typeof types.SetLightLevelDecode>;
 export type SetTracker = t.TypeOf<typeof types.SetTrackerDecode>;
 export type AddTracker = t.TypeOf<typeof types.AddTrackerDecode>;
 export type DeleteTracker = t.TypeOf<typeof types.DeleteTrackerDecode>;

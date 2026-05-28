@@ -3,6 +3,7 @@ import Image, { ImageProps } from "next/image";
 import Icon_Game from "@fc/public/Icon-VLHG.png";
 import Icon_DefCon from "@fc/public/Icon-DefCon.png";
 import Icon_Manage from "@fc/public/Icon-Manage.png";
+import Icon_LightLevel from "@fc/public/Icon-LightLevel.svg";
 import React, { useEffect } from "react";
 import { calculatePressTabIcon } from "@fc/lib/press";
 
@@ -66,6 +67,12 @@ export function GameTabSwitcher({
                 tabs[component.componentType] = {
                     title: "Trackers",
                     image: Icon_DefCon,
+                };
+                break;
+            case "LightLevel":
+                tabs[component.componentType] = {
+                    title: "Light Level",
+                    image: Icon_LightLevel,
                 };
         }
     });
