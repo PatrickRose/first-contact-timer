@@ -17,9 +17,8 @@ jest.mock("argon2", () => {
 describe("hashPassword", () => {
     test("hash a password", async () => {
         const { hash } = await import("argon2");
-        const { hashPassword } = await import(
-            "@fc/server/repository/user/argon"
-        );
+        const { hashPassword } =
+            await import("@fc/server/repository/user/argon");
 
         expect(await hashPassword("test password")).toBe("HASHED PASSWORD");
         expect(hash).toHaveBeenCalledWith("test password", {
