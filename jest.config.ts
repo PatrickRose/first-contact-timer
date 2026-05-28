@@ -17,6 +17,10 @@ const config: Config = {
         "src/types/io-ts-def.ts",
         "src/server/user/consts.ts",
     ],
+    moduleNameMapper: {
+        // bson v7 ships ESM by default; force Jest to load the CJS build.
+        "^bson$": "<rootDir>/node_modules/bson/lib/bson.cjs",
+    },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
