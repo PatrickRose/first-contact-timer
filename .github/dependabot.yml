@@ -6,6 +6,16 @@ updates:
       schedule:
           interval: "daily"
       open-pull-requests-limit: 5
+      groups:
+          react:
+              patterns:
+                  - "react"
+                  - "react-dom"
+                  - "@types/react"
+                  - "@types/react-dom"
+          fontawesome:
+              patterns:
+                  - "@fortawesome/*"
 
     # Enable version updates for github actions
     - package-ecosystem: "github-actions"
