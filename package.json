@@ -24,7 +24,7 @@
         "io-ts": "^2.2.22",
         "iron-session": "^8.0.4",
         "mongodb": "^7.3.0",
-        "next": "16.2.7",
+        "next": "16.2.9",
         "react": "19.2.7",
         "react-dom": "^19.2.7",
         "react-qr-code": "^2.2.0",
