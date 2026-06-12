@@ -27,7 +27,7 @@
         "next": "16.2.7",
         "react": "19.2.7",
         "react-dom": "^19.2.7",
-        "react-qr-code": "^2.0.21",
+        "react-qr-code": "^2.2.0",
         "react-transition-group": "^4.4.5",
         "swr": "^2.4.1"
     },
