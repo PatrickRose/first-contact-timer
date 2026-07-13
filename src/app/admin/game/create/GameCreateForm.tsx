@@ -74,16 +74,27 @@ export function GameCreateForm() {
     };
 
     return (
-        <form onSubmit={submit}>
+        <form onSubmit={submit} className="flex flex-col gap-6">
             {success !== null ? (
-                <div className="p-4 bg-green-300 rounded-2xl text-black">
+                <div
+                    role="status"
+                    className="rounded-lg border border-green-500/50 bg-green-950/60 p-4 text-sm text-green-200"
+                >
                     Game with ID {success} created! You can access it at{" "}
-                    <Link href={`/game/${success}`}>/game/{success}</Link>
+                    <Link
+                        className="font-semibold text-green-100 underline hover:text-white"
+                        href={`/game/${success}`}
+                    >
+                        /game/{success}
+                    </Link>
                 </div>
             ) : null}
             {error !== null ? (
-                <div className="p-4 bg-red-300 rounded-2xl text-black">
-                    <ul>
+                <div
+                    role="alert"
+                    className="rounded-lg border border-red-500/50 bg-red-950/60 p-4 text-sm text-red-200"
+                >
+                    <ul className="list-inside list-disc space-y-1">
                         {error.map((val, key) => (
                             <li key={key}>{val}</li>
                         ))}
@@ -91,47 +102,57 @@ export function GameCreateForm() {
                 </div>
             ) : null}
 
-            <div className="flex py-2">
-                <label className="pr-2 w-1/6" htmlFor="game-id">
-                    Game ID:{" "}
+            <div>
+                <label
+                    className="block text-sm font-medium text-zinc-300"
+                    htmlFor="game-id"
+                >
+                    Game ID
                 </label>
                 <input
-                    className="flex-1"
+                    className="mt-2 block w-full rounded-lg border-zinc-700 bg-zinc-950 text-zinc-100 placeholder-zinc-500 focus:border-indigo-500 focus:ring-indigo-500"
                     id="game-id"
                     value={gameID}
                     onChange={(event) => setID(event.target.value)}
                 />
+                <p className="mt-2 text-sm text-zinc-500">
+                    This becomes part of the game URL, so keep it short and
+                    memorable.
+                </p>
             </div>
 
             <fieldset>
-                <legend className="text-sm font-semibold leading-6">
-                    Game Type
+                <legend className="text-sm font-medium text-zinc-300">
+                    Game type
                 </legend>
-                <div className="mt-6 space-y-6">
+                <div className="mt-2 grid gap-3 sm:grid-cols-2">
                     {Object.entries(gameTypes).map(([key, label]) => (
-                        <div key={key} className="flex items-center gap-x-3">
+                        <label
+                            key={key}
+                            htmlFor={key}
+                            className={`flex cursor-pointer items-center gap-x-3 rounded-lg border p-3 text-sm font-medium transition ${
+                                key == type
+                                    ? "border-indigo-500 bg-indigo-950/40 text-indigo-100"
+                                    : "border-zinc-700 bg-zinc-950 text-zinc-300 hover:border-zinc-500"
+                            }`}
+                        >
                             <input
                                 id={key}
                                 name="gameType"
                                 type="radio"
-                                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                className="h-4 w-4 border-zinc-600 bg-zinc-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
                                 checked={key == type}
                                 value={key}
                                 onChange={() => setType(key as GameType)}
                             />
-                            <label
-                                htmlFor={key}
-                                className="block text-sm font-medium leading-6"
-                            >
-                                {label}
-                            </label>
-                        </div>
+                            {label}
+                        </label>
                     ))}
                 </div>
             </fieldset>
 
-            <div className="py-2">
-                <button className="p-4 border border-white hover:bg-white hover:text-black">
+            <div>
+                <button className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 font-semibold text-white transition hover:bg-indigo-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-zinc-900 sm:w-auto">
                     Create Game
                 </button>
             </div>
