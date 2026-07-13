@@ -16,6 +16,7 @@ import {
     makeActiveGame,
     makeFakeGameRepo,
     makeInactiveGame,
+    setupInformation,
 } from "../../fixtures/game";
 import { makeProps, makeRequest } from "../../fixtures/routes";
 import GameRepository from "@fc/server/repository/game";
@@ -151,6 +152,40 @@ describe("GET /game/[id]/api", () => {
             components: [],
             turnNumber: 1,
             phase: 1,
+            phaseEnd: 0,
+        });
+    });
+
+    test("does not tick over a game that has reached its turn limit", async () => {
+        const game = makeActiveGame({
+            setupInformation: {
+                ...setupInformation,
+                maxTurns: 1,
+            },
+        });
+        game.turnInformation.currentPhase = 3;
+        game.turnInformation.phaseEnd = new Date(
+            2023,
+            1,
+            2,
+            3,
+            4,
+            0,
+            0,
+        ).toString();
+
+        const repo = makeFakeGameRepo(game);
+        getGameRepo.mockReturnValue(MakeRight(repo));
+
+        const response = await GET(makeRequest(), makeProps());
+
+        expect(repo.nextTurn).not.toHaveBeenCalled();
+        expect(await response.json()).toEqual({
+            active: true,
+            breakingNews: [],
+            components: [],
+            turnNumber: 1,
+            phase: 3,
             phaseEnd: 0,
         });
     });

@@ -49,6 +49,7 @@ const ALL_GAME_TYPES: GameType[] = [
     "aftermath",
     "wts-1970",
     "dow",
+    "dow-new-eden",
     "running-hot",
     "AYNOHYEB",
     "DeedsAndDestiny",

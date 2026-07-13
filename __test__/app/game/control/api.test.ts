@@ -16,6 +16,7 @@ import {
     makeActiveGame,
     makeFakeGameRepo,
     makeInactiveGame,
+    setupInformation,
 } from "../../../fixtures/game";
 import { makeProps, makeRequest } from "../../../fixtures/routes";
 import GameRepository from "@fc/server/repository/game";
@@ -351,6 +352,64 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 2,
                 phase: 1,
                 phaseEnd: 60,
+            });
+        });
+
+        test("does not go past the turn limit", async () => {
+            const game = makeActiveGame({
+                setupInformation: {
+                    ...setupInformation,
+                    maxTurns: 2,
+                },
+            });
+            game.turnInformation.turnNumber = 2;
+            const repo = makeFakeGameRepo(game);
+            getGameRepo.mockReturnValue(MakeRight(repo));
+
+            const response = await POST(
+                makeRequest({ action: "forward-turn" }),
+                makeProps(),
+            );
+
+            expect(await response.json()).toEqual({
+                active: true,
+                breakingNews: [],
+                components: [],
+                turnNumber: 2,
+                phase: 1,
+                phaseEnd: 60,
+            });
+        });
+    });
+
+    describe("turn limit", () => {
+        test("forward-phase does nothing on the last phase of the last turn", async () => {
+            const game = makeActiveGame({
+                setupInformation: {
+                    ...setupInformation,
+                    maxTurns: 2,
+                },
+            });
+            game.turnInformation.turnNumber = 2;
+            game.turnInformation.currentPhase = 3;
+            const repo = makeFakeGameRepo(game);
+            getGameRepo.mockReturnValue(MakeRight(repo));
+
+            const response = await POST(
+                makeRequest({ action: "forward-phase" }),
+                makeProps(),
+            );
+
+            // The turn information is untouched, so the phase end comes from
+            // the fixture's original phase end (65 seconds after the mocked
+            // time)
+            expect(await response.json()).toEqual({
+                active: true,
+                breakingNews: [],
+                components: [],
+                turnNumber: 2,
+                phase: 3,
+                phaseEnd: 65,
             });
         });
     });
