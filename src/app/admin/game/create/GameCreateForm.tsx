@@ -83,7 +83,7 @@ export function GameCreateForm() {
                     Game with ID {success} created! You can access it at{" "}
                     <Link
                         className="font-semibold text-green-100 underline hover:text-white"
-                        href={`/game/${success}`}
+                        href={`/game/${encodeURIComponent(success)}`}
                     >
                         /game/{success}
                     </Link>
