@@ -151,6 +151,80 @@ describe("POST /admin/game/create/api", () => {
         });
     });
 
+    test("returns a 400 when custom components are invalid", async () => {
+        const response = await POST(
+            makeRequest({
+                gameID: "new-game",
+                type: "dow",
+                components: [{ componentType: "NotARealComponent" }],
+            }),
+        );
+
+        expect(response.status).toBe(400);
+        expect(await response.json()).toEqual({
+            result: false,
+            errors: ["Incorrect request"],
+        });
+    });
+
+    test("creates a game with custom components instead of the defaults", async () => {
+        const repo = makeFakeGameRepo(makeActiveGame());
+        getGameRepo.mockReturnValue(MakeRight(repo));
+
+        const customComponents: Game["components"] = [
+            {
+                componentType: "Weather",
+                weatherMessage: "Howling gales",
+            },
+            {
+                componentType: "Trackers",
+                trackers: {
+                    Morale: { value: 5, type: "bar", max: 10 },
+                },
+            },
+        ];
+
+        const response = await POST(
+            makeRequest({
+                gameID: "new-game",
+                type: "dow",
+                components: customComponents,
+            }),
+        );
+
+        expect(response.status).toBe(200);
+        expect(await response.json()).toEqual({ result: true });
+
+        expect(repo.insert).toHaveBeenCalledWith(
+            expect.objectContaining({
+                _id: "new-game",
+                components: customComponents,
+                frozenTurn: expect.objectContaining({
+                    components: customComponents,
+                }),
+            }),
+        );
+    });
+
+    test("creates a game with no components when an empty list is sent", async () => {
+        const repo = makeFakeGameRepo(makeActiveGame());
+        getGameRepo.mockReturnValue(MakeRight(repo));
+
+        const response = await POST(
+            makeRequest({ gameID: "new-game", type: "dow", components: [] }),
+        );
+
+        expect(response.status).toBe(200);
+        expect(await response.json()).toEqual({ result: true });
+
+        expect(repo.insert).toHaveBeenCalledWith(
+            expect.objectContaining({
+                _id: "new-game",
+                components: [],
+            }),
+        );
+    });
+
     describe("creates every game type", () => {
         ALL_GAME_TYPES.forEach((type) => {
             test(`creates a ${type} game`, async () => {

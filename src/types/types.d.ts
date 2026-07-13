@@ -21,6 +21,8 @@ export type DBUser = t.TypeOf<typeof types.DBUserDecode>;
 export type CreateGameResponse = t.TypeOf<
     typeof types.CreateGameResponseDecode
 >;
+export type CreateGameRequest = t.TypeOf<typeof types.CreateGameRequestDecode>;
+export type Component = t.TypeOf<typeof types.ComponentDecode>;
 export type GameType = t.TypeOf<typeof types.GameTypeDecode>;
 
 export type Game = t.TypeOf<typeof types.GameDecode>;

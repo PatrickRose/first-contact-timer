@@ -91,11 +91,6 @@ export const GameTypeDecode = t.union([
     t.literal("touched-by-darkness"),
 ]);
 
-export const CreateGameRequestDecode = t.type({
-    gameID: t.string,
-    type: GameTypeDecode,
-});
-
 export const CreateGameResponseDecode = t.union([
     t.type({
         result: t.literal(true),
@@ -199,6 +194,16 @@ export const ComponentDecode = t.union([
     RunningHotRunnersDecode,
     TrackersDecode,
     LightLevelDecode,
+]);
+
+export const CreateGameRequestDecode = t.intersection([
+    t.type({
+        gameID: t.string,
+        type: GameTypeDecode,
+    }),
+    t.partial({
+        components: t.array(ComponentDecode),
+    }),
 ]);
 
 export const PressDecode = t.intersection([
