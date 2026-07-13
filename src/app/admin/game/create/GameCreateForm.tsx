@@ -63,6 +63,7 @@ export function GameCreateForm() {
         aftermath: "Aftermath",
         "wts-1970": "Watch the Skies: 1970",
         dow: "Den of Wolves",
+        "dow-new-eden": "Den of Wolves: New Eden",
         "running-hot": "Running Hot",
         AYNOHYEB: "Are you now...",
         DeedsAndDestiny: "Deeds & Destiny",
