@@ -20,6 +20,11 @@ const config: Config = {
     moduleNameMapper: {
         // bson v7 ships ESM by default; force Jest to load the CJS build.
         "^bson$": "<rootDir>/node_modules/bson/lib/bson.cjs",
+        // next/jest resolves the tsconfig path aliases by rewriting import
+        // specifiers at transform time, which doesn't cover the module name
+        // passed to jest.mock() - so mirror the aliases here too.
+        "^@fc/public/(.*)$": "<rootDir>/public/$1",
+        "^@fc/(components|lib|pages|server|types)/(.*)$": "<rootDir>/src/$1/$2",
     },
 };
 

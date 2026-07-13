@@ -20,6 +20,7 @@ export default async function loginRoute(
         res.status(405).json({
             message: "Only post requests are allowed",
         });
+        return;
     }
 
     const body = await req.body;

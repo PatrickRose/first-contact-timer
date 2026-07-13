@@ -42,16 +42,20 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
     "back-phase": (game) => {
         const turnInformation = game.turnInformation;
 
-        const currentPhase = game.turnInformation.currentPhase;
-        const newPhase =
-            currentPhase == 1
-                ? game.setupInformation.phases.length - 1
-                : currentPhase - 1;
+        const currentPhase = turnInformation.currentPhase;
 
-        const turnNumber =
-            currentPhase == 1
-                ? turnInformation.turnNumber - 1
-                : turnInformation.turnNumber;
+        let newPhase = currentPhase - 1;
+        let turnNumber = turnInformation.turnNumber;
+
+        if (currentPhase == 1) {
+            if (turnNumber == 1) {
+                // There is nothing before turn 1 phase 1, so restart the phase
+                newPhase = 1;
+            } else {
+                newPhase = game.setupInformation.phases.length;
+                turnNumber -= 1;
+            }
+        }
 
         const newTurnInformation = generateNewTurnInformation(
             newPhase,
