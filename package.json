@@ -57,5 +57,11 @@
     },
     "overrides": {
         "@types/react": "19.2.17"
+    },
+    "allowScripts": {
+        "argon2@0.44.0": true,
+        "esbuild@0.28.1": true,
+        "sharp@0.34.5": true,
+        "unrs-resolver@1.11.1": true
     }
 }
