@@ -57,29 +57,38 @@ export default function LoginForm() {
     };
 
     return (
-        <form onSubmit={submit} className="flex-col">
+        <form onSubmit={submit} className="flex flex-col gap-5">
             {error !== null ? (
-                <div className="p-4 bg-red-300 rounded-2xl text-black">
+                <div
+                    role="alert"
+                    className="rounded-lg border border-red-500/50 bg-red-950/60 p-4 text-sm text-red-200"
+                >
                     {error}
                 </div>
             ) : null}
-            <div className="flex py-2">
-                <label className="pr-2 w-1/6" htmlFor="username">
-                    Username:{" "}
+            <div>
+                <label
+                    className="block text-sm font-medium text-zinc-300"
+                    htmlFor="username"
+                >
+                    Username
                 </label>
                 <input
-                    className="flex-1"
+                    className="mt-2 block w-full rounded-lg border-zinc-700 bg-zinc-950 text-zinc-100 placeholder-zinc-500 focus:border-indigo-500 focus:ring-indigo-500"
                     id="username"
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                 />
             </div>
-            <div className="flex py-2">
-                <label className="pr-2 w-1/6" htmlFor="password">
-                    Password:{" "}
+            <div>
+                <label
+                    className="block text-sm font-medium text-zinc-300"
+                    htmlFor="password"
+                >
+                    Password
                 </label>
                 <input
-                    className="flex-1"
+                    className="mt-2 block w-full rounded-lg border-zinc-700 bg-zinc-950 text-zinc-100 placeholder-zinc-500 focus:border-indigo-500 focus:ring-indigo-500"
                     id="password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
@@ -87,11 +96,9 @@ export default function LoginForm() {
                 />
             </div>
 
-            <div className="py-2">
-                <button className="p-4 border border-white hover:bg-white hover:text-black">
-                    Login
-                </button>
-            </div>
+            <button className="mt-2 w-full rounded-lg bg-indigo-600 px-4 py-2.5 font-semibold text-white transition hover:bg-indigo-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-zinc-900">
+                Login
+            </button>
         </form>
     );
 }
