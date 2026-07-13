@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Game, SetupInformation } from "@fc/types/types";
+import { atTurnLimit } from "@fc/server/turn";
 import { TurnComponentMapper } from "@fc/lib/ComponentMapper";
 
 type TurnCounterProps = {
@@ -15,23 +16,32 @@ const TurnTimer = function TurnTimer(props: {
     timestamp: number;
     active: boolean;
     mobile: boolean;
+    finished: boolean;
 }) {
     const formatter = new Intl.NumberFormat("en-GB", {
         minimumIntegerDigits: 2,
     });
 
-    const { timestamp, active, mobile } = props;
+    const { timestamp, active, mobile, finished } = props;
     const minutes = Math.floor(Number(timestamp / 60));
     const seconds = timestamp % 60;
 
     let paused;
 
-    if (!active) {
-        const pausedClass = mobile ? "lg:hidden" : "hidden lg:block";
+    const bannerClass = mobile ? "lg:hidden" : "hidden lg:block";
 
+    if (finished) {
         paused = (
             <p
-                className={`${pausedClass} pt-10 px-6 bg-zinc-600 text-white rounded-sm alert alert-danger text-6xl`}
+                className={`${bannerClass} pt-10 px-6 bg-zinc-600 text-white rounded-sm alert alert-danger text-6xl`}
+            >
+                GAME COMPLETE
+            </p>
+        );
+    } else if (!active) {
+        paused = (
+            <p
+                className={`${bannerClass} pt-10 px-6 bg-zinc-600 text-white rounded-sm alert alert-danger text-6xl`}
             >
                 GAME PAUSED
             </p>
@@ -95,6 +105,12 @@ export default function TurnCounter(props: TurnCounterProps) {
     const textSize = setupInformation.phases[phase - 1]?.hidden
         ? "text-4xl lg:text-5xl"
         : "text-6xl lg:text-8xl";
+    const turnText =
+        setupInformation.maxTurns === undefined
+            ? `Aftermath Turn ${turn}`
+            : `Aftermath Turn ${turn} of ${setupInformation.maxTurns}`;
+    const finished =
+        atTurnLimit(turn, phase, setupInformation) && timestamp === 0;
 
     return (
         <React.Fragment>
@@ -107,7 +123,7 @@ export default function TurnCounter(props: TurnCounterProps) {
                 ))}
                 <div>
                     <h1 className="text-3xl lg:text-4xl mt-4 mb-4 lg:mb-8 uppercase ">
-                        Aftermath Turn {turn}
+                        {turnText}
                     </h1>
                     <h2
                         className={`font-semibold mt-4 mb-4 uppercase w-7/8 m-auto ${textSize}`}
@@ -118,11 +134,13 @@ export default function TurnCounter(props: TurnCounterProps) {
                         timestamp={timestamp}
                         active={active}
                         mobile={true}
+                        finished={finished}
                     />
                     <TurnTimer
                         timestamp={timestamp}
                         active={active}
                         mobile={false}
+                        finished={finished}
                     />
                 </div>
             </div>

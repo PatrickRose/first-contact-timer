@@ -91,7 +91,33 @@ export function nextPhase(phase: number, setup: SetupInformation): number {
     return newPhaseNumber > setup.phases.length ? 1 : newPhaseNumber;
 }
 
+export function atTurnLimit(
+    turnNumber: number,
+    currentPhase: number,
+    setupInformation: SetupInformation,
+): boolean {
+    const maxTurns = setupInformation.maxTurns;
+
+    return (
+        maxTurns !== undefined &&
+        turnNumber >= maxTurns &&
+        currentPhase >= setupInformation.phases.length
+    );
+}
+
+export function isAtTurnLimit(game: Game): boolean {
+    return atTurnLimit(
+        game.turnInformation.turnNumber,
+        game.turnInformation.currentPhase,
+        game.setupInformation,
+    );
+}
+
 export function tickTurn(game: Game): Game {
+    if (isAtTurnLimit(game)) {
+        return game;
+    }
+
     const newPhase: number = nextPhase(
         game.turnInformation.currentPhase,
         game.setupInformation,
@@ -119,7 +145,11 @@ export function tickTurn(game: Game): Game {
 }
 
 export function hasFinished(game: Game): boolean {
-    return game.active && new Date(game.turnInformation.phaseEnd) < new Date();
+    return (
+        game.active &&
+        !isAtTurnLimit(game) &&
+        new Date(game.turnInformation.phaseEnd) < new Date()
+    );
 }
 
 export function createGame(

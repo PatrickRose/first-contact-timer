@@ -279,6 +279,7 @@ const GAME_TYPES: Record<
             breakingNewsBanner: true,
             components: [],
             logo: "/dow-new-eden.png",
+            maxTurns: 8,
             press: {
                 name: "INC",
                 logo: "/inc.png",
@@ -361,6 +362,7 @@ const GAME_TYPES: Record<
             theme: "first-contact",
             breakingNewsBanner: true,
             components: [],
+            maxTurns: 8,
             press: [
                 {
                     name: "Test Press",

@@ -250,6 +250,9 @@ export const SetupInformationDecode = t.intersection([
         hidePressInSidebar: t.boolean,
     }),
     t.partial({
+        maxTurns: t.number,
+    }),
+    t.partial({
         timerStyles: t.type({
             activePhase: PhaseStyleDecode,
             futurePhase: PhaseStyleDecode,

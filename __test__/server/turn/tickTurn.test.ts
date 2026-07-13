@@ -86,6 +86,41 @@ describe("tickTurn", () => {
 
                 expect(tickTurn(baseGame)).toEqual(expectedGame);
             });
+
+            test(`last phase of the final turn does not tick when maxTurns is ${currentTurn}`, () => {
+                const game: Game = {
+                    ...baseGame,
+                    setupInformation: {
+                        ...baseGame.setupInformation,
+                        maxTurns: currentTurn,
+                    },
+                };
+
+                expect(tickTurn(game)).toEqual(game);
+            });
+
+            test(`last phase still ticks to turn ${
+                currentTurn + 1
+            } when maxTurns is ${currentTurn + 1}`, () => {
+                const game: Game = {
+                    ...baseGame,
+                    setupInformation: {
+                        ...baseGame.setupInformation,
+                        maxTurns: currentTurn + 1,
+                    },
+                };
+
+                const expectedGame = {
+                    ...game,
+                    turnInformation: {
+                        turnNumber: currentTurn + 1,
+                        currentPhase: 1,
+                        phaseEnd: new Date(60 * 1000).toString(),
+                    },
+                };
+
+                expect(tickTurn(game)).toEqual(expectedGame);
+            });
         }
     }
 });
