@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Game, SetupInformation } from "@fc/types/types";
-import { lengthOfPhase } from "@fc/server/turn";
+import { atTurnLimit, lengthOfPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
 import { TurnComponentMapper } from "@fc/lib/ComponentMapper";
 import Image from "next/image";
@@ -18,23 +18,32 @@ const TurnTimer = function TurnTimer(props: {
     timestamp: number;
     active: boolean;
     mobile: boolean;
+    finished: boolean;
 }) {
     const formatter = new Intl.NumberFormat("en-GB", {
         minimumIntegerDigits: 2,
     });
 
-    const { timestamp, active, mobile } = props;
+    const { timestamp, active, mobile, finished } = props;
     const minutes = Math.floor(Number(timestamp / 60));
     const seconds = timestamp % 60;
 
     let paused;
 
-    if (!active) {
-        const pausedClass = mobile ? "lg:hidden" : "hidden lg:block";
+    const bannerClass = mobile ? "lg:hidden" : "hidden lg:block";
 
+    if (finished) {
         paused = (
             <p
-                className={`${pausedClass} py-3 px-6 bg-zinc-600 text-white rounded-sm alert alert-danger text-3xl`}
+                className={`${bannerClass} py-3 px-6 bg-zinc-600 text-white rounded-sm alert alert-danger text-3xl`}
+            >
+                GAME COMPLETE
+            </p>
+        );
+    } else if (!active) {
+        paused = (
+            <p
+                className={`${bannerClass} py-3 px-6 bg-zinc-600 text-white rounded-sm alert alert-danger text-3xl`}
             >
                 GAME PAUSED
             </p>
@@ -139,6 +148,12 @@ export default function TurnCounter(props: TurnCounterProps) {
     const { turn, phase, timestamp, active, setupInformation } = props;
 
     const text = setupInformation.phases[phase - 1]?.title;
+    const turnText =
+        setupInformation.maxTurns === undefined
+            ? `Turn ${turn}`
+            : `Turn ${turn} of ${setupInformation.maxTurns}`;
+    const finished =
+        atTurnLimit(turn, phase, setupInformation) && timestamp === 0;
 
     return (
         <React.Fragment>
@@ -149,9 +164,14 @@ export default function TurnCounter(props: TurnCounterProps) {
                 <TurnComponentMapper key={key} component={component} />
             ))}
             <h1 className="text-4xl lg:text-5xl mt-4 mb-8 uppercase ">
-                Turn {turn}: {text}
+                {turnText}: {text}
             </h1>
-            <TurnTimer timestamp={timestamp} active={active} mobile={true} />
+            <TurnTimer
+                timestamp={timestamp}
+                active={active}
+                mobile={true}
+                finished={finished}
+            />
             <div className="flex lg:flex-wrap flex-row  mt-4">
                 {setupInformation.phases.map((val, key) => {
                     const phaseLength = lengthOfPhase(
@@ -175,7 +195,12 @@ export default function TurnCounter(props: TurnCounterProps) {
                     );
                 })}
             </div>
-            <TurnTimer timestamp={timestamp} active={active} mobile={false} />
+            <TurnTimer
+                timestamp={timestamp}
+                active={active}
+                mobile={false}
+                finished={finished}
+            />
         </React.Fragment>
     );
 }

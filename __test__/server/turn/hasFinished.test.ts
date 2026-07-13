@@ -92,6 +92,52 @@ describe("hasfinished", () => {
     });
 
     testCases.forEach(({ name, difference }) => {
+        test(`${name} - at the turn limit forced to false`, () => {
+            const newDate = new Date(
+                mockCurrentDate.getTime() + difference * 1000,
+            );
+            const game: Game = {
+                ...baseGame,
+                setupInformation: {
+                    ...baseGame.setupInformation,
+                    phases: [{ title: "test", length: 1, hidden: false }],
+                    maxTurns: 8,
+                },
+                turnInformation: {
+                    turnNumber: 8,
+                    currentPhase: 1,
+                    phaseEnd: newDate.toString(),
+                },
+            };
+
+            expect(hasFinished(game)).toBe(false);
+        });
+    });
+
+    testCases.forEach(({ name, difference, expected }) => {
+        test(`${name} - below the turn limit behaves normally (${expected})`, () => {
+            const newDate = new Date(
+                mockCurrentDate.getTime() + difference * 1000,
+            );
+            const game: Game = {
+                ...baseGame,
+                setupInformation: {
+                    ...baseGame.setupInformation,
+                    phases: [{ title: "test", length: 1, hidden: false }],
+                    maxTurns: 8,
+                },
+                turnInformation: {
+                    turnNumber: 7,
+                    currentPhase: 1,
+                    phaseEnd: newDate.toString(),
+                },
+            };
+
+            expect(hasFinished(game)).toBe(expected);
+        });
+    });
+
+    testCases.forEach(({ name, difference }) => {
         test(`${name} - when inactive forced to false`, () => {
             const newDate = new Date(
                 mockCurrentDate.getTime() + difference * 1000,

@@ -3,7 +3,11 @@ import { ApiResponse, ControlAction, ControlAPI, Game } from "@fc/types/types";
 import { isLeft } from "fp-ts/Either";
 import { getGameRepo } from "@fc/server/repository/game";
 import { ControlAPIDecode } from "@fc/types/io-ts-def";
-import { generateNewTurnInformation, toApiResponse } from "@fc/server/turn";
+import {
+    generateNewTurnInformation,
+    isAtTurnLimit,
+    toApiResponse,
+} from "@fc/server/turn";
 import { MakeRight } from "@fc/lib/io-ts-helpers";
 
 const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
@@ -85,6 +89,10 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         });
     },
     "forward-phase": (game) => {
+        if (isAtTurnLimit(game)) {
+            return MakeRight(game);
+        }
+
         const turnInformation = game.turnInformation;
 
         const { newPhase, turnNumber } =
@@ -113,7 +121,10 @@ const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
         const turnInformation = game.turnInformation;
 
         const newPhase = 1;
-        const turnNumber = turnInformation.turnNumber + 1;
+        const turnNumber = Math.min(
+            turnInformation.turnNumber + 1,
+            game.setupInformation.maxTurns ?? Infinity,
+        );
 
         const newTurnInformation = generateNewTurnInformation(
             newPhase,
