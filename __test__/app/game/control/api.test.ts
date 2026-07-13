@@ -265,10 +265,7 @@ describe("POST /game/[id]/control/api", () => {
             });
         });
 
-        test("moves to the previous turn from the first phase", async () => {
-            // Documents the current behaviour: going back from phase 1 lands
-            // on phase `phases.length - 1` (not the final phase) of the
-            // previous turn, and the turn number can reach 0
+        test("moves to the final phase of the previous turn from the first phase", async () => {
             const game = makeActiveGame();
             game.turnInformation.turnNumber = 2;
             const repo = makeFakeGameRepo(game);
@@ -279,13 +276,36 @@ describe("POST /game/[id]/control/api", () => {
                 makeProps(),
             );
 
+            // Phase 3 is 3 minutes long
             expect(await response.json()).toEqual({
                 active: true,
                 breakingNews: [],
                 components: [],
                 turnNumber: 1,
-                phase: 2,
-                phaseEnd: 120,
+                phase: 3,
+                phaseEnd: 180,
+            });
+        });
+
+        test("restarts the phase on the first phase of the first turn", async () => {
+            const game = makeActiveGame();
+            const repo = makeFakeGameRepo(game);
+            getGameRepo.mockReturnValue(MakeRight(repo));
+
+            const response = await POST(
+                makeRequest({ action: "back-phase" }),
+                makeProps(),
+            );
+
+            // There is nothing before turn 1 phase 1, so the phase timer is
+            // reset to the full phase length instead
+            expect(await response.json()).toEqual({
+                active: true,
+                breakingNews: [],
+                components: [],
+                turnNumber: 1,
+                phase: 1,
+                phaseEnd: 60,
             });
         });
     });

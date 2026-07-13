@@ -92,15 +92,23 @@ beforeEach(() => {
 });
 
 describe("loginRoute", () => {
-    test("rejects non-POST requests", async () => {
-        const { req, res } = makeReqRes("GET", undefined);
+    test("rejects non-POST requests without processing them", async () => {
+        // Even with a valid body, a non-POST request must stop at the 405
+        // and never reach the login flow
+        const { req, res } = makeReqRes("PUT", {
+            username: "test-user",
+            password: "hunter2",
+        });
 
         await loginRoute(req, res);
 
-        expect(res.status).toHaveBeenNthCalledWith(1, 405);
-        expect(res.json).toHaveBeenNthCalledWith(1, {
+        expect(res.status).toHaveBeenCalledTimes(1);
+        expect(res.status).toHaveBeenCalledWith(405);
+        expect(res.json).toHaveBeenCalledTimes(1);
+        expect(res.json).toHaveBeenCalledWith({
             message: "Only post requests are allowed",
         });
+        expect(getUserRepo).not.toHaveBeenCalled();
     });
 
     test("rejects a request without a username or password", async () => {
