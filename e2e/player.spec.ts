@@ -31,7 +31,7 @@ test.describe("player display", () => {
         const desktopTimer = page.getByTestId("turn-timer-desktop");
         const gameTab = page.getByRole("button", { name: "Game", exact: true });
 
-        if (await isMobileLayout(page)) {
+        if (isMobileLayout(page)) {
             // Mobile: bottom tab bar + condensed timer, no desktop timer.
             await expect(gameTab).toBeVisible();
             await expect(mobileTimer).toBeVisible();
@@ -47,7 +47,7 @@ test.describe("player display", () => {
         page,
     }) => {
         test.skip(
-            !(await isMobileLayout(page)),
+            !isMobileLayout(page),
             "Tab bar only exists on mobile widths",
         );
 
@@ -81,7 +81,7 @@ test.describe("player display", () => {
         page,
     }) => {
         test.skip(
-            !(await isMobileLayout(page)),
+            !isMobileLayout(page),
             "Tab bar only exists on mobile widths",
         );
 
