@@ -18,10 +18,14 @@ export interface ListGamesResult {
 /**
  * Distinguishable error value returned by the game repository when a
  * compare-and-set update matches zero documents - i.e. turnInformation changed
- * between the read and the write. The route layer maps this to HTTP 409 and
- * retries once. See #783.
+ * between the read and the write.
+ *
+ * This is a unique symbol rather than a string so it can never collide with a
+ * human-readable error message that happens to read "conflict"; the two share
+ * the `Either` left channel. The route layer maps it to HTTP 409. See #783.
  */
-export const UPDATE_CONFLICT = "conflict";
+export const UPDATE_CONFLICT: unique symbol = Symbol("game-update-conflict");
+export type UpdateConflict = typeof UPDATE_CONFLICT;
 
 export default interface GameRepository {
     get: (id: string) => Promise<Either<false, Game>>;
@@ -31,7 +35,7 @@ export default interface GameRepository {
     runControlAction: (
         currentGame: Game,
         action: ControlAction,
-    ) => Promise<Either<string, Game>>;
+    ) => Promise<Either<string | UpdateConflict, Game>>;
     setBreakingNews: (
         currentGame: Game,
         breakingNews: string,

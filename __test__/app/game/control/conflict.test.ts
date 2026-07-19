@@ -23,7 +23,13 @@ import GameRepository, { UPDATE_CONFLICT } from "@fc/server/repository/game";
 jest.mock("@fc/server/repository/game", () => ({
     __esModule: true,
     getGameRepo: jest.fn(),
-    UPDATE_CONFLICT: "conflict",
+    // Use the real sentinel symbol so the route's conflict dispatch is exercised
+    // exactly as in production, not against a stand-in string.
+    UPDATE_CONFLICT: (
+        jest.requireActual("@fc/server/repository/game") as {
+            UPDATE_CONFLICT: symbol;
+        }
+    ).UPDATE_CONFLICT,
 }));
 
 type Handler = (

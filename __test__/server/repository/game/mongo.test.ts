@@ -359,14 +359,43 @@ describe("nextTurn", () => {
         expect(result).toEqual(MakeLeft("Failed to get game?"));
     });
 
-    test("returns a conflict when the CAS update matches no documents", async () => {
-        const { collection, repository } = makeFakeMongo();
+    test("returns the fresh advanced state when the CAS update conflicts", async () => {
+        const { cursor, collection, repository } = makeFakeMongo();
+
+        // The CAS matched nothing: another writer already advanced the turn.
+        collection.updateOne.mockResolvedValue({ matchedCount: 0 });
+
+        // The re-fetch returns the already-advanced (phase 2) game.
+        const freshGame = makeActiveGame({
+            turnInformation: {
+                turnNumber: 1,
+                currentPhase: 2,
+                phaseEnd: new Date(2023, 1, 2, 3, 6, 5, 0).toString(),
+            },
+        });
+        cursor.next.mockResolvedValue(freshGame);
+
+        // The stale input is still on phase 1.
+        const staleGame = makeActiveGame();
+        const result = await repository.nextTurn(staleGame);
+
+        // A lost auto-advance is success from the poller's view: it gets the
+        // fresh advanced state, not the stale pre-advance one.
+        expect(result).toEqual(MakeRight(freshGame));
+        if (isRight(result)) {
+            expect(result.right.turnInformation.currentPhase).toBe(2);
+        }
+    });
+
+    test("returns a left when the game cannot be re-fetched after a conflict", async () => {
+        const { cursor, collection, repository } = makeFakeMongo();
 
         collection.updateOne.mockResolvedValue({ matchedCount: 0 });
+        cursor.next.mockResolvedValue(null);
 
         const result = await repository.nextTurn(makeActiveGame());
 
-        expect(result).toEqual(MakeLeft(UPDATE_CONFLICT));
+        expect(result).toEqual(MakeLeft("Failed to get game?"));
     });
 });
 
