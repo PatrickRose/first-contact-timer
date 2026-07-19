@@ -128,8 +128,13 @@ function ControlButton({
         })
             .then(async (response) => {
                 if (!response.ok) {
+                    // Include the response body - the control routes return
+                    // useful error messages.
+                    const body = await response.text().catch(() => "");
                     setError(
-                        `Control command failed (HTTP ${response.status})`,
+                        `Control command failed (HTTP ${response.status})${
+                            body ? `: ${body}` : ""
+                        }`,
                     );
                     return;
                 }
