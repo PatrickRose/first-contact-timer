@@ -132,6 +132,7 @@ export function PhaseCount({
 
     return (
         <div
+            data-testid="phase-count"
             className={`md:flex flex-1 flex-col p-3 transition duration-500 border-4 ${backgroundClass}`}
         >
             {phaseInformation.logo ? (

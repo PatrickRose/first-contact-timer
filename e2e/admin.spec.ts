@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
+import { projectGameId } from "./helpers";
 import { ADMIN_USERNAME, DEFAULT_PASSWORD } from "./seed";
 
 test.describe("admin", () => {
@@ -45,15 +46,14 @@ test.describe("admin", () => {
             page.getByRole("heading", { name: "Dashboard" }),
         ).toBeVisible();
 
-        // Go to the create-game form. Unique id per project/run so reruns and
-        // the second viewport project don't collide on a duplicate _id.
+        // Go to the create-game form. Unique id per project AND per run so
+        // reruns and the other viewport projects don't collide on a duplicate
+        // _id.
         await page.goto("/admin/game/create");
-        const gameId = `e2e-created-${testInfo.project.name
-            .replace(/\s+/g, "-")
-            .toLowerCase()}-${Date.now()}`;
+        const gameId = `${projectGameId("e2e-created", testInfo)}-${Date.now()}`;
 
         await page.getByLabel("Game ID").fill(gameId);
-        await page.locator("#first-contact").check();
+        await page.getByRole("radio", { name: "First Contact: 2035" }).check();
         await page.getByRole("button", { name: "Create Game" }).click();
 
         // Success banner links to the new game.

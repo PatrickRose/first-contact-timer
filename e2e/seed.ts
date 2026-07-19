@@ -1,6 +1,7 @@
-import * as argon2 from "argon2";
 import type { Db } from "mongodb";
 import type { Game } from "../src/types/types";
+import { hashPassword } from "../src/server/repository/user/argon";
+import { DEFAULT_PASSWORD } from "../src/server/repository/user/consts";
 
 /**
  * Deterministic seed data for the e2e suite. Games are inserted directly with
@@ -10,9 +11,9 @@ import type { Game } from "../src/types/types";
  * Game ids are referenced by the spec files, so keep them in sync.
  */
 
-// Matches src/server/repository/user/consts.ts. Kept as a literal so the seeder
-// has no runtime dependency on the app's path aliases.
-export const DEFAULT_PASSWORD = "DefaultMegaminPasswordPleaseReset";
+// Re-exported so specs (admin.spec.ts) log in with the same password the app's
+// user-creation flow would have set.
+export { DEFAULT_PASSWORD };
 export const ADMIN_USERNAME = "e2e-admin";
 
 const GAME_IDS = {
@@ -25,7 +26,11 @@ const GAME_IDS = {
 
 export const games = GAME_IDS;
 
-/** A phaseEnd far enough in the future that active games never auto-advance. */
+/**
+ * A phaseEnd far enough in the future that active games never auto-advance.
+ * Note this is set once at global-setup time, so the WHOLE suite must finish
+ * well within the hour - if it ever grows near that, bump this.
+ */
 function futurePhaseEnd(): string {
     return new Date(Date.now() + 60 * 60 * 1000).toString();
 }
@@ -196,10 +201,7 @@ export async function seedDatabase(db: Db): Promise<void> {
 
     await usersCollection.insertOne({
         _id: ADMIN_USERNAME,
-        password: await argon2.hash(DEFAULT_PASSWORD, {
-            type: argon2.argon2id,
-            timeCost: 5,
-        }),
+        password: await hashPassword(DEFAULT_PASSWORD),
         passwordNeedsReset: true,
     });
 }

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import { games } from "./seed";
 import { isMobileLayout } from "./helpers";
 
@@ -11,15 +11,13 @@ test.describe("player display", () => {
             page.getByRole("heading", { name: /Turn 1: Team Time/ }),
         ).toBeVisible();
 
-        // Every phase from the setup is listed in the phase counter. The same
-        // titles appear in hidden mobile/desktop variants, so pick a visible one.
+        // Every phase from the setup is listed in the phase counter. Scoped to
+        // the phase-count boxes: a page-wide text match would be satisfied by
+        // the H1 ("Turn 1: Team Time") even with the counter missing.
+        const phaseBoxes = page.getByTestId("phase-count");
+        await expect(phaseBoxes).toHaveCount(3);
         for (const phase of ["Team Time", "Action Phase", "Debrief"]) {
-            await expect(
-                page
-                    .getByText(phase, { exact: false })
-                    .filter({ visible: true })
-                    .first(),
-            ).toBeVisible();
+            await expect(phaseBoxes.filter({ hasText: phase })).toBeVisible();
         }
     });
 
