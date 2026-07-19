@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@fc/types/types";
-import { isLeft } from "fp-ts/Either";
-import { getGameRepo } from "@fc/server/repository/game";
 import { ControlAPIDecode } from "@fc/types/io-ts-def";
-import { CONTROL_ACTIONS, toApiResponse } from "@fc/server/turn";
+import { CONTROL_ACTIONS } from "@fc/server/turn";
+import { runControlActionRoute } from "@fc/server/components";
 
 export async function POST(
     request: NextRequest,
@@ -21,26 +20,5 @@ export async function POST(
         );
     }
 
-    const gameRepo = getGameRepo();
-
-    if (isLeft(gameRepo)) {
-        return NextResponse.json({ error: gameRepo.left }, { status: 500 });
-    }
-
-    const game = await gameRepo.right.get(id);
-
-    if (isLeft(game)) {
-        return NextResponse.json({ error: "Game not found" }, { status: 404 });
-    }
-
-    const newGame = await gameRepo.right.runControlAction(
-        game.right,
-        CONTROL_ACTIONS[body.action],
-    );
-
-    if (isLeft(newGame)) {
-        return NextResponse.json({ error: newGame.left }, { status: 500 });
-    }
-
-    return NextResponse.json(toApiResponse(newGame.right));
+    return runControlActionRoute(id, CONTROL_ACTIONS[body.action]);
 }

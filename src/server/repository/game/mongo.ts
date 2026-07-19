@@ -1,4 +1,8 @@
-import GameRepository, { ListGamesOptions, ListGamesResult } from "./index";
+import GameRepository, {
+    ListGamesOptions,
+    ListGamesResult,
+    UPDATE_CONFLICT,
+} from "./index";
 import { Either, isLeft } from "fp-ts/Either";
 import { ControlAction, Game } from "@fc/types/types";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
@@ -114,10 +118,18 @@ export class MongoRepository implements GameRepository {
 
             const { _id, turnInformation } = currentFields;
 
-            await gameCollection.updateOne(
+            const result = await gameCollection.updateOne(
                 { _id, turnInformation },
                 { $set: newFields },
             );
+
+            // The CAS filter on { _id, turnInformation } prevents double
+            // advances, but a 0-match means turnInformation changed between the
+            // read and this write. Surface that as a conflict rather than
+            // silently no-opping and returning success. See #783.
+            if (result.matchedCount === 0) {
+                return MakeLeft(UPDATE_CONFLICT);
+            }
 
             return MakeRight(true);
         } catch (e) {
