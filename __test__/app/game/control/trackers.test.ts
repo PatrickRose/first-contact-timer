@@ -308,4 +308,52 @@ describe("POST /game/[id]/control/api/trackers", () => {
             expect(body.components[0].trackers).toEqual({});
         });
     });
+
+    describe("prototype pollution", () => {
+        test.each(["__proto__", "constructor", "prototype"])(
+            "setting the tracker %p returns a 500 and does not pollute Object.prototype",
+            async (tracker) => {
+                const repo = makeFakeGameRepo(
+                    makeActiveGame({ components: [trackersComponent()] }),
+                );
+                getGameRepo.mockReturnValue(MakeRight(repo));
+
+                const response = await POST(
+                    makeRequest({ tracker, value: 7 }),
+                    makeProps(),
+                );
+
+                expect(response.status).toBe(500);
+                expect(await response.json()).toEqual({
+                    error: `No ${tracker} tracker found for game test-game`,
+                });
+                // Had the inherited-key lookup passed the guard, the write
+                // would have landed on Object.prototype.value.
+                expect(({} as Record<string, unknown>).value).toBeUndefined();
+            },
+        );
+
+        test.each(["__proto__", "constructor", "prototype"])(
+            "adding the tracker %p is rejected as an invalid name",
+            async (tracker) => {
+                const repo = makeFakeGameRepo(
+                    makeActiveGame({ components: [trackersComponent()] }),
+                );
+                getGameRepo.mockReturnValue(MakeRight(repo));
+
+                const response = await POST(
+                    makeRequest({
+                        tracker,
+                        trackerDefinition: { value: 0, type: "circle", max: 5 },
+                    }),
+                    makeProps(),
+                );
+
+                expect(response.status).toBe(500);
+                expect(await response.json()).toEqual({
+                    error: `${tracker} is not a valid tracker name for game test-game`,
+                });
+            },
+        );
+    });
 });

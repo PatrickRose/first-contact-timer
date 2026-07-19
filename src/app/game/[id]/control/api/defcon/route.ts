@@ -48,9 +48,7 @@ export async function POST(
                 return MakeLeft(`No defcon component for game ${id}`);
             }
 
-            const country = defconComponent.countries[body.stateName];
-
-            if (!country) {
+            if (!Object.hasOwn(defconComponent.countries, body.stateName)) {
                 return MakeLeft(
                     `Defcon component does not include ${body.stateName}`,
                 );

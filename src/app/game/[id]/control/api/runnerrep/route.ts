@@ -50,7 +50,7 @@ export async function POST(
                 );
             }
 
-            if (corpComponent.rep[body.runnerName] === undefined) {
+            if (!Object.hasOwn(corpComponent.rep, body.runnerName)) {
                 return MakeLeft(
                     `No ${body.runnerName} runner found for game ${id}`,
                 );
