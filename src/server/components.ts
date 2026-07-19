@@ -1,6 +1,9 @@
-import { Component, ComponentType, Game } from "@fc/types/types";
+import { ApiResponse, Component, ComponentType, Game } from "@fc/types/types";
 import { Either, isLeft } from "fp-ts/Either";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
+import { NextRequest, NextResponse } from "next/server";
+import { getGameRepo } from "@fc/server/repository/game";
+import { toApiResponse } from "@fc/server/turn";
 
 /**
  * The concrete component variant for a given componentType discriminant.
@@ -17,6 +20,7 @@ export type ComponentOfType<T extends ComponentType> = Extract<
  */
 export type ComponentMutation<T extends ComponentType> = (
     component: ComponentOfType<T>,
+    game: Game,
 ) => Either<string, void>;
 
 function findComponent<T extends ComponentType>(
@@ -58,7 +62,7 @@ export function updateComponent<T extends ComponentType>(
         return MakeLeft(`No ${notFoundLabel} for game ${game._id}`);
     }
 
-    const result = apply(component);
+    const result = apply(component, newGame);
 
     if (isLeft(result)) {
         return result;
@@ -71,9 +75,107 @@ export function updateComponent<T extends ComponentType>(
         );
 
         if (frozenComponent !== undefined) {
-            apply(frozenComponent);
+            apply(frozenComponent, newGame);
         }
     }
 
     return MakeRight(newGame);
+}
+
+type Decoder<B> = { is: (u: unknown) => u is B };
+
+/**
+ * One (decoder, mutation) pairing for a component route. A route may accept
+ * several body shapes for the same component (e.g. trackers set/add/delete).
+ * The body type is erased to `unknown` internally but preserved at the call
+ * site via this factory.
+ */
+export type ComponentRouteAction<T extends ComponentType> = {
+    is: (u: unknown) => boolean;
+    apply: (
+        body: unknown,
+        component: ComponentOfType<T>,
+        game: Game,
+    ) => Either<string, void>;
+};
+
+export function componentAction<T extends ComponentType, B>(
+    componentType: T,
+    decoder: Decoder<B>,
+    apply: (
+        body: B,
+        component: ComponentOfType<T>,
+        game: Game,
+    ) => Either<string, void>,
+): ComponentRouteAction<T> {
+    // componentType is only used to bind T for inference at the call site.
+    void componentType;
+    return {
+        is: (u): boolean => decoder.is(u),
+        apply: (body, component, game) => apply(body as B, component, game),
+    };
+}
+
+type ComponentRouteHandler = (
+    request: NextRequest,
+    props: { params: Promise<{ id: string }> },
+) => Promise<NextResponse<ApiResponse | { error: string }>>;
+
+/**
+ * Builds a control route handler for a component. Collapses the ~70-line
+ * copy-pasted handler (parse -> decode -> repo -> get -> mutate -> mirror ->
+ * error-map -> respond) into a decoder + mutation pair, preserving the exact
+ * status codes: 400 (bad body), 404 (game not found), 500 (errors).
+ */
+export function makeComponentRoute<T extends ComponentType>(
+    componentType: T,
+    notFoundLabel: string,
+    actions: ComponentRouteAction<T>[],
+): ComponentRouteHandler {
+    return async (request, props) => {
+        const params = await props.params;
+        const id = params.id;
+
+        const body = await request.json();
+
+        const action = actions.find((candidate) => candidate.is(body));
+
+        if (action === undefined) {
+            return NextResponse.json(
+                { error: "Incorrect request" },
+                { status: 400 },
+            );
+        }
+
+        const gameRepo = getGameRepo();
+
+        if (isLeft(gameRepo)) {
+            return NextResponse.json({ error: gameRepo.left }, { status: 500 });
+        }
+
+        const game = await gameRepo.right.get(id);
+
+        if (isLeft(game)) {
+            return NextResponse.json(
+                { error: "Game not found" },
+                { status: 404 },
+            );
+        }
+
+        const newGame = await gameRepo.right.runControlAction(game.right, (g) =>
+            updateComponent(
+                g,
+                componentType,
+                (component, currentGame) =>
+                    action.apply(body, component, currentGame),
+                notFoundLabel,
+            ),
+        );
+
+        if (isLeft(newGame)) {
+            return NextResponse.json({ error: newGame.left }, { status: 500 });
+        }
+
+        return NextResponse.json(toApiResponse(newGame.right));
+    };
 }
