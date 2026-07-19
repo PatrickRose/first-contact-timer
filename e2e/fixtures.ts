@@ -6,13 +6,11 @@ import { gameById } from "./seed";
 
 /**
  * Restore a game to a pristine copy of the `templateId` seed, stored under
- * `targetId` (defaults to `templateId`). Mutating specs pass a per-project
- * `targetId` so the four projects don't fight over one shared document.
+ * `targetId`. The target id is REQUIRED (use `projectGameId` from helpers.ts)
+ * so a mutating spec can't accidentally clobber a shared seed document that
+ * read-only specs in other workers are relying on.
  */
-export type ResetGame = (
-    templateId: string,
-    targetId?: string,
-) => Promise<void>;
+export type ResetGame = (templateId: string, targetId: string) => Promise<void>;
 
 type WorkerFixtures = {
     resetGame: ResetGame;
@@ -31,11 +29,15 @@ export const test = base.extend<object, WorkerFixtures>({
             await client.connect();
             const games = client.db(dbEnv.MONGO_DB).collection<Game>("games");
 
-            await use(async (templateId, targetId = templateId) => {
-                await games.deleteMany({ _id: targetId });
-                await games.insertOne({
-                    ...gameById(templateId),
-                    _id: targetId,
+            await use(async (templateId, targetId) => {
+                // The replacement must not carry an _id (driver typing); the
+                // upserted document takes its _id from the filter.
+                const { _id, ...template } = gameById(templateId);
+                void _id;
+
+                // Single atomic op - no window where the document is missing.
+                await games.replaceOne({ _id: targetId }, template, {
+                    upsert: true,
                 });
             });
 
