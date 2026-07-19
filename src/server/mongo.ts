@@ -105,6 +105,26 @@ export default function initialiseMongo(): Either<
     return MakeRight(getClientPromise(connStr.right));
 }
 
+/**
+ * Closes the shared client and clears the cache. This is ONLY for short-lived
+ * processes such as CLI scripts, where the shared pool would otherwise keep the
+ * event loop alive and stop the process from exiting. The server request path
+ * must never call this: the client is shared across all requests, so closing it
+ * would break every in-flight and subsequent request. See #791.
+ */
+export async function closeClient(): Promise<void> {
+    const promise = globalWithMongo._mongoClientPromise;
+
+    if (promise === undefined) {
+        return;
+    }
+
+    globalWithMongo._mongoClientPromise = undefined;
+
+    const client = await promise;
+    await client.close();
+}
+
 type CollectionNames = {
     users: DBUser;
     games: Game;

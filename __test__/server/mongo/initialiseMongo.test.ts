@@ -133,6 +133,35 @@ describe("initialiseMongo", () => {
         expect(succeedingConnect).toHaveBeenCalledTimes(1);
     });
 
+    test("closeClient closes the shared client and clears the cache", async () => {
+        const { default: initialiseMongo, closeClient } =
+            await import("@fc/server/mongo");
+        const { MongoClient } = await import("mongodb");
+        const mockedClient = MongoClient as unknown as Mock;
+
+        required.forEach((val) => (process.env[val] = val));
+
+        const close = jest.fn(async () => undefined);
+        const connect = jest.fn(async () => ({ close }));
+        mockedClient.mockImplementationOnce(() => ({ connect }));
+
+        // Establish the shared client, then close it.
+        initialiseMongo();
+        await closeClient();
+
+        expect(close).toHaveBeenCalledTimes(1);
+        // The cache is cleared, so the next call constructs a fresh client.
+        mockedClient.mockClear();
+        initialiseMongo();
+        expect(mockedClient).toHaveBeenCalledTimes(1);
+    });
+
+    test("closeClient is a no-op when no client is cached", async () => {
+        const { closeClient } = await import("@fc/server/mongo");
+
+        await expect(closeClient()).resolves.toBeUndefined();
+    });
+
     test("MONGO_PROTOCOL and MONGO_OPTIONS override the connection string", async () => {
         const initialiseMongo = (await import("@fc/server/mongo")).default;
         const { MongoClient } = await import("mongodb");
