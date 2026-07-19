@@ -1,17 +1,13 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import { games } from "./seed";
 import { openTab, projectGameId } from "./helpers";
-import { closeDb, resetGame } from "./db";
 
 const NEWS_LABEL = "Enter breaking news headline here:";
 
 test.describe("press tools", () => {
-    test.afterAll(async () => {
-        await closeDb();
-    });
-
     test("can submit breaking news on an active game", async ({
         page,
+        resetGame,
     }, testInfo) => {
         // Submitting mutates the game, so use a per-project copy.
         const gameId = projectGameId(games.firstContact, testInfo);

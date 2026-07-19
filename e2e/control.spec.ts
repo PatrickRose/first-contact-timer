@@ -1,7 +1,7 @@
-import { test, expect, type Page } from "@playwright/test";
+import { type Page } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import { games } from "./seed";
 import { openTab, projectGameId } from "./helpers";
-import { closeDb, resetGame } from "./db";
 
 test.describe("control tools", () => {
     // Control actions mutate the game (pause, phase/turn, light level). Use a
@@ -9,7 +9,7 @@ test.describe("control tools", () => {
     // independent even when they run in parallel locally.
     let gameId: string;
 
-    test.beforeEach(async ({ page }, testInfo) => {
+    test.beforeEach(async ({ page, resetGame }, testInfo) => {
         gameId = projectGameId(games.lightLevel, testInfo);
         await resetGame(games.lightLevel, gameId);
         await page.goto(`/game/${gameId}/control`);
@@ -18,10 +18,6 @@ test.describe("control tools", () => {
         await expect(
             page.getByRole("heading", { name: "Control Tools" }),
         ).toBeVisible();
-    });
-
-    test.afterAll(async () => {
-        await closeDb();
     });
 
     // Click a control action and return the ApiResponse the POST responded
