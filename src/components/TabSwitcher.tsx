@@ -18,7 +18,9 @@ export function GameTabSwitcher({
     manageTabTitle: string | null;
     game: Game;
 }) {
-    useEffect(() => window.scrollTo({ top: 0 }), [activeTab]);
+    useEffect(() => {
+        window.scrollTo({ top: 0 });
+    }, [activeTab]);
 
     const tabs: Record<string, TabInfo> = {
         home: {
