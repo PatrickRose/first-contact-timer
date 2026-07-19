@@ -15,9 +15,8 @@ export function projectGameId(baseId: string, testInfo: TestInfo): string {
  * the bottom tab bar (GameTabSwitcher) shows and the sidebar hides. Detected
  * from the project's viewport width, which is what drives that CSS.
  */
-export async function isMobileLayout(page: Page): Promise<boolean> {
-    const width = page.viewportSize()?.width ?? 0;
-    return width < 1024;
+export function isMobileLayout(page: Page): boolean {
+    return (page.viewportSize()?.width ?? 0) < 1024;
 }
 
 /**
@@ -42,7 +41,7 @@ export async function waitForCountdownTick(page: Page): Promise<void> {
  * "Press"). On desktop everything is shown at once, so switching is a no-op.
  */
 export async function openTab(page: Page, tabName: string): Promise<void> {
-    if (!(await isMobileLayout(page))) {
+    if (!isMobileLayout(page)) {
         return;
     }
 
