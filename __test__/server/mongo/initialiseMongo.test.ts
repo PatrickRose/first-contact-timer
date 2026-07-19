@@ -10,14 +10,24 @@ import { isLeft, Left } from "fp-ts/Either";
 
 jest.mock("mongodb", () => {
     return {
-        MongoClient: jest.fn(),
+        MongoClient: jest.fn().mockImplementation(() => ({
+            // The client promise is created via client.connect(); the cache
+            // never awaits it in these tests, so resolving to undefined is fine.
+            connect: jest.fn(async () => undefined),
+        })),
     };
 });
 describe("initialiseMongo", () => {
     const existingEnv = process.env;
+    const globalWithMongo = globalThis as typeof globalThis & {
+        _mongoClientPromise?: unknown;
+    };
 
     beforeEach(() => {
         process.env = { ...existingEnv };
+        // The client is cached on globalThis, so reset it between tests to
+        // exercise the construction path with each connection string.
+        delete globalWithMongo._mongoClientPromise;
     });
 
     afterAll(() => {
@@ -73,6 +83,11 @@ describe("initialiseMongo", () => {
 
         expect(MongoClient).toHaveBeenCalledWith(
             `mongodb+srv://MONGO_USERNAME:MONGO_PASSWORD@MONGO_URL/MONGO_DB?retryWrites=true&w=majority`,
+            {
+                maxPoolSize: 10,
+                serverSelectionTimeoutMS: 5000,
+                connectTimeoutMS: 5000,
+            },
         );
     });
 
@@ -90,6 +105,11 @@ describe("initialiseMongo", () => {
 
         expect(MongoClient).toHaveBeenCalledWith(
             `mongodb://MONGO_USERNAME:MONGO_PASSWORD@MONGO_URL/MONGO_DB?authSource=admin`,
+            {
+                maxPoolSize: 10,
+                serverSelectionTimeoutMS: 5000,
+                connectTimeoutMS: 5000,
+            },
         );
     });
 });
