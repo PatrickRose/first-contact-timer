@@ -23,7 +23,14 @@ export default function initialiseMongo(): Either<string, MongoClient> {
         );
     }
 
-    const connStr = `mongodb+srv://${username}:${password}@${host}/${database}?retryWrites=true&w=majority`;
+    // The protocol and connection options are configurable via env (as
+    // documented in .env.example) so the app can point at a local/standalone
+    // Mongo (e.g. `mongodb://` in tests) as well as a `mongodb+srv://` Atlas
+    // cluster. The defaults preserve the previous hard-coded Atlas behaviour.
+    const protocol = process.env.MONGO_PROTOCOL || "mongodb+srv";
+    const options = process.env.MONGO_OPTIONS || "retryWrites=true&w=majority";
+
+    const connStr = `${protocol}://${username}:${password}@${host}/${database}?${options}`;
 
     return MakeRight(new MongoClient(connStr));
 }
