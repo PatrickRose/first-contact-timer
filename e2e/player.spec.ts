@@ -29,8 +29,8 @@ test.describe("player display", () => {
             page.getByRole("heading", { name: /Turn 1: Team Time/ }),
         ).toBeVisible();
 
-        const mobileTimer = page.locator("p.text-6xl").first();
-        const desktopTimer = page.locator("p.text-8xl").first();
+        const mobileTimer = page.getByTestId("turn-timer-mobile");
+        const desktopTimer = page.getByTestId("turn-timer-desktop");
         const gameTab = page.getByRole("button", { name: "Game", exact: true });
 
         if (await isMobileLayout(page)) {
@@ -113,15 +113,18 @@ test.describe("player display", () => {
         await page.getByRole("button", { name: "Defcon", exact: true }).click();
         await page.getByRole("button", { name: "Game", exact: true }).click();
 
-        // With the bug, React calls the returned Promise as the cleanup ->
-        // "TypeError: ... is not a function". Assert that specific crash didn't
-        // happen, and that the app is still live (Game content restored).
-        expect(
-            pageErrors.filter((e) => /is not a function/i.test(e.message)),
-        ).toEqual([]);
+        // Liveness first: with the bug the crash on the second switch blanks
+        // the tree / drops the tab bar, so the Game content wouldn't restore.
         await expect(
             page.getByRole("heading", { name: /Turn 1: Team Time/ }),
         ).toBeVisible();
+
+        // Then the specific crash signature: React calling the returned Promise
+        // as the cleanup -> "TypeError: ... is not a function". Checked after the
+        // visibility assertion so an asynchronously-delivered error isn't missed.
+        expect(
+            pageErrors.filter((e) => /is not a function/i.test(e.message)),
+        ).toEqual([]);
     });
 
     test("aftermath theme renders", async ({ page }) => {

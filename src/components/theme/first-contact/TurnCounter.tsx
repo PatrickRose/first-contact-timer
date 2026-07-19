@@ -58,7 +58,12 @@ const TurnTimer = function TurnTimer(props: {
 
     return (
         <React.Fragment>
-            <p className={`${textClass}`}>
+            <p
+                className={`${textClass}`}
+                data-testid={
+                    mobile ? "turn-timer-mobile" : "turn-timer-desktop"
+                }
+            >
                 {`${formatter.format(minutes)}:${formatter.format(seconds)}`}
             </p>
             {paused}
