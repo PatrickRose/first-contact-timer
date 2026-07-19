@@ -1,5 +1,6 @@
 import { Collection, Db, MongoClient } from "mongodb";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
+import { buildMongoConnectionString } from "@fc/lib/mongoConnectionString";
 import { Either } from "fp-ts/Either";
 import { DBUser, Game } from "@fc/types/types";
 
@@ -30,7 +31,15 @@ export default function initialiseMongo(): Either<string, MongoClient> {
     const protocol = process.env.MONGO_PROTOCOL || "mongodb+srv";
     const options = process.env.MONGO_OPTIONS || "retryWrites=true&w=majority";
 
-    const connStr = `${protocol}://${username}:${password}@${host}/${database}?${options}`;
+    // The missing-vars guard above guarantees these are defined.
+    const connStr = buildMongoConnectionString({
+        protocol,
+        username: username!,
+        password: password!,
+        host: host!,
+        database: database!,
+        options,
+    });
 
     return MakeRight(new MongoClient(connStr));
 }

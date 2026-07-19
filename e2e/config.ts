@@ -11,6 +11,8 @@
  * container), those values win and global-setup skips starting Docker.
  */
 
+import { buildMongoConnectionString } from "../src/lib/mongoConnectionString";
+
 // Deliberately not 3000: a stray `next dev` on the default port would otherwise
 // be reused by `reuseExistingServer`, silently running the suite against the
 // developer's own dev database instead of the seeded e2e Mongo.
@@ -35,15 +37,14 @@ export const dbEnv = {
 /** True when Mongo is supplied externally and we must not start Docker. */
 export const usingExternalMongo = process.env.MONGO_URL !== undefined;
 
-/** Connection string the seeder uses (mirrors src/server/mongo.ts). */
+/** Connection string the seeder uses (same builder the app uses). */
 export function mongoConnectionString(): string {
-    const {
-        MONGO_PROTOCOL,
-        MONGO_USERNAME,
-        MONGO_PASSWORD,
-        MONGO_URL,
-        MONGO_DB,
-        MONGO_OPTIONS,
-    } = dbEnv;
-    return `${MONGO_PROTOCOL}://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_URL}/${MONGO_DB}?${MONGO_OPTIONS}`;
+    return buildMongoConnectionString({
+        protocol: dbEnv.MONGO_PROTOCOL,
+        username: dbEnv.MONGO_USERNAME,
+        password: dbEnv.MONGO_PASSWORD,
+        host: dbEnv.MONGO_URL,
+        database: dbEnv.MONGO_DB,
+        options: dbEnv.MONGO_OPTIONS,
+    });
 }
