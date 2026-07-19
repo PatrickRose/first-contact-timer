@@ -35,7 +35,6 @@ export const dbEnv = {
     SECRET_COOKIE_PASSWORD:
         process.env.SECRET_COOKIE_PASSWORD ??
         "e2e-test-cookie-password-at-least-32-chars",
-    SECONDS_IN_PHASE: process.env.SECONDS_IN_PHASE ?? "15",
 } as const;
 
 /**

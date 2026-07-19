@@ -32,7 +32,6 @@ jobs:
             MONGO_DB: firstcontact-e2e
             MONGO_OPTIONS: authSource=admin
             SECRET_COOKIE_PASSWORD: e2e-test-cookie-password-at-least-32-chars
-            SECONDS_IN_PHASE: "15"
 
         steps:
             - uses: actions/checkout@v7
