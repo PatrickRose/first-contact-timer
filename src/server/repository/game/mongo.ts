@@ -16,7 +16,7 @@ function escapeRegex(input: string): string {
 const MAX_SEARCH_LENGTH = 64;
 
 export class MongoRepository implements GameRepository {
-    constructor(private readonly mongo: MongoClient) {}
+    constructor(private readonly mongo: Promise<MongoClient>) {}
 
     static APIInstance(): Either<string, MongoRepository> {
         const client = initialiseMongo();
@@ -30,9 +30,7 @@ export class MongoRepository implements GameRepository {
 
     async get(id: string): Promise<Either<false, Game>> {
         try {
-            await this.mongo.connect();
-
-            const database = this.mongo.db();
+            const database = (await this.mongo).db();
 
             const games = getCollection(database, "games");
 
@@ -48,8 +46,6 @@ export class MongoRepository implements GameRepository {
         } catch (e) {
             console.log(e);
             return MakeLeft(false);
-        } finally {
-            await this.mongo.close();
         }
     }
 
@@ -99,9 +95,7 @@ export class MongoRepository implements GameRepository {
 
     async insert(game: Game): Promise<Either<string, true>> {
         try {
-            await this.mongo.connect();
-
-            const database = this.mongo.db();
+            const database = (await this.mongo).db();
 
             const gameCollection = getCollection(database, "games");
 
@@ -110,8 +104,6 @@ export class MongoRepository implements GameRepository {
             return MakeRight<true>(true);
         } catch (e) {
             return MakeLeft((e as Error).message);
-        } finally {
-            await this.mongo.close();
         }
     }
 
@@ -120,9 +112,7 @@ export class MongoRepository implements GameRepository {
         currentFields: Game,
     ): Promise<Either<string, true>> {
         try {
-            await this.mongo.connect();
-
-            const database = this.mongo.db();
+            const database = (await this.mongo).db();
 
             const gameCollection = getCollection(database, "games");
 
@@ -136,8 +126,6 @@ export class MongoRepository implements GameRepository {
             return MakeRight(true);
         } catch (e) {
             return MakeLeft((e as Error).message);
-        } finally {
-            await this.mongo.close();
         }
     }
 
@@ -188,9 +176,7 @@ export class MongoRepository implements GameRepository {
         pressAccount: number,
     ): Promise<Either<string, Game>> {
         try {
-            await this.mongo.connect();
-
-            const database = this.mongo.db();
+            const database = (await this.mongo).db();
 
             const gameCollection = getCollection(database, "games");
 
@@ -210,8 +196,6 @@ export class MongoRepository implements GameRepository {
             );
         } catch (e) {
             return MakeLeft((e as Error).message);
-        } finally {
-            await this.mongo.close();
         }
 
         const newGame = await this.get(_id);
