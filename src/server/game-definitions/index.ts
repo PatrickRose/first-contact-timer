@@ -1,4 +1,3 @@
-import { GameType } from "@fc/types/types";
 import { GameDefinition } from "./types";
 import { firstContact } from "./first-contact";
 import { aftermath } from "./aftermath";
@@ -40,17 +39,16 @@ export const GAME_DEFINITIONS = {
 
 export type DefinedGameType = keyof typeof GAME_DEFINITIONS;
 
-/**
- * Compile-time exhaustiveness check.
+/*
+ * Drift protection lives in two independent places, so no extra type-level
+ * assertion is needed here:
  *
- * `GameType` is derived from `GameTypeDecode`, which is in turn derived from the
- * keys of `GAME_DEFINITIONS`. These assertions fail to type-check if those two
- * ever fall out of step (a definition key the decoder does not recognise, or a
- * `GameType` with no definition), turning a missing definition into a compile
- * error. They are purely type-level and emit no runtime code.
+ *   1. `satisfies Record<string, GameDefinition>` above makes a malformed or
+ *      incomplete definition a compile error.
+ *   2. `GameType`/`GameTypeDecode` are derived from `t.keyof(GAME_DEFINITIONS)`
+ *      (see `src/types/io-ts-def.ts`), so the type union and the data are the
+ *      same source and cannot fall out of step.
+ *
+ * An assertion comparing `DefinedGameType` against `GameType` would be
+ * tautological: both derive from these keys, so it could never fail.
  */
-type MutuallyAssignable<A extends B, B extends C, C = A> = true;
-export type GameTypeMatchesDefinitions = MutuallyAssignable<
-    DefinedGameType,
-    GameType
->;
