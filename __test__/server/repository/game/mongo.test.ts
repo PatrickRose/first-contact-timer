@@ -13,6 +13,7 @@ import {
 import { isLeft, isRight } from "fp-ts/Either";
 import { MongoClient } from "mongodb";
 import { MongoRepository } from "@fc/server/repository/game/mongo";
+import { UPDATE_CONFLICT } from "@fc/server/repository/game";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 import { Game } from "@fc/types/types";
 import { makeActiveGame } from "../../../fixtures/game";
@@ -48,8 +49,11 @@ function makeFakeMongo() {
             async () => ({}),
         ),
         updateOne: jest.fn<
-            (filter: unknown, update: unknown) => Promise<object>
-        >(async () => ({})),
+            (
+                filter: unknown,
+                update: unknown,
+            ) => Promise<{ matchedCount: number }>
+        >(async () => ({ matchedCount: 1 })),
     };
     const db = {
         collection: jest.fn<(name: string) => typeof collection>(
@@ -354,6 +358,16 @@ describe("nextTurn", () => {
 
         expect(result).toEqual(MakeLeft("Failed to get game?"));
     });
+
+    test("returns a conflict when the CAS update matches no documents", async () => {
+        const { collection, repository } = makeFakeMongo();
+
+        collection.updateOne.mockResolvedValue({ matchedCount: 0 });
+
+        const result = await repository.nextTurn(makeActiveGame());
+
+        expect(result).toEqual(MakeLeft(UPDATE_CONFLICT));
+    });
 });
 
 describe("runControlAction", () => {
@@ -411,6 +425,18 @@ describe("runControlAction", () => {
         );
 
         expect(result).toEqual(MakeLeft("Failed to get game?"));
+    });
+
+    test("returns a conflict when the CAS update matches no documents", async () => {
+        const { collection, repository } = makeFakeMongo();
+
+        collection.updateOne.mockResolvedValue({ matchedCount: 0 });
+
+        const result = await repository.runControlAction(makeActiveGame(), () =>
+            MakeRight({ active: true }),
+        );
+
+        expect(result).toEqual(MakeLeft(UPDATE_CONFLICT));
     });
 });
 
