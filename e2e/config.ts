@@ -23,10 +23,14 @@ export const DOCKER_CONTAINER_NAME = "fc-e2e-mongo";
 
 export const dbEnv = {
     MONGO_PROTOCOL: process.env.MONGO_PROTOCOL ?? "mongodb",
-    MONGO_URL: process.env.MONGO_URL ?? "localhost:27017",
+    // Non-default host port so the disposable container can't collide with a
+    // developer's own local Mongo on 27017.
+    MONGO_URL: process.env.MONGO_URL ?? "localhost:27117",
     MONGO_USERNAME: process.env.MONGO_USERNAME ?? "root",
     MONGO_PASSWORD: process.env.MONGO_PASSWORD ?? "example",
-    MONGO_DB: process.env.MONGO_DB ?? "firstcontact",
+    // The "e2e" in the name is load-bearing: global-setup refuses to wipe a
+    // database whose name doesn't look like a test database.
+    MONGO_DB: process.env.MONGO_DB ?? "firstcontact-e2e",
     MONGO_OPTIONS: process.env.MONGO_OPTIONS ?? "authSource=admin",
     SECRET_COOKIE_PASSWORD:
         process.env.SECRET_COOKIE_PASSWORD ??
@@ -34,7 +38,14 @@ export const dbEnv = {
     SECONDS_IN_PHASE: process.env.SECONDS_IN_PHASE ?? "15",
 } as const;
 
-/** True when Mongo is supplied externally and we must not start Docker. */
+/**
+ * True when Mongo is supplied externally and we must not start Docker.
+ *
+ * Deliberately an import-time constant: global-setup later copies dbEnv
+ * (including MONGO_URL) into process.env, so anything reading the env *live*
+ * after that would always answer "external" — and global-teardown would then
+ * skip removing the Docker container it should clean up. Keep it a constant.
+ */
 export const usingExternalMongo = process.env.MONGO_URL !== undefined;
 
 /** Connection string the seeder uses (same builder the app uses). */

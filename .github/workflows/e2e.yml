@@ -22,11 +22,13 @@ jobs:
         env:
             # Setting MONGO_URL makes global-setup reuse this service container
             # instead of starting its own Docker Mongo. These mirror e2e/config.ts.
+            # The database name must look like a test database ("e2e"/"test") or
+            # global-setup will refuse to seed it.
             MONGO_PROTOCOL: mongodb
             MONGO_URL: localhost:27017
             MONGO_USERNAME: root
             MONGO_PASSWORD: example
-            MONGO_DB: firstcontact
+            MONGO_DB: firstcontact-e2e
             MONGO_OPTIONS: authSource=admin
             SECRET_COOKIE_PASSWORD: e2e-test-cookie-password-at-least-32-chars
             SECONDS_IN_PHASE: "15"

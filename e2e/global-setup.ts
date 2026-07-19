@@ -27,24 +27,35 @@ function startDockerMongo(): void {
         // Nothing to remove - fine.
     }
 
-    execFileSync(
-        "docker",
-        [
-            "run",
-            "-d",
-            "--rm",
-            "-p",
-            "27017:27017",
-            "-e",
-            `MONGO_INITDB_ROOT_USERNAME=${dbEnv.MONGO_USERNAME}`,
-            "-e",
-            `MONGO_INITDB_ROOT_PASSWORD=${dbEnv.MONGO_PASSWORD}`,
-            "--name",
-            DOCKER_CONTAINER_NAME,
-            "mongo:7",
-        ],
-        { stdio: "ignore" },
-    );
+    // Publish on whatever host port dbEnv.MONGO_URL names (non-default by
+    // default, so we can't collide with a developer's own Mongo on 27017).
+    const hostPort = dbEnv.MONGO_URL.split(":")[1] ?? "27017";
+
+    try {
+        execFileSync(
+            "docker",
+            [
+                "run",
+                "-d",
+                "--rm",
+                "-p",
+                `${hostPort}:27017`,
+                "-e",
+                `MONGO_INITDB_ROOT_USERNAME=${dbEnv.MONGO_USERNAME}`,
+                "-e",
+                `MONGO_INITDB_ROOT_PASSWORD=${dbEnv.MONGO_PASSWORD}`,
+                "--name",
+                DOCKER_CONTAINER_NAME,
+                "mongo:7",
+            ],
+            { stdio: "ignore" },
+        );
+    } catch (error) {
+        throw new Error(
+            `[e2e] Failed to start the Mongo container. Is Docker running, ` +
+                `and is host port ${hostPort} free? (${String(error)})`,
+        );
+    }
 }
 
 async function waitForMongo(uri: string): Promise<MongoClient> {
@@ -97,6 +108,23 @@ export default async function globalSetup(): Promise<void> {
     } else {
         console.log("[e2e] Starting Docker Mongo container...");
         startDockerMongo();
+    }
+
+    // Second layer of the wipe guard, applied even for "local" hosts: a
+    // localhost port can be an SSH tunnel / kubectl port-forward to a real
+    // cluster, so also require the database NAME to look like a test database
+    // before running the destructive seed.
+    if (
+        !/(e2e|test)/i.test(dbEnv.MONGO_DB) &&
+        process.env.E2E_ALLOW_EXTERNAL_MONGO !== "1"
+    ) {
+        throw new Error(
+            `[e2e] Refusing to seed database "${dbEnv.MONGO_DB}": seeding ` +
+                `wipes the games/users collections, and the name doesn't look ` +
+                `like a test database (no "e2e"/"test" in it). Use a dedicated ` +
+                `test database, or set E2E_ALLOW_EXTERNAL_MONGO=1 if it really ` +
+                `is disposable.`,
+        );
     }
 
     const client = await waitForMongo(mongoConnectionString());
