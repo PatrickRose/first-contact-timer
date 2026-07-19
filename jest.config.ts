@@ -13,6 +13,9 @@ const config: Config = {
 
     testEnvironment: "jest-environment-jsdom",
     setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+    // Playwright specs live in e2e/ and use *.spec.ts; keep them out of Jest,
+    // which otherwise picks up *.spec.ts via next/jest's default testMatch.
+    testPathIgnorePatterns: ["/node_modules/", "/e2e/"],
     coveragePathIgnorePatterns: [
         "src/types/io-ts-def.ts",
         "src/server/user/consts.ts",

@@ -1,0 +1,46 @@
+/**
+ * Single source of truth for the e2e test environment.
+ *
+ * These values are shared between `playwright.config.ts` (which forwards them
+ * to the Next.js `webServer`) and `global-setup.ts` (which starts/connects to
+ * Mongo and seeds it). Keeping them here avoids the config-load vs global-setup
+ * ordering problem and guarantees the app server and the seeder agree on the
+ * same database.
+ *
+ * If `MONGO_URL` is already set in the environment (e.g. a CI service
+ * container), those values win and global-setup skips starting Docker.
+ */
+
+export const PORT = 3000;
+export const BASE_URL = `http://localhost:${PORT}`;
+
+export const DOCKER_CONTAINER_NAME = "fc-e2e-mongo";
+
+export const dbEnv = {
+    MONGO_PROTOCOL: process.env.MONGO_PROTOCOL ?? "mongodb",
+    MONGO_URL: process.env.MONGO_URL ?? "localhost:27017",
+    MONGO_USERNAME: process.env.MONGO_USERNAME ?? "root",
+    MONGO_PASSWORD: process.env.MONGO_PASSWORD ?? "example",
+    MONGO_DB: process.env.MONGO_DB ?? "firstcontact",
+    MONGO_OPTIONS: process.env.MONGO_OPTIONS ?? "authSource=admin",
+    SECRET_COOKIE_PASSWORD:
+        process.env.SECRET_COOKIE_PASSWORD ??
+        "e2e-test-cookie-password-at-least-32-chars",
+    SECONDS_IN_PHASE: process.env.SECONDS_IN_PHASE ?? "15",
+} as const;
+
+/** True when Mongo is supplied externally and we must not start Docker. */
+export const usingExternalMongo = process.env.MONGO_URL !== undefined;
+
+/** Connection string the seeder uses (mirrors src/server/mongo.ts). */
+export function mongoConnectionString(): string {
+    const {
+        MONGO_PROTOCOL,
+        MONGO_USERNAME,
+        MONGO_PASSWORD,
+        MONGO_URL,
+        MONGO_DB,
+        MONGO_OPTIONS,
+    } = dbEnv;
+    return `${MONGO_PROTOCOL}://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_URL}/${MONGO_DB}?${MONGO_OPTIONS}`;
+}
