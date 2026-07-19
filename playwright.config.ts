@@ -49,7 +49,7 @@ export default defineConfig({
     webServer: {
         command: "npm run build && npm run start",
         url: BASE_URL,
-        timeout: 180_000,
+        timeout: 300_000,
         reuseExistingServer: !process.env.CI,
         // Forward the shared DB/session config to the Next.js app server.
         env: { ...dbEnv },
