@@ -39,6 +39,8 @@ jobs:
                   node-version: 24.x
                   cache: "npm"
             - run: npm ci
+            - name: Typecheck e2e sources
+              run: npx tsc --noEmit -p e2e/tsconfig.json
             - name: Install Playwright browsers
               run: npx playwright install --with-deps chromium webkit
             - name: Run Playwright e2e tests
