@@ -4,7 +4,7 @@ import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 
 export const POST = makeComponentRoute(
     "RunningHotRunners",
-    "RunningHotRunners component component",
+    "RunningHotRunners",
     [
         componentAction(
             "RunningHotRunners",

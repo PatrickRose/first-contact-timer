@@ -9,7 +9,7 @@ import { isUnsafeKey } from "@fc/lib/safe-keys";
 
 export const POST = makeComponentRoute(
     "Trackers",
-    "Trackers component component",
+    "Trackers",
     [
         componentAction(
             "Trackers",

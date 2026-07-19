@@ -137,8 +137,7 @@ const ROUTES: RouteConfig[] = [
         validBody: { corpName: "GenEq", diff: 5 },
         invalidBody: { corpName: "Weyland-Yutani", diff: 5 },
         makeComponent: corpComponent,
-        noComponentError:
-            "No RunningHotCorp component component for game test-game",
+        noComponentError: "No RunningHotCorp component for game test-game",
     },
     {
         name: "runnerrep",
@@ -147,7 +146,7 @@ const ROUTES: RouteConfig[] = [
         invalidBody: { runnerName: "G1T" },
         makeComponent: runnersComponent,
         noComponentError:
-            "No RunningHotRunners component component for game test-game",
+            "No RunningHotRunners component for game test-game",
     },
     {
         name: "light-level",
@@ -164,7 +163,7 @@ const ROUTES: RouteConfig[] = [
         validBody: { tracker: "Bar", value: 5 },
         invalidBody: { tracker: "Bar" },
         makeComponent: trackersComponent,
-        noComponentError: "No Trackers component component for game test-game",
+        noComponentError: "No Trackers component for game test-game",
     },
 ];
 

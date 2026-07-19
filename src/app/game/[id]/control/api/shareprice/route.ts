@@ -4,7 +4,7 @@ import { MakeRight } from "@fc/lib/io-ts-helpers";
 
 export const POST = makeComponentRoute(
     "RunningHotCorp",
-    "RunningHotCorp component component",
+    "RunningHotCorp",
     [
         componentAction(
             "RunningHotCorp",

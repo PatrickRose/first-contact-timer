@@ -50,7 +50,7 @@ describe("updateComponent", () => {
             game,
             "Weather",
             () => MakeRight(undefined),
-            "weather component",
+            "weather",
         );
 
         expect(result).toEqual(

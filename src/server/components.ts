@@ -52,14 +52,14 @@ export function updateComponent<T extends ComponentType>(
     game: Game,
     type: T,
     apply: ComponentMutation<T>,
-    notFoundLabel: string = `${type} component`,
+    notFoundLabel: string = type,
 ): Either<string, Game> {
     const newGame = { ...game };
 
     const component = findComponent(newGame.components, type);
 
     if (component === undefined) {
-        return MakeLeft(`No ${notFoundLabel} for game ${game._id}`);
+        return MakeLeft(`No ${notFoundLabel} component for game ${game._id}`);
     }
 
     const result = apply(component, newGame);
