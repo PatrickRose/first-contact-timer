@@ -385,6 +385,24 @@ export const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
     },
 };
 
+/**
+ * The relative turn-navigation actions: each computes the new turn/phase as an
+ * offset from the CURRENT state. Re-applying one on already-advanced state would
+ * advance the game a second time, so on a CAS conflict the route must NOT retry
+ * them (it returns 409 and lets the operator re-decide). pause/play are absent
+ * because they set absolute state and are safe to re-apply on fresh state.
+ */
+export const RELATIVE_CONTROL_ACTIONS: ReadonlySet<ControlAPI["action"]> =
+    new Set(["forward-phase", "back-phase", "forward-turn", "back-turn"]);
+
+/**
+ * Whether a control action is safe to auto-retry once on a CAS conflict.
+ * Idempotent/absolute actions are; relative turn navigation is not.
+ */
+export function isRetrySafeAction(action: ControlAPI["action"]): boolean {
+    return !RELATIVE_CONTROL_ACTIONS.has(action);
+}
+
 export function generateNewTurnInformation(
     phase: Game["turnInformation"]["currentPhase"],
     turn: Game["turnInformation"]["turnNumber"],

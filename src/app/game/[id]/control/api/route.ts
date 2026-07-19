@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@fc/types/types";
 import { ControlAPIDecode } from "@fc/types/io-ts-def";
-import { CONTROL_ACTIONS } from "@fc/server/turn";
+import { CONTROL_ACTIONS, isRetrySafeAction } from "@fc/server/turn";
 import { runControlActionRoute } from "@fc/server/control-route";
 
 export async function POST(
@@ -20,5 +20,12 @@ export async function POST(
         );
     }
 
-    return runControlActionRoute(id, CONTROL_ACTIONS[body.action]);
+    // Relative turn-navigation actions must not be auto-retried on a CAS
+    // conflict (re-applying would double-advance the game); idempotent actions
+    // such as pause/play are safe to retry. See #783.
+    return runControlActionRoute(
+        id,
+        CONTROL_ACTIONS[body.action],
+        isRetrySafeAction(body.action),
+    );
 }
