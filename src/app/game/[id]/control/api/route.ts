@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@fc/types/types";
 import { ControlAPIDecode } from "@fc/types/io-ts-def";
 import { CONTROL_ACTIONS } from "@fc/server/turn";
-import { runControlActionRoute } from "@fc/server/components";
+import { runControlActionRoute } from "@fc/server/control-route";
 
 export async function POST(
     request: NextRequest,
