@@ -130,7 +130,7 @@ export const WolfAttackDecode = t.intersection([
     }),
 ]);
 
-const CorpNamesDecode = t.union([
+export const CorpNamesDecode = t.union([
     t.literal("GenEq"),
     t.literal("MCM"),
     t.literal("Gordon"),
