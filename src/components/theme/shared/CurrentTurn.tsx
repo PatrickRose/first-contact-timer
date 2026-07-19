@@ -1,14 +1,21 @@
 import * as React from "react";
-import { SetupInformation, Theme } from "@fc/types/types";
 
-interface CurrentTurnCounterProps {
-    turn: number;
-    phase: number;
+// The theme-specific presentation for the sticky current-turn banner. Each
+// theme shell builds this explicitly (see its presentation module) so a new
+// theme must supply its own values - the shared component never guesses which
+// theme it is rendering.
+export interface CurrentTurnPresentation {
+    // The left-hand content block (turn/phase labels). Structurally different
+    // between themes, so the shell owns it entirely.
+    header: React.ReactNode;
+    // Colour/background classes appended to the shared banner layout classes.
+    bannerClass: string;
+    // Font-size class for the countdown timer.
+    timerSizeClass: string;
+}
+
+interface CurrentTurnCounterProps extends CurrentTurnPresentation {
     timestamp: number;
-    active: boolean;
-    phaseInformation: SetupInformation["phases"][0];
-    // Selects the per-theme header treatment.
-    variant?: Theme;
 }
 
 const CurrentTurnTimer = function CurrentTurnTimer(props: {
@@ -32,86 +39,24 @@ const CurrentTurnTimer = function CurrentTurnTimer(props: {
     );
 };
 
-function FirstContactContent({
-    turn,
-    phaseInformation,
+export default function CurrentTurn({
     timestamp,
-}: {
-    turn: number;
-    phaseInformation: SetupInformation["phases"][0];
-    timestamp: number;
-}) {
-    const backgroundClass = phaseInformation.hidden
-        ? "bg-linear-to-b from-turn-counter-past-light to-turn-counter-past-dark opacity-50"
-        : "bg-turn-counter-current";
-
-    const turnText = phaseInformation.hidden
-        ? `Turn ${turn}, next phase:`
-        : `Turn ${turn}, current phase:`;
-
-    const phaseText = phaseInformation.title;
-
-    return (
-        <div
-            className={`lg:hidden flex flex-1 flex-row items-center justify-between p-3 transition duration-500 text-white delay-250 ${backgroundClass}`}
-        >
-            <div>
-                <p className="pb-0 mb-0 text-xl">{turnText}</p>
-                <p className="pb-0 mb-0 text-2xl">{phaseText}</p>
-            </div>
-            <CurrentTurnTimer timestamp={timestamp} sizeClass="text-4xl" />
-        </div>
-    );
-}
-
-function AftermathContent({
-    phaseInformation,
-    timestamp,
-}: {
-    phaseInformation: SetupInformation["phases"][0];
-    timestamp: number;
-}) {
-    const backgroundClass = "bg-aftermath-alert text-aftermath";
-
-    const textSize = phaseInformation.hidden ? "text-xl" : "text-4xl";
-
-    const phaseText = phaseInformation.title;
-
-    return (
-        <div
-            className={`lg:hidden flex flex-1 flex-row items-center justify-between p-3 transition duration-500 delay-250 ${backgroundClass}`}
-        >
-            <div>
-                <p
-                    className={`pb-0 mb-0 text-2xl font-semibold uppercase ${textSize}`}
-                >
-                    {phaseText}
-                </p>
-            </div>
-            <CurrentTurnTimer timestamp={timestamp} sizeClass="text-5xl" />
-        </div>
-    );
-}
-
-export default function CurrentTurn(props: CurrentTurnCounterProps) {
-    const { turn, timestamp, phaseInformation, variant = "first-contact" } =
-        props;
-
+    header,
+    bannerClass,
+    timerSizeClass,
+}: CurrentTurnCounterProps) {
     return (
         <React.Fragment>
             <div className="flex lg:flex-wrap flex-col lg:flex-row mt-0 bg-black">
-                {variant === "aftermath" ? (
-                    <AftermathContent
-                        phaseInformation={phaseInformation}
+                <div
+                    className={`lg:hidden flex flex-1 flex-row items-center justify-between p-3 transition duration-500 delay-250 ${bannerClass}`}
+                >
+                    {header}
+                    <CurrentTurnTimer
                         timestamp={timestamp}
+                        sizeClass={timerSizeClass}
                     />
-                ) : (
-                    <FirstContactContent
-                        turn={turn}
-                        phaseInformation={phaseInformation}
-                        timestamp={timestamp}
-                    />
-                )}
+                </div>
             </div>
         </React.Fragment>
     );

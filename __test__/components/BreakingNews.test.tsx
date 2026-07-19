@@ -2,6 +2,8 @@ import { describe, expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import BreakingNews from "@fc/components/theme/shared/BreakingNews";
 import { LivePress, NewsItem } from "@fc/types/types";
+import { FIRST_CONTACT_BREAKING_NEWS } from "@fc/components/theme/first-contact/presentation";
+import { AFTERMATH_BREAKING_NEWS } from "@fc/components/theme/aftermath/presentation";
 
 const press: LivePress = [{ name: "Press One" }];
 
@@ -18,7 +20,13 @@ function makeItem(overrides: Partial<NewsItem> = {}): NewsItem {
 
 describe("BreakingNews", () => {
     test("renders the banner with the news text", () => {
-        render(<BreakingNews newsItem={makeItem()} press={press} />);
+        render(
+            <BreakingNews
+                newsItem={makeItem()}
+                press={press}
+                {...FIRST_CONTACT_BREAKING_NEWS}
+            />,
+        );
 
         expect(
             screen.getByRole("heading", { name: /breaking news/i }),
@@ -28,7 +36,11 @@ describe("BreakingNews", () => {
 
     test("renders nothing when there is no news item", () => {
         const { container } = render(
-            <BreakingNews newsItem={undefined} press={press} />,
+            <BreakingNews
+                newsItem={undefined}
+                press={press}
+                {...FIRST_CONTACT_BREAKING_NEWS}
+            />,
         );
 
         expect(container).toBeEmptyDOMElement();
@@ -36,18 +48,24 @@ describe("BreakingNews", () => {
 
     test("renders nothing when press is disabled", () => {
         const { container } = render(
-            <BreakingNews newsItem={makeItem()} press={false} />,
+            <BreakingNews
+                newsItem={makeItem()}
+                press={false}
+                {...FIRST_CONTACT_BREAKING_NEWS}
+            />,
         );
 
         expect(container).toBeEmptyDOMElement();
     });
 
-    test("first-contact variant pins the banner to the bottom", () => {
+    test("applies the supplied footer accent classes", () => {
         render(
             <BreakingNews
                 newsItem={makeItem()}
                 press={press}
-                variant="first-contact"
+                footerAccentClass="sticky bottom-0"
+                imageWrapperClass="p-8 max-w-1/4"
+                imageSize={1024}
             />,
         );
 
@@ -56,12 +74,12 @@ describe("BreakingNews", () => {
         expect(footer).not.toHaveClass("overflow-hidden");
     });
 
-    test("aftermath variant lets the banner flow and clips overflow", () => {
+    test("applies a different theme's footer accent classes", () => {
         render(
             <BreakingNews
                 newsItem={makeItem()}
                 press={press}
-                variant="aftermath"
+                {...AFTERMATH_BREAKING_NEWS}
             />,
         );
 
