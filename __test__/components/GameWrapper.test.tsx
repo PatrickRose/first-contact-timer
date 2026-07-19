@@ -30,13 +30,16 @@ jest.mock("@fc/lib/useInterval", () => ({
 
 // The themes render a large component tree that's irrelevant here (and pulls
 // in browser APIs jsdom can't provide); we only care about the poll interval.
-jest.mock("@fc/components/theme/first-contact/FirstContactTheme", () => ({
+// Mocking the registry rather than each theme keeps the theme selection out of
+// these tests and avoids the async next/dynamic loadable entirely.
+jest.mock("@fc/components/theme/registry", () => ({
     __esModule: true,
-    FirstContactTheme: () => null,
-}));
-jest.mock("@fc/components/theme/aftermath/AftermathTheme", () => ({
-    __esModule: true,
-    AftermathTheme: () => null,
+    THEME_REGISTRY: new Proxy(
+        {},
+        {
+            get: () => () => null,
+        },
+    ),
 }));
 
 // The module under test is imported dynamically after the mocks above are

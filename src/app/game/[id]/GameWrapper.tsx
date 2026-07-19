@@ -7,8 +7,7 @@ import useInterval from "@fc/lib/useInterval";
 import { ApiResponseDecode } from "@fc/types/io-ts-def";
 import ControlTools from "@fc/components/ControlTools";
 import PressForm from "./press/PressForm";
-import { FirstContactTheme } from "@fc/components/theme/first-contact/FirstContactTheme";
-import { AftermathTheme } from "@fc/components/theme/aftermath/AftermathTheme";
+import { THEME_REGISTRY } from "@fc/components/theme/registry";
 
 const triggersAudio: (keyof ApiResponse)[] = ["active", "turnNumber", "phase"];
 
@@ -139,19 +138,10 @@ export default function GameWrapper(props: GameWrapperProps) {
             break;
     }
 
-    if (game.setupInformation.theme === "aftermath") {
-        return (
-            <AftermathTheme
-                game={game}
-                apiResponse={apiResponse}
-                childComponent={child}
-                manageTabTitle={manageTabTitle}
-            />
-        );
-    }
+    const Theme = THEME_REGISTRY[game.setupInformation.theme];
 
     return (
-        <FirstContactTheme
+        <Theme
             game={game}
             apiResponse={apiResponse}
             childComponent={child}
