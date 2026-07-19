@@ -1,0 +1,69 @@
+name: E2E
+
+on:
+    push:
+        branches: [develop, main]
+    pull_request:
+        branches: [develop, main]
+
+jobs:
+    playwright:
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+
+        services:
+            mongo:
+                image: mongo:7
+                ports:
+                    - 27017:27017
+                env:
+                    MONGO_INITDB_ROOT_USERNAME: root
+                    MONGO_INITDB_ROOT_PASSWORD: example
+
+        env:
+            # Setting MONGO_URL makes global-setup reuse this service container
+            # instead of starting its own Docker Mongo. These mirror e2e/config.ts.
+            # The database name must look like a test database ("e2e"/"test") or
+            # global-setup will refuse to seed it.
+            MONGO_PROTOCOL: mongodb
+            MONGO_URL: localhost:27017
+            MONGO_USERNAME: root
+            MONGO_PASSWORD: example
+            MONGO_DB: firstcontact-e2e
+            MONGO_OPTIONS: authSource=admin
+            SECRET_COOKIE_PASSWORD: e2e-test-cookie-password-at-least-32-chars
+            SECONDS_IN_PHASE: "15"
+
+        steps:
+            - uses: actions/checkout@v7
+            - name: Use Node.js 24.x
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24.x
+                  cache: "npm"
+            - run: npm ci
+            - name: Typecheck e2e sources
+              run: npx tsc --noEmit -p e2e/tsconfig.json
+            - name: Cache Playwright browsers
+              uses: actions/cache@v6
+              with:
+                  path: ~/.cache/ms-playwright
+                  key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+            - name: Cache Next.js build
+              uses: actions/cache@v6
+              with:
+                  path: .next/cache
+                  key: ${{ runner.os }}-e2e-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+                  restore-keys: |
+                      ${{ runner.os }}-e2e-nextjs-${{ hashFiles('package-lock.json') }}-
+            - name: Install Playwright browsers
+              run: npx playwright install --with-deps chromium webkit
+            - name: Run Playwright e2e tests
+              run: npm run test:e2e
+            - name: Upload Playwright report
+              if: ${{ !cancelled() }}
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: playwright-report/
+                  retention-days: 7

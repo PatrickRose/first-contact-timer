@@ -1,5 +1,6 @@
 import { Collection, Db, MongoClient } from "mongodb";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
+import { buildMongoConnectionString } from "@fc/lib/mongoConnectionString";
 import { Either } from "fp-ts/Either";
 import { DBUser, Game } from "@fc/types/types";
 
@@ -23,7 +24,22 @@ export default function initialiseMongo(): Either<string, MongoClient> {
         );
     }
 
-    const connStr = `mongodb+srv://${username}:${password}@${host}/${database}?retryWrites=true&w=majority`;
+    // The protocol and connection options are configurable via env (as
+    // documented in .env.example) so the app can point at a local/standalone
+    // Mongo (e.g. `mongodb://` in tests) as well as a `mongodb+srv://` Atlas
+    // cluster. The defaults preserve the previous hard-coded Atlas behaviour.
+    const protocol = process.env.MONGO_PROTOCOL || "mongodb+srv";
+    const options = process.env.MONGO_OPTIONS || "retryWrites=true&w=majority";
+
+    // The missing-vars guard above guarantees these are defined.
+    const connStr = buildMongoConnectionString({
+        protocol,
+        username: username!,
+        password: password!,
+        host: host!,
+        database: database!,
+        options,
+    });
 
     return MakeRight(new MongoClient(connStr));
 }
