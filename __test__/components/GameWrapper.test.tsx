@@ -7,8 +7,8 @@ import {
     jest,
     test,
 } from "@jest/globals";
-import { render } from "@testing-library/react";
-import { Game, SetupInformation } from "@fc/types/types";
+import { act, render } from "@testing-library/react";
+import { ApiResponse, Game, SetupInformation } from "@fc/types/types";
 import {
     makeActiveGame,
     makeInactiveGame,
@@ -19,9 +19,11 @@ import {
 // the poll interval first and the 1s local countdown second, so
 // mockIntervalDelays[0] is the poll cadence this test is about.
 const mockIntervalDelays: (number | null)[] = [];
+const mockIntervalCallbacks: (() => void)[] = [];
 jest.mock("@fc/lib/useInterval", () => ({
     __esModule: true,
-    default: (_callback: () => void, delay: number | null) => {
+    default: (callback: () => void, delay: number | null) => {
+        mockIntervalCallbacks.push(callback);
         mockIntervalDelays.push(delay);
     },
 }));
@@ -66,9 +68,16 @@ function pollDelay(): number {
     return delay as number;
 }
 
+// GameWrapper registers exactly two intervals per render (poll, then the 1s
+// countdown), so the poll delay from each render is at the even indices.
+function pollDelays(): (number | null)[] {
+    return mockIntervalDelays.filter((_, index) => index % 2 === 0);
+}
+
 describe("GameWrapper poll interval", () => {
     beforeEach(() => {
         mockIntervalDelays.length = 0;
+        mockIntervalCallbacks.length = 0;
         // Fixed jitter factor -> deterministic delays: the multiplier is
         // 1 + 0.5 * 0.25 = 1.125.
         jest.spyOn(Math, "random").mockReturnValue(0.5);
@@ -129,5 +138,48 @@ describe("GameWrapper poll interval", () => {
 
         expect(pollDelay()).toBe(5000);
         expect(pollDelay()).toBeGreaterThanOrEqual(1000);
+    });
+
+    test("re-derives the cadence when the game finishes mid-session", async () => {
+        // finished is a plain derived value, not memoised, so it must react to
+        // apiResponse changing after mount. This game has a turn limit but
+        // starts mid-game (phase 1), so it is not finished at mount.
+        const game = makeActiveGame({
+            setupInformation: finishedSetup,
+            turnInformation: {
+                turnNumber: 1,
+                currentPhase: 1,
+                phaseEnd: new Date(2023, 1, 2, 3, 5, 10, 0).toString(),
+            },
+        });
+
+        // When the poll fires, the server reports the game has hit its limit.
+        const finishedBody: ApiResponse = {
+            turnNumber: 1,
+            phase: finishedSetup.phases.length,
+            breakingNews: [],
+            active: true,
+            phaseEnd: 0,
+            components: [],
+        };
+        (global as unknown as { fetch: unknown }).fetch = jest.fn(() =>
+            Promise.resolve({ json: () => Promise.resolve(finishedBody) }),
+        );
+
+        render(<GameWrapper game={game} mode="Player" />);
+
+        // Mount: not finished yet -> steady active cadence.
+        expect(pollDelays().at(-1)).toBe(5625);
+
+        // Drive one poll cycle; the finished response flows into state and the
+        // component re-renders.
+        await act(async () => {
+            mockIntervalCallbacks[0]();
+        });
+
+        // The re-render re-derives finished from the new apiResponse and backs
+        // the poll interval off to the slow cadence - proving it is not frozen
+        // at its mount value.
+        expect(pollDelays().at(-1)).toBe(33750);
     });
 });
