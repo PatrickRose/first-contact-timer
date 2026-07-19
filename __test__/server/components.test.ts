@@ -120,6 +120,26 @@ describe("updateComponent", () => {
         }
     });
 
+    test("propagates a Left produced by the frozen-turn re-apply", () => {
+        const game = makeInactiveGame(
+            { components: [weatherComponent("Sunny")] },
+            { components: [weatherComponent("Sunny")] },
+        );
+
+        let call = 0;
+        const result = updateComponent(game, "Weather", (component) => {
+            call += 1;
+            // The live apply succeeds; the frozen re-apply fails.
+            if (call === 1) {
+                component.weatherMessage = "Storms";
+                return MakeRight(undefined);
+            }
+            return MakeLeft("frozen failed");
+        });
+
+        expect(result).toEqual(MakeLeft("frozen failed"));
+    });
+
     test("does not touch the frozen turn for an active game", () => {
         const game = makeActiveGame({
             components: [weatherComponent("Sunny")],

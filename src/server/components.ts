@@ -75,7 +75,11 @@ export function updateComponent<T extends ComponentType>(
         );
 
         if (frozenComponent !== undefined) {
-            apply(frozenComponent, newGame);
+            const frozenResult = apply(frozenComponent, newGame);
+
+            if (isLeft(frozenResult)) {
+                return frozenResult;
+            }
         }
     }
 
