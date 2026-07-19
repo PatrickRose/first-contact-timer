@@ -67,7 +67,15 @@ function getClientPromise(connStr: string): Promise<MongoClient> {
             connectTimeoutMS: 5000,
         });
 
-        globalWithMongo._mongoClientPromise = client.connect();
+        // Cache the connect() promise, but if it rejects clear the cache so the
+        // next request starts a fresh connect. Otherwise a single failed first
+        // connect would poison the cache for the whole warm life of the
+        // container and every later request would reuse the rejected promise.
+        const p = client.connect().catch((e) => {
+            globalWithMongo._mongoClientPromise = undefined;
+            throw e;
+        });
+        globalWithMongo._mongoClientPromise = p;
     }
 
     return globalWithMongo._mongoClientPromise;

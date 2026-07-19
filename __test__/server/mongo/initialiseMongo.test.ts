@@ -6,6 +6,7 @@ import {
     jest,
     test,
 } from "@jest/globals";
+import type { Mock } from "jest-mock";
 import { isLeft, Left } from "fp-ts/Either";
 
 jest.mock("mongodb", () => {
@@ -89,6 +90,47 @@ describe("initialiseMongo", () => {
                 connectTimeoutMS: 5000,
             },
         );
+    });
+
+    test("clears the cache after a failed connect so the next call retries", async () => {
+        const initialiseMongo = (await import("@fc/server/mongo")).default;
+        const { MongoClient } = await import("mongodb");
+        const mockedClient = MongoClient as unknown as Mock;
+
+        required.forEach((val) => (process.env[val] = val));
+
+        const failingConnect = jest.fn(async () => {
+            throw new Error("connection refused");
+        });
+        const succeedingConnect = jest.fn(async () => undefined);
+
+        mockedClient.mockImplementationOnce(() => ({
+            connect: failingConnect,
+        }));
+        mockedClient.mockImplementationOnce(() => ({
+            connect: succeedingConnect,
+        }));
+
+        // The first connect rejects; awaiting the cached promise surfaces the
+        // error and (crucially) clears the cache.
+        const first = initialiseMongo();
+        expect(isLeft(first)).toBe(false);
+        if (isLeft(first)) {
+            return;
+        }
+        await expect(first.right).rejects.toThrow("connection refused");
+
+        // The next call must attempt a fresh connect rather than reusing the
+        // poisoned, rejected promise.
+        const second = initialiseMongo();
+        expect(isLeft(second)).toBe(false);
+        if (isLeft(second)) {
+            return;
+        }
+        await expect(second.right).resolves.toBeUndefined();
+
+        expect(failingConnect).toHaveBeenCalledTimes(1);
+        expect(succeedingConnect).toHaveBeenCalledTimes(1);
     });
 
     test("MONGO_PROTOCOL and MONGO_OPTIONS override the connection string", async () => {
