@@ -62,7 +62,13 @@ const globalWithMongo = globalThis as typeof globalThis & {
 function getClientPromise(connStr: string): Promise<MongoClient> {
     if (!globalWithMongo._mongoClientPromise) {
         const client = new MongoClient(connStr, {
-            maxPoolSize: 10,
+            // Keep the pool small: many warm serverless containers can each
+            // hold a pool, and (containers x maxPoolSize) must stay comfortably
+            // under Atlas's 500-connection cap, so 5 leaves headroom.
+            maxPoolSize: 5,
+            // Fail fast (5s) rather than letting a stuck server pile up hung
+            // requests that each hold the event loop until a much longer
+            // default timeout elapses.
             serverSelectionTimeoutMS: 5000,
             connectTimeoutMS: 5000,
         });

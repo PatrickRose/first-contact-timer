@@ -85,7 +85,7 @@ describe("initialiseMongo", () => {
         expect(MongoClient).toHaveBeenCalledWith(
             `mongodb+srv://MONGO_USERNAME:MONGO_PASSWORD@MONGO_URL/MONGO_DB?retryWrites=true&w=majority`,
             {
-                maxPoolSize: 10,
+                maxPoolSize: 5,
                 serverSelectionTimeoutMS: 5000,
                 connectTimeoutMS: 5000,
             },
@@ -148,7 +148,7 @@ describe("initialiseMongo", () => {
         expect(MongoClient).toHaveBeenCalledWith(
             `mongodb://MONGO_USERNAME:MONGO_PASSWORD@MONGO_URL/MONGO_DB?authSource=admin`,
             {
-                maxPoolSize: 10,
+                maxPoolSize: 5,
                 serverSelectionTimeoutMS: 5000,
                 connectTimeoutMS: 5000,
             },
