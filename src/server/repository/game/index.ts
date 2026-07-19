@@ -15,6 +15,14 @@ export interface ListGamesResult {
     page: number;
 }
 
+/**
+ * Distinguishable error value returned by the game repository when a
+ * compare-and-set update matches zero documents - i.e. turnInformation changed
+ * between the read and the write. The route layer maps this to HTTP 409 and
+ * retries once. See #783.
+ */
+export const UPDATE_CONFLICT = "conflict";
+
 export default interface GameRepository {
     get: (id: string) => Promise<Either<false, Game>>;
     list: (opts: ListGamesOptions) => Promise<Either<string, ListGamesResult>>;
