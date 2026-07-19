@@ -8,7 +8,21 @@ test.describe("admin", () => {
         await expect(page.getByLabel("Username")).toBeVisible();
     });
 
-    test("log in and create a game", async ({ page }, testInfo) => {
+    test("log in and create a game", async ({
+        page,
+        browserName,
+    }, testInfo) => {
+        // The e2e server runs over http://localhost, and the iron-session
+        // cookie is Secure (production build). WebKit refuses to store Secure
+        // cookies over plain http (Chromium treats localhost as secure), so the
+        // session can't be established here. This is a test-server artifact
+        // only - production runs over HTTPS. Auth is covered by the Chromium
+        // projects.
+        test.skip(
+            browserName === "webkit",
+            "WebKit drops Secure cookies over http://localhost",
+        );
+
         await page.goto("/admin/login");
 
         await page.getByLabel("Username").fill(ADMIN_USERNAME);
