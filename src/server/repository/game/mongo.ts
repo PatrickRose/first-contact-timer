@@ -2,6 +2,7 @@ import GameRepository, {
     ListGamesOptions,
     ListGamesResult,
     UPDATE_CONFLICT,
+    UpdateConflict,
 } from "./index";
 import { Either, isLeft } from "fp-ts/Either";
 import { ControlAction, Game } from "@fc/types/types";
@@ -110,7 +111,7 @@ export class MongoRepository implements GameRepository {
     async #updateTurn(
         newFields: Partial<Game>,
         currentFields: Game,
-    ): Promise<Either<string, true>> {
+    ): Promise<Either<string | UpdateConflict, true>> {
         try {
             const database = (await this.mongo).db();
 
@@ -146,7 +147,17 @@ export class MongoRepository implements GameRepository {
         );
 
         if (isLeft(updateResult)) {
-            return updateResult;
+            // A lost auto-advance means another writer already advanced the turn
+            // (typically another player's poll). From the poller's point of view
+            // that is success, so return the fresh, already-advanced state
+            // instead of falling back to the stale pre-advance turn. See #783.
+            if (updateResult.left === UPDATE_CONFLICT) {
+                const fresh = await this.get(game._id);
+
+                return isRight(fresh) ? fresh : MakeLeft("Failed to get game?");
+            }
+
+            return MakeLeft(updateResult.left);
         }
 
         const result = await this.get(game._id);
@@ -157,7 +168,7 @@ export class MongoRepository implements GameRepository {
     async runControlAction(
         currentGame: Game,
         action: ControlAction,
-    ): Promise<Either<string, Game>> {
+    ): Promise<Either<string | UpdateConflict, Game>> {
         const tickedTurn = action(currentGame);
 
         if (isLeft(tickedTurn)) {
