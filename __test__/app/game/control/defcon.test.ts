@@ -193,4 +193,29 @@ describe("POST /game/[id]/control/api/defcon", () => {
         expect(body.active).toBe(false);
         expect(body.components[0].countries.China.status).toBe(2);
     });
+
+    describe.each(["__proto__", "constructor", "prototype"])(
+        "rejects the prototype-polluting state name %p",
+        (stateName) => {
+            test("returns a 500 and does not pollute Object.prototype", async () => {
+                const repo = makeFakeGameRepo(
+                    makeActiveGame({ components: [defconComponent()] }),
+                );
+                getGameRepo.mockReturnValue(MakeRight(repo));
+
+                const response = await POST(
+                    makeRequest({ stateName, newStatus: 1 }),
+                    makeProps(),
+                );
+
+                expect(response.status).toBe(500);
+                expect(await response.json()).toEqual({
+                    error: `Defcon component does not include ${stateName}`,
+                });
+                // Had the inherited-key lookup passed the guard, the write
+                // would have landed on Object.prototype.status.
+                expect(({} as Record<string, unknown>).status).toBeUndefined();
+            });
+        },
+    );
 });

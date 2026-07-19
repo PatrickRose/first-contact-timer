@@ -75,4 +75,21 @@ describe("initialiseMongo", () => {
             `mongodb+srv://MONGO_USERNAME:MONGO_PASSWORD@MONGO_URL/MONGO_DB?retryWrites=true&w=majority`,
         );
     });
+
+    test("MONGO_PROTOCOL and MONGO_OPTIONS override the connection string", async () => {
+        const initialiseMongo = (await import("@fc/server/mongo")).default;
+        const { MongoClient } = await import("mongodb");
+
+        required.forEach((val) => (process.env[val] = val));
+        process.env.MONGO_PROTOCOL = "mongodb";
+        process.env.MONGO_OPTIONS = "authSource=admin";
+
+        const result = initialiseMongo();
+
+        expect(isLeft(result)).toBe(false);
+
+        expect(MongoClient).toHaveBeenCalledWith(
+            `mongodb://MONGO_USERNAME:MONGO_PASSWORD@MONGO_URL/MONGO_DB?authSource=admin`,
+        );
+    });
 });

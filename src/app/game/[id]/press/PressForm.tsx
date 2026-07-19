@@ -83,6 +83,7 @@ export default function PressForm({
                     </label>
                     <div className="block">
                         <textarea
+                            id="breaking-news"
                             name="breaking-news"
                             className="form-control w-full ml-0 mr-4 bg-black text-white text-xl"
                             value={breakingNews}

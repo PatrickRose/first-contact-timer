@@ -58,7 +58,12 @@ const TurnTimer = function TurnTimer(props: {
 
     return (
         <React.Fragment>
-            <p className={`${textClass}`}>
+            <p
+                className={`${textClass}`}
+                data-testid={
+                    mobile ? "turn-timer-mobile" : "turn-timer-desktop"
+                }
+            >
                 {`${formatter.format(minutes)}:${formatter.format(seconds)}`}
             </p>
             {paused}
@@ -127,6 +132,7 @@ export function PhaseCount({
 
     return (
         <div
+            data-testid="phase-count"
             className={`md:flex flex-1 flex-col p-3 transition duration-500 border-4 ${backgroundClass}`}
         >
             {phaseInformation.logo ? (

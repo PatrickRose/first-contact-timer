@@ -126,15 +126,30 @@ function ControlButton({
             body: JSON.stringify(body),
             method: "post",
         })
-            .then((response) => response.json())
-            .then((result) => {
-                if (!ApiResponseDecode.is(result)) {
-                    setError("Invalid API Response");
+            .then(async (response) => {
+                if (!response.ok) {
+                    // Include the response body - the control routes return
+                    // useful error messages.
+                    const body = await response.text().catch(() => "");
+                    setError(
+                        `Control command failed (HTTP ${response.status})${
+                            body ? `: ${body}` : ""
+                        }`,
+                    );
+                    return;
                 }
 
+                const result = await response.json();
+
+                if (!ApiResponseDecode.is(result)) {
+                    setError("Invalid API Response");
+                    return;
+                }
+
+                setError(undefined);
                 setAPIResponse(result);
             })
-            .catch((error) => console.error(error))
+            .catch((error) => setError(String(error)))
             .finally(() => setButtonPressed(false));
     };
 
