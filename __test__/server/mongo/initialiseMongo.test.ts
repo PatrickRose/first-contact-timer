@@ -31,9 +31,9 @@ describe("initialiseMongo", () => {
         "MONGO_DB",
     ];
 
-    for (let i = 0; i < required.length ** 2 - 1; i++) {
+    for (let i = 0; i < 2 ** required.length - 1; i++) {
         const envToSet = required.filter((_, index) => {
-            return ((2 ^ index) & i) != 0;
+            return ((1 << index) & i) != 0;
         });
         const notSetEnv = required.filter((val) => !envToSet.includes(val));
 
