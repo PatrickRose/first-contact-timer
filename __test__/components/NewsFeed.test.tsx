@@ -2,8 +2,14 @@ import { describe, expect, test } from "@jest/globals";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { NewsFeed } from "@fc/components/theme/shared/NewsFeed";
 import { LivePress, NewsItem } from "@fc/types/types";
+import { FIRST_CONTACT_NEWS_FEED } from "@fc/components/theme/first-contact/presentation";
+import { AFTERMATH_NEWS_FEED } from "@fc/components/theme/aftermath/presentation";
 
 const press: LivePress = [{ name: "Press One" }, { name: "Press Two" }];
+
+// Every NewsFeed render needs the theme presentation; default to first-contact
+// unless a test overrides it.
+const presentation = FIRST_CONTACT_NEWS_FEED;
 
 function makeItem(overrides: Partial<NewsItem> = {}): NewsItem {
     return {
@@ -26,6 +32,7 @@ describe("NewsFeed", () => {
                 ]}
                 press={press}
                 showPressFilter
+                {...presentation}
             />,
         );
 
@@ -38,7 +45,12 @@ describe("NewsFeed", () => {
 
     test("drives the filter through the select value, not option selected", () => {
         render(
-            <NewsFeed newsItems={[makeItem()]} press={press} showPressFilter />,
+            <NewsFeed
+                newsItems={[makeItem()]}
+                press={press}
+                showPressFilter
+                {...presentation}
+            />,
         );
 
         const select = screen.getByRole("combobox") as HTMLSelectElement;
@@ -63,6 +75,7 @@ describe("NewsFeed", () => {
                 ]}
                 press={press}
                 showPressFilter
+                {...presentation}
             />,
         );
 
@@ -80,21 +93,32 @@ describe("NewsFeed", () => {
                 newsItems={[makeItem()]}
                 press={press}
                 showPressFilter={false}
+                {...presentation}
             />,
         );
 
         expect(screen.queryByRole("combobox")).toBeNull();
     });
 
-    test("shows the filter by default (aftermath never opted out)", () => {
-        render(<NewsFeed newsItems={[makeItem()]} press={press} />);
+    test("shows the filter by default when showPressFilter is omitted", () => {
+        render(
+            <NewsFeed
+                newsItems={[makeItem()]}
+                press={press}
+                {...presentation}
+            />,
+        );
 
         expect(screen.getByRole("combobox")).toBeInTheDocument();
     });
 
-    test("first-contact variant adds its spacing classes", () => {
+    test("applies the first-contact spacing presentation", () => {
         const { container } = render(
-            <NewsFeed newsItems={[]} press={press} variant="first-contact" />,
+            <NewsFeed
+                newsItems={[]}
+                press={press}
+                {...FIRST_CONTACT_NEWS_FEED}
+            />,
         );
 
         expect(container.firstChild).toHaveClass("py-4");
@@ -103,9 +127,9 @@ describe("NewsFeed", () => {
         ).toHaveClass("mb-6");
     });
 
-    test("aftermath variant omits those spacing classes", () => {
+    test("applies the aftermath spacing presentation", () => {
         const { container } = render(
-            <NewsFeed newsItems={[]} press={press} variant="aftermath" />,
+            <NewsFeed newsItems={[]} press={press} {...AFTERMATH_NEWS_FEED} />,
         );
 
         expect(container.firstChild).not.toHaveClass("py-4");

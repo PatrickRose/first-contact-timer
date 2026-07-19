@@ -1,4 +1,4 @@
-import type { LivePress, NewsItem, Theme } from "@fc/types/types";
+import type { LivePress, NewsItem } from "@fc/types/types";
 import Image from "next/image";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -81,21 +81,29 @@ function NewsItem({ item, press }: { item: NewsItem; press: LivePress }) {
     );
 }
 
+// The theme-specific presentation for the press feed. Supplied explicitly by
+// each theme shell so the shared component never branches on the active theme.
+export interface NewsFeedPresentation {
+    // Classes on the outer wrapper (e.g. first-contact adds vertical padding).
+    outerClass: string;
+    // Classes appended to the shared feed-title classes (e.g. first-contact
+    // adds bottom margin).
+    headerAccentClass: string;
+}
+
 export function NewsFeed({
     newsItems,
     press,
     showPressFilter = true,
-    variant = "first-contact",
+    outerClass,
+    headerAccentClass,
 }: {
     newsItems: NewsItem[];
     press: LivePress;
-    // Whether the press-account filter is offered. Defaults to true so the
-    // aftermath theme (which never opted out) keeps showing it.
+    // Whether the press-account filter is offered. Defaults to true so a theme
+    // that does not opt out keeps showing it.
     showPressFilter?: boolean;
-    // Selects the small layout differences between the themes without forking
-    // the component.
-    variant?: Theme;
-}) {
+} & NewsFeedPresentation) {
     const pressFeedTitle = getPressFeedTitle(press);
 
     const [filter, setFilter] = useState<number | null>(null);
@@ -119,11 +127,7 @@ export function NewsFeed({
         }
     };
 
-    const isFirstContact = variant === "first-contact";
-    const outerClass = isFirstContact ? "py-4" : "";
-    const headerClass = `text-2xl mt-2 ${
-        isFirstContact ? "mb-6 " : ""
-    }uppercase text-center`;
+    const headerClass = `text-2xl mt-2 ${headerAccentClass} uppercase text-center`;
 
     return (
         <div className={outerClass}>

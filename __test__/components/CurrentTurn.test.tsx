@@ -1,29 +1,15 @@
 import { describe, expect, test } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import CurrentTurn from "@fc/components/theme/shared/CurrentTurn";
-import { SetupInformation } from "@fc/types/types";
 
-type Phase = SetupInformation["phases"][0];
-
-const visiblePhase: Phase = {
-    title: "Opening Moves",
-    length: 5,
-    hidden: false,
-};
-
-const hiddenPhase: Phase = {
-    title: "Secret Phase",
-    length: 5,
-    hidden: true,
-};
-
-function makeProps(overrides: Partial<Parameters<typeof CurrentTurn>[0]> = {}) {
+function makeProps(
+    overrides: Partial<Parameters<typeof CurrentTurn>[0]> = {},
+): Parameters<typeof CurrentTurn>[0] {
     return {
-        turn: 3,
-        phase: 1,
         timestamp: 125,
-        active: true,
-        phaseInformation: visiblePhase,
+        header: <div>Header content</div>,
+        bannerClass: "bg-turn-counter-current",
+        timerSizeClass: "text-4xl",
         ...overrides,
     };
 }
@@ -35,39 +21,34 @@ describe("CurrentTurn", () => {
         expect(screen.getByText("00:09")).toBeInTheDocument();
     });
 
-    describe("first-contact variant", () => {
-        test("shows the current turn and phase title", () => {
-            render(
-                <CurrentTurn {...makeProps({ variant: "first-contact" })} />,
-            );
+    test("renders the theme-provided header verbatim", () => {
+        render(
+            <CurrentTurn
+                {...makeProps({ header: <div>Turn 3, current phase:</div> })}
+            />,
+        );
 
-            expect(
-                screen.getByText("Turn 3, current phase:"),
-            ).toBeInTheDocument();
-            expect(screen.getByText("Opening Moves")).toBeInTheDocument();
-        });
-
-        test("labels a hidden phase as the next phase", () => {
-            render(
-                <CurrentTurn
-                    {...makeProps({
-                        variant: "first-contact",
-                        phaseInformation: hiddenPhase,
-                    })}
-                />,
-            );
-
-            expect(screen.getByText("Turn 3, next phase:")).toBeInTheDocument();
-        });
+        expect(screen.getByText("Turn 3, current phase:")).toBeInTheDocument();
     });
 
-    describe("aftermath variant", () => {
-        test("shows only the phase title, without the turn line", () => {
-            render(<CurrentTurn {...makeProps({ variant: "aftermath" })} />);
+    test("applies the theme-provided banner classes", () => {
+        render(
+            <CurrentTurn
+                {...makeProps({
+                    bannerClass: "bg-aftermath-alert text-aftermath",
+                })}
+            />,
+        );
 
-            expect(screen.getByText("Opening Moves")).toBeInTheDocument();
-            expect(screen.queryByText(/current phase:/i)).toBeNull();
-            expect(screen.queryByText(/next phase:/i)).toBeNull();
-        });
+        // The timer paragraph lives inside the banner div that carries the
+        // accent classes.
+        const banner = screen.getByText("02:05").closest("div");
+        expect(banner).toHaveClass("bg-aftermath-alert", "text-aftermath");
+    });
+
+    test("applies the theme-provided timer size class", () => {
+        render(<CurrentTurn {...makeProps({ timerSizeClass: "text-5xl" })} />);
+
+        expect(screen.getByText("02:05")).toHaveClass("text-5xl");
     });
 });

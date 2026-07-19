@@ -1,19 +1,34 @@
 import * as React from "react";
-import { Game, NewsItem, Theme } from "@fc/types/types";
+import { Game, NewsItem } from "@fc/types/types";
 import { BreakingNewsText } from "./NewsFeed";
 import Image from "next/image";
 import { getIconForPressItem, getTitleForPressItem } from "@fc/lib/press";
 
+// The theme-specific presentation for the breaking-news banner. Supplied
+// explicitly by each theme shell so the shared component never branches on the
+// active theme.
+export interface BreakingNewsPresentation {
+    // Positioning/overflow classes appended to the shared banner classes
+    // (e.g. first-contact pins to the bottom, aftermath clips overflow).
+    footerAccentClass: string;
+    // Wrapper classes around the banner image.
+    imageWrapperClass: string;
+    // Rendered image resolution.
+    imageSize: number;
+}
+
+interface BreakingNewsProps extends BreakingNewsPresentation {
+    newsItem?: NewsItem;
+    press: Game["setupInformation"]["press"];
+}
+
 export default function BreakingNews({
     newsItem,
     press,
-    variant = "first-contact",
-}: {
-    newsItem?: NewsItem;
-    press: Game["setupInformation"]["press"];
-    // Selects the small layout differences between the themes.
-    variant?: Theme;
-}) {
+    footerAccentClass,
+    imageWrapperClass,
+    imageSize,
+}: BreakingNewsProps) {
     if (!newsItem) {
         return null;
     }
@@ -22,18 +37,7 @@ export default function BreakingNews({
         return null;
     }
 
-    const isFirstContact = variant === "first-contact";
-
-    // first-contact pins the banner to the bottom of the viewport; aftermath
-    // lets it flow and clips overflow. The image is rendered at a larger
-    // resolution and width-capped in first-contact.
-    const footerClass = `${
-        isFirstContact ? "sticky bottom-0 " : ""
-    }w-full bg-linear-to-r from-red-700 to-red-900 text-white mt-4 ${
-        isFirstContact ? "" : "overflow-hidden "
-    }hidden lg:flex flex-row justify-between`;
-    const imageWrapperClass = isFirstContact ? "p-8 max-w-1/4" : "p-8";
-    const imageSize = isFirstContact ? 1024 : 128;
+    const footerClass = `${footerAccentClass} w-full bg-linear-to-r from-red-700 to-red-900 text-white mt-4 hidden lg:flex flex-row justify-between`;
 
     return (
         <footer className={footerClass}>
