@@ -14,13 +14,23 @@ export type ControlRouteResponse = NextResponse<
  *
  * The repository update is a compare-and-set on turnInformation, which can lose
  * to a concurrent writer (e.g. a lazy auto-advance triggered by a player's
- * poll). On such a conflict this re-fetches the game and re-applies the action
- * once; a persistent conflict surfaces as HTTP 409 rather than a silent success
- * with the other writer's state. See #783.
+ * poll). How a conflict is handled depends on whether the action is safe to
+ * re-apply on fresh state:
+ *
+ *  - Idempotent actions (component edits, and pause/play which set absolute
+ *    state) are re-fetched and re-applied once; a persistent conflict is a 409.
+ *  - Non-idempotent actions (relative turn navigation such as forward-phase)
+ *    must NOT be retried: re-applying on already-advanced state would advance
+ *    the game a second time. They return 409 immediately so the operator can
+ *    re-decide against fresh state.
+ *
+ * Callers pass retryOnConflict accordingly (default true for the idempotent
+ * component-edit path). See #783.
  */
 export async function runControlActionRoute(
     id: string,
     action: ControlAction,
+    retryOnConflict: boolean = true,
 ): Promise<ControlRouteResponse> {
     const gameRepo = getGameRepo();
 
@@ -36,7 +46,7 @@ export async function runControlActionRoute(
 
     let result = await gameRepo.right.runControlAction(game.right, action);
 
-    if (isLeft(result) && result.left === UPDATE_CONFLICT) {
+    if (isLeft(result) && result.left === UPDATE_CONFLICT && retryOnConflict) {
         const fresh = await gameRepo.right.get(id);
 
         if (isLeft(fresh)) {
