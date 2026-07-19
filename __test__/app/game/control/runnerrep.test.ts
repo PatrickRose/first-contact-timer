@@ -190,4 +190,31 @@ describe("POST /game/[id]/control/api/runnerrep", () => {
         expect(body.active).toBe(false);
         expect(body.components[0].rep.Ballet.reputation).toBe(5);
     });
+
+    describe.each(["__proto__", "constructor", "prototype"])(
+        "rejects the prototype-polluting runner name %p",
+        (runnerName) => {
+            test("returns a 500 and does not pollute Object.prototype", async () => {
+                const repo = makeFakeGameRepo(
+                    makeActiveGame({ components: [runnersComponent()] }),
+                );
+                getGameRepo.mockReturnValue(MakeRight(repo));
+
+                const response = await POST(
+                    makeRequest({ runnerName, diff: 1 }),
+                    makeProps(),
+                );
+
+                expect(response.status).toBe(500);
+                expect(await response.json()).toEqual({
+                    error: `No ${runnerName} runner found for game test-game`,
+                });
+                // Had the inherited-key lookup passed the guard, the write
+                // would have landed on Object.prototype.reputation.
+                expect(
+                    ({} as Record<string, unknown>).reputation,
+                ).toBeUndefined();
+            });
+        },
+    );
 });

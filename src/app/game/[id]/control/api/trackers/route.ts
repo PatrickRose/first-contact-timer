@@ -15,6 +15,7 @@ import {
 } from "@fc/types/io-ts-def";
 import { toApiResponse } from "@fc/server/turn";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
+import { isUnsafeKey } from "@fc/lib/safe-keys";
 
 async function AddTrackerAction(
     body: AddTracker,
@@ -35,7 +36,13 @@ async function AddTrackerAction(
             );
         }
 
-        if (tracker.trackers[body.tracker] !== undefined) {
+        if (isUnsafeKey(body.tracker)) {
+            return MakeLeft(
+                `${body.tracker} is not a valid tracker name for game ${game._id}`,
+            );
+        }
+
+        if (Object.hasOwn(tracker.trackers, body.tracker)) {
             return MakeLeft(
                 `${body.tracker} tracker already exists for game ${game._id}`,
             );
@@ -87,7 +94,7 @@ async function SetTrackerAction(
             );
         }
 
-        if (tracker.trackers[body.tracker] === undefined) {
+        if (!Object.hasOwn(tracker.trackers, body.tracker)) {
             return MakeLeft(
                 `No ${body.tracker} tracker found for game ${game._id}`,
             );
@@ -133,7 +140,7 @@ async function DeleteTrackerAction(
             );
         }
 
-        if (tracker.trackers[body.tracker] === undefined) {
+        if (!Object.hasOwn(tracker.trackers, body.tracker)) {
             return MakeLeft(
                 `No ${body.tracker} tracker found for game ${game._id}`,
             );
