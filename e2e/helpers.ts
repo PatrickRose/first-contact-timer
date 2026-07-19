@@ -11,13 +11,29 @@ export function projectGameId(baseId: string, testInfo: TestInfo): string {
 }
 
 /**
- * The layout is responsive via Tailwind's `lg:` (1024px) breakpoint. The bottom
- * tab bar (GameTabSwitcher) is `lg:hidden`, so its presence is a reliable proxy
- * for "this is the mobile layout".
+ * The layout is responsive via Tailwind's `lg:` (1024px) breakpoint: below it
+ * the bottom tab bar (GameTabSwitcher) shows and the sidebar hides. Detected
+ * from the project's viewport width, which is what drives that CSS.
  */
 export async function isMobileLayout(page: Page): Promise<boolean> {
     const width = page.viewportSize()?.width ?? 0;
     return width < 1024;
+}
+
+/**
+ * Wait until React has hydrated and the client is live, proven by the 1s
+ * countdown actually ticking (only client-side JS changes that text).
+ *
+ * Interacting with a controlled input before hydration silently loses the
+ * input: the fill sets the DOM value but no React onChange fires, and the
+ * next client render resets the field to React's (empty) state - observed as
+ * a real race on Desktop Safari, whose larger desktop tree hydrates slowest.
+ * Only valid on an ACTIVE game (a paused game's countdown doesn't tick).
+ */
+export async function waitForCountdownTick(page: Page): Promise<void> {
+    const timer = page.getByTestId("turn-timer-desktop");
+    const initial = await timer.textContent();
+    await expect(timer).not.toHaveText(initial ?? "");
 }
 
 /**

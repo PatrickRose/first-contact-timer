@@ -1,6 +1,6 @@
 import { test, expect } from "./fixtures";
 import { games } from "./seed";
-import { openTab, projectGameId } from "./helpers";
+import { openTab, projectGameId, waitForCountdownTick } from "./helpers";
 
 const NEWS_LABEL = "Enter breaking news headline here:";
 
@@ -15,6 +15,9 @@ test.describe("press tools", () => {
 
         await page.goto(`/game/${gameId}/press`);
         await openTab(page, "Press Tools");
+        // Filling the controlled textarea before React hydrates silently
+        // loses the input (the next client render resets it to empty state).
+        await waitForCountdownTick(page);
 
         const textarea = page.getByLabel(NEWS_LABEL);
         await expect(textarea).toBeVisible();
