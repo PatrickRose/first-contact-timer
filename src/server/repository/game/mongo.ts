@@ -119,6 +119,13 @@ export class MongoRepository implements GameRepository {
 
             const { _id, turnInformation } = currentFields;
 
+            // The compare-and-set filter is keyed on turnInformation ONLY. It
+            // guards against concurrent turn advances, but NOT against two
+            // operators editing DIFFERENT components at the same time - those
+            // still last-write-wins, because neither touches turnInformation.
+            // Closing that gap needs a monotonic `version` field on the document
+            // (plus a data migration to backfill it), which is a deliberately
+            // deferred follow-up. See #783.
             const result = await gameCollection.updateOne(
                 { _id, turnInformation },
                 { $set: newFields },
