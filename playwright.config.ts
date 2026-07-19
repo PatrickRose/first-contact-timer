@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import { BASE_URL, dbEnv } from "./e2e/config";
+import { BASE_URL, PORT, dbEnv } from "./e2e/config";
 
 /**
  * Playwright e2e configuration.
@@ -9,8 +9,8 @@ import { BASE_URL, dbEnv } from "./e2e/config";
  * deterministic game/user data, and the `webServer` below builds and starts
  * the real Next.js app against that database.
  *
- * Tests run on both a desktop and a mobile viewport (Chromium only) to cover
- * the responsive `lg:` (1024px) layout split.
+ * Tests run on desktop and mobile viewports across Chromium and WebKit to
+ * cover the responsive `lg:` (1024px) layout split and cross-engine behaviour.
  */
 
 export default defineConfig({
@@ -55,7 +55,7 @@ export default defineConfig({
     ],
 
     webServer: {
-        command: "npm run build && npm run start",
+        command: `npm run build && npm run start -- --port ${PORT}`,
         url: BASE_URL,
         timeout: 300_000,
         reuseExistingServer: !process.env.CI,

@@ -19,12 +19,20 @@ async function getDb(): Promise<Db> {
     return client.db(dbEnv.MONGO_DB);
 }
 
-/** Restore a single game to its pristine seeded state. */
-export async function resetGame(id: string): Promise<void> {
+/**
+ * Restore a game to a pristine copy of the `templateId` seed, stored under
+ * `targetId` (defaults to `templateId`). Mutating specs pass a per-project
+ * `targetId` so the four projects don't fight over one shared document when
+ * they run in parallel locally.
+ */
+export async function resetGame(
+    templateId: string,
+    targetId: string = templateId,
+): Promise<void> {
     const db = await getDb();
     const games = db.collection<Game>("games");
-    await games.deleteMany({ _id: id });
-    await games.insertOne(gameById(id));
+    await games.deleteMany({ _id: targetId });
+    await games.insertOne({ ...gameById(templateId), _id: targetId });
 }
 
 export async function closeDb(): Promise<void> {

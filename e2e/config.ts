@@ -11,7 +11,10 @@
  * container), those values win and global-setup skips starting Docker.
  */
 
-export const PORT = 3000;
+// Deliberately not 3000: a stray `next dev` on the default port would otherwise
+// be reused by `reuseExistingServer`, silently running the suite against the
+// developer's own dev database instead of the seeded e2e Mongo.
+export const PORT = 3100;
 export const BASE_URL = `http://localhost:${PORT}`;
 
 export const DOCKER_CONTAINER_NAME = "fc-e2e-mongo";

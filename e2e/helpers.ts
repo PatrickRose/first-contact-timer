@@ -1,4 +1,14 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, type Page, type TestInfo } from "@playwright/test";
+
+/**
+ * A game id namespaced to the running project. Mutating specs use this so the
+ * four projects (Desktop/Mobile x Chrome/Safari) each mutate their own copy of
+ * a seeded game instead of racing on one shared document.
+ */
+export function projectGameId(baseId: string, testInfo: TestInfo): string {
+    const slug = testInfo.project.name.replace(/\s+/g, "-").toLowerCase();
+    return `${baseId}-${slug}`;
+}
 
 /**
  * The layout is responsive via Tailwind's `lg:` (1024px) breakpoint. The bottom
