@@ -151,7 +151,7 @@ function buildGames(): Game[] {
                 phases: standardPhases,
                 press: false,
             },
-            [{ componentType: "LightLevel", value: 10, max: 10 }],
+            [{ componentType: "LightLevel", value: 5, max: 10 }],
         ),
 
         // Aftermath theme smoke.
@@ -174,6 +174,15 @@ interface DBUserDoc {
     _id: string;
     password: string;
     passwordNeedsReset: boolean;
+}
+
+/** A fresh copy of a single seeded game, used by tests to reset mutable state. */
+export function gameById(id: string): Game {
+    const game = buildGames().find((candidate) => candidate._id === id);
+    if (game === undefined) {
+        throw new Error(`No seed game with id "${id}"`);
+    }
+    return game;
 }
 
 export async function seedDatabase(db: Db): Promise<void> {

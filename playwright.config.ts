@@ -19,7 +19,10 @@ export default defineConfig({
     globalSetup: "./e2e/global-setup.ts",
     globalTeardown: "./e2e/global-teardown.ts",
 
-    fullyParallel: true,
+    // Tests within a file run serially (they may reset shared game state);
+    // separate files still run in parallel across workers, and each file owns
+    // its own game ids so there is no cross-file contention.
+    fullyParallel: false,
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 1 : 0,
     workers: process.env.CI ? 1 : undefined,
