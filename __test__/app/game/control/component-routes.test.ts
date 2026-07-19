@@ -149,8 +149,7 @@ const ROUTES: RouteConfig[] = [
         validBody: { runnerName: "G1T", diff: 1 },
         invalidBody: { runnerName: "G1T" },
         makeComponent: runnersComponent,
-        noComponentError:
-            "No RunningHotRunners component for game test-game",
+        noComponentError: "No RunningHotRunners component for game test-game",
     },
     {
         name: "light-level",
@@ -390,6 +389,25 @@ describe("shareprice mutation", () => {
 
         const body = await response.json();
         expect(body.components[0].sharePrice.ANT).toBe(2);
+    });
+
+    test("returns a 500 for a corp missing from the share price map", async () => {
+        // A valid corp name that the game does not track, which would
+        // otherwise assign NaN to the share price.
+        repoWith({
+            componentType: "RunningHotCorp",
+            sharePrice: { GenEq: 10 },
+        } as unknown as Component);
+
+        const response = await handlers.shareprice(
+            makeRequest({ corpName: "MCM", diff: 5 }),
+            makeProps(),
+        );
+
+        expect(response.status).toBe(500);
+        expect(await response.json()).toEqual({
+            error: "No MCM corp found for game test-game",
+        });
     });
 });
 
