@@ -38,3 +38,12 @@ describe("game definitions share prices", () => {
         },
     );
 });
+
+describe("game definitions data", () => {
+    // Regression guard for the data extracted out of the old inline GAME_TYPES
+    // blob. Any accidental edit to a definition (phase length, country list,
+    // corp price, etc.) shows up as a snapshot diff in review.
+    test("match the recorded snapshot", () => {
+        expect(GAME_DEFINITIONS).toMatchSnapshot();
+    });
+});
