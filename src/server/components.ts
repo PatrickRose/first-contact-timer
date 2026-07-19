@@ -136,7 +136,17 @@ export function makeComponentRoute<T extends ComponentType>(
         const params = await props.params;
         const id = params.id;
 
-        const body = await request.json();
+        let body: unknown;
+        try {
+            body = await request.json();
+        } catch {
+            // A malformed JSON body is a client error, not a server error;
+            // fall through to the same 400 the invalid-body path returns.
+            return NextResponse.json(
+                { error: "Incorrect request" },
+                { status: 400 },
+            );
+        }
 
         const action = actions.find((candidate) => candidate.is(body));
 

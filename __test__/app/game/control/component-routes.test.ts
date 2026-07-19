@@ -26,7 +26,11 @@ import {
     makeFakeGameRepo,
     makeInactiveGame,
 } from "../../../fixtures/game";
-import { makeProps, makeRequest } from "../../../fixtures/routes";
+import {
+    makeMalformedRequest,
+    makeProps,
+    makeRequest,
+} from "../../../fixtures/routes";
 import GameRepository from "@fc/server/repository/game";
 import { Component } from "@fc/types/types";
 
@@ -202,6 +206,13 @@ describe.each(ROUTES)("component route contract: $name", (route) => {
             makeRequest(route.invalidBody),
             makeProps(),
         );
+
+        expect(response.status).toBe(400);
+        expect(await response.json()).toEqual({ error: "Incorrect request" });
+    });
+
+    test("returns a 400 for a malformed JSON body", async () => {
+        const response = await post()(makeMalformedRequest(), makeProps());
 
         expect(response.status).toBe(400);
         expect(await response.json()).toEqual({ error: "Incorrect request" });
