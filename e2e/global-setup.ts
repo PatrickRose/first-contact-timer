@@ -79,6 +79,20 @@ export default async function globalSetup(): Promise<void> {
     }
 
     if (usingExternalMongo) {
+        // Seeding wipes the games and users collections, so refuse to touch a
+        // non-local Mongo unless explicitly allowed. This stops an exported
+        // MONGO_URL pointing at a shared/Atlas cluster from being wiped by a
+        // stray `npm run test:e2e`.
+        const host = dbEnv.MONGO_URL;
+        const isLocal = /^(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(host);
+        if (!isLocal && process.env.E2E_ALLOW_EXTERNAL_MONGO !== "1") {
+            throw new Error(
+                `[e2e] Refusing to seed a non-local Mongo at "${host}" ` +
+                    `(seeding wipes the games/users collections). Set ` +
+                    `E2E_ALLOW_EXTERNAL_MONGO=1 if this really is a disposable ` +
+                    `test database.`,
+            );
+        }
         console.log("[e2e] Using externally provided Mongo (MONGO_URL set).");
     } else {
         console.log("[e2e] Starting Docker Mongo container...");
