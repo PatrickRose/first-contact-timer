@@ -3,12 +3,12 @@ import { useState } from "react";
 import { GameTabSwitcher } from "../../TabSwitcher";
 import SideComponents from "./SideComponentsAftermath";
 import { SideComponentMapper } from "@fc/lib/ComponentMapper";
-import BreakingNews from "./BreakingNews";
-import { NewsFeed } from "./NewsFeed";
-import LogoBlock from "./LogoBlock";
+import BreakingNews from "../shared/BreakingNews";
+import { NewsFeed } from "../shared/NewsFeed";
+import LogoBlock from "../shared/LogoBlock";
 import TurnCounter from "./TurnCounter";
 import PhaseList from "./PhaseList";
-import CurrentTurn from "./CurrentTurn";
+import CurrentTurn from "../shared/CurrentTurn";
 import AlertSystemFooter from "./AlertSystemFooter";
 import { getCurrentPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
@@ -44,6 +44,7 @@ export function AftermathTheme({
                     timestamp={apiResponse.phaseEnd}
                     active={apiResponse.active}
                     phaseInformation={currentPhaseInformation.right}
+                    variant="aftermath"
                 />
             </div>
             <div className="flex flex-col content-between h-screen overflow-y-auto">
@@ -112,6 +113,7 @@ export function AftermathTheme({
                             >
                                 <LogoBlock
                                     setupInformation={game.setupInformation}
+                                    variant="aftermath"
                                 />
                             </div>
                             {childComponent ? (
@@ -132,6 +134,7 @@ export function AftermathTheme({
                                     <NewsFeed
                                         newsItems={apiResponse.breakingNews}
                                         press={game.setupInformation.press}
+                                        variant="aftermath"
                                     />
                                 </div>
                             )}
@@ -140,6 +143,7 @@ export function AftermathTheme({
                             <BreakingNews
                                 newsItem={apiResponse.breakingNews[0]}
                                 press={game.setupInformation.press}
+                                variant="aftermath"
                             />
                         ) : null}
                     </main>
