@@ -1,0 +1,660 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`game definitions data match the recorded snapshot 1`] = `
+{
+  "AYNOHYEB": {
+    "components": [],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [],
+      "gameName": "Are You Now Or Have You Ever Been...",
+      "logo": "/AYNOHYEB/logo.jpg",
+      "phases": [
+        {
+          "hidden": false,
+          "length": 10,
+          "title": "Day Phase",
+        },
+        {
+          "hidden": false,
+          "length": 10,
+          "title": "Night Phase",
+        },
+        {
+          "hidden": false,
+          "length": 10,
+          "title": "Team Time",
+        },
+      ],
+      "press": {
+        "logo": "/AYNOHYEB/maine-gazette.png",
+        "name": "Maine Gazette",
+      },
+      "theme": "first-contact",
+    },
+  },
+  "DeedsAndDestiny": {
+    "components": [],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [],
+      "gameName": "Deeds & Destiny",
+      "phases": [
+        {
+          "hidden": false,
+          "length": 5,
+          "logo": "/DeedsAndDestiny/Morning.png",
+          "phaseInformation": [
+            "Check for new quests",
+            "See whether the threats have developed",
+            "Do a little bartering",
+            "Talk to others",
+            "Gather your party before venturing forth",
+          ],
+          "title": "Morning",
+        },
+        {
+          "hidden": false,
+          "length": 15,
+          "logo": "/DeedsAndDestiny/Day.png",
+          "phaseInformation": [
+            "Venture forth",
+            "Gather resources at the edge Hope’s Harbour",
+            "Build or improve buildings",
+            "Craft equipment",
+            "Trade, talk, negotiate, plot and plan",
+          ],
+          "title": "Day",
+        },
+        {
+          "hidden": false,
+          "length": 5,
+          "logo": "/DeedsAndDestiny/Evening.png",
+          "phaseInformation": [
+            "Return to Hope’s Harbour",
+            "Talk, trade, gossip and brag with other adventurers",
+            "Upgrade and craft",
+            "Decided where you're going to spend the night",
+          ],
+          "title": "Evening",
+        },
+        {
+          "hidden": false,
+          "length": 5,
+          "logo": "/DeedsAndDestiny/Night.png",
+          "phaseInformation": [
+            "Recover your dice pool",
+            "Spend XP to improve your Attributes and Health Points",
+            "Spend XP to learn new Skills or change Class at the appropriate building",
+            "Plot, plan and scheme",
+          ],
+          "title": "Night",
+        },
+      ],
+      "press": {
+        "name": "Town Crier",
+      },
+      "theme": "first-contact",
+      "timerStyles": {
+        "activePhase": {
+          "background": "bg-white",
+          "border": "border-yellow-300",
+          "text": "text-black",
+        },
+        "futurePhase": {
+          "background": "bg-neutral-400",
+          "border": "border-black",
+          "text": "text-black",
+        },
+        "pastPhase": {
+          "background": "bg-linear-to-b from-neutral-100 to-neutral-400",
+          "border": "border-black",
+          "text": "text-black",
+        },
+      },
+    },
+  },
+  "aftermath": {
+    "components": [
+      {
+        "componentType": "Weather",
+        "weatherMessage": "",
+      },
+    ],
+    "setupInformation": {
+      "breakingNewsBanner": false,
+      "components": [
+        "Weather",
+      ],
+      "gameName": "Aftermath",
+      "phases": [
+        {
+          "hidden": false,
+          "length": 9,
+          "title": "Planning",
+        },
+        {
+          "hidden": true,
+          "length": 2,
+          "title": "BBC News Broadcast begins in",
+        },
+        {
+          "hidden": false,
+          "length": 2,
+          "title": "BBC News",
+        },
+        {
+          "hidden": false,
+          "length": 2,
+          "title": "FRB",
+        },
+        {
+          "hidden": false,
+          "length": 20,
+          "title": "Action",
+        },
+      ],
+      "press": false,
+      "theme": "aftermath",
+    },
+  },
+  "dead-britannia": {
+    "components": [],
+    "setupInformation": {
+      "breakingNewsBanner": false,
+      "components": [],
+      "gameName": "Dead Britannia",
+      "logo": "/DeadBritannia/logo.jpeg",
+      "phases": [
+        {
+          "hidden": false,
+          "length": 15,
+          "title": "Settlement Administration",
+        },
+        {
+          "hidden": false,
+          "length": 25,
+          "title": "Action Phase",
+        },
+      ],
+      "press": false,
+      "theme": "first-contact",
+    },
+  },
+  "dev-test-game": {
+    "components": [
+      {
+        "componentType": "Trackers",
+        "trackers": {
+          "Bar": {
+            "max": 10,
+            "type": "bar",
+            "value": 0,
+          },
+          "Circle": {
+            "max": 35,
+            "type": "circle",
+            "value": 0,
+          },
+        },
+      },
+    ],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [],
+      "gameName": "Dev Test Game",
+      "maxTurns": 8,
+      "phases": [
+        {
+          "hidden": false,
+          "length": 18,
+          "title": "Action Phase",
+        },
+        {
+          "hidden": false,
+          "length": 12,
+          "title": "Team Phase",
+        },
+      ],
+      "press": [
+        {
+          "logo": "/MGC.png",
+          "name": "Test Press",
+        },
+        {
+          "logo": "/Icon-VLHG.png",
+          "name": "Second Press",
+        },
+      ],
+      "theme": "first-contact",
+    },
+  },
+  "dow": {
+    "components": [
+      {
+        "componentType": "DoWWolfAttack",
+        "inProgress": false,
+      },
+    ],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [],
+      "gameName": "Den of Wolves",
+      "phases": [
+        {
+          "hidden": false,
+          "length": 18,
+          "title": "Action Phase",
+        },
+        {
+          "hidden": false,
+          "length": 12,
+          "title": "Team Phase",
+        },
+      ],
+      "press": {
+        "logo": "/inc.png",
+        "name": "INC",
+      },
+      "theme": "first-contact",
+    },
+  },
+  "dow-new-eden": {
+    "components": [
+      {
+        "componentType": "DoWWolfAttack",
+        "inProgress": false,
+      },
+    ],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [],
+      "gameName": "Den of Wolves: New Eden",
+      "logo": "/dow-new-eden.png",
+      "maxTurns": 8,
+      "phases": [
+        {
+          "extraTime": {
+            "1": 5,
+          },
+          "hidden": false,
+          "length": 5,
+          "title": "Maintenance",
+        },
+        {
+          "extraTime": {
+            "1": 10,
+          },
+          "hidden": false,
+          "length": 15,
+          "title": "Coordination",
+        },
+      ],
+      "press": {
+        "logo": "/inc.png",
+        "name": "INC",
+      },
+      "theme": "first-contact",
+    },
+  },
+  "faes-anatomy": {
+    "components": [],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [],
+      "gameName": "Fae's Anatomy",
+      "logo": "/FaesAnatomy/logo.jpg",
+      "phases": [
+        {
+          "extraTime": {
+            "1": 10,
+          },
+          "hidden": false,
+          "length": 10,
+          "title": "Commune Phase",
+        },
+        {
+          "extraTime": {
+            "1": 5,
+          },
+          "hidden": false,
+          "length": 10,
+          "title": "Medical Phase",
+        },
+        {
+          "hidden": false,
+          "length": 10,
+          "title": "Negotiation Phase",
+        },
+        {
+          "hidden": false,
+          "length": 5,
+          "title": "Press time",
+        },
+      ],
+      "press": {
+        "logo": "/FaesAnatomy/Taliesin Journal.png",
+        "name": "Taliesin Journal",
+      },
+      "theme": "first-contact",
+    },
+  },
+  "first-contact": {
+    "components": [
+      {
+        "componentType": "Defcon",
+        "countries": {
+          "China": {
+            "countryName": "China",
+            "shortName": "🇨🇳",
+            "status": 3,
+          },
+          "France": {
+            "countryName": "France",
+            "shortName": "🇫🇷",
+            "status": 3,
+          },
+          "India": {
+            "countryName": "India",
+            "shortName": "🇮🇳",
+            "status": 3,
+          },
+          "Israel": {
+            "countryName": "Israel",
+            "shortName": "🇮🇱",
+            "status": "hidden",
+          },
+          "Pakistan": {
+            "countryName": "Pakistan",
+            "shortName": "🇵🇰",
+            "status": 3,
+          },
+          "Russia": {
+            "countryName": "Russia",
+            "shortName": "🇷🇺",
+            "status": 3,
+          },
+          "UnitedKingdom": {
+            "countryName": "United Kingdom",
+            "shortName": "🇬🇧",
+            "status": 3,
+          },
+          "UnitedStates": {
+            "countryName": "United States",
+            "shortName": "🇺🇸",
+            "status": 3,
+          },
+        },
+      },
+    ],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [
+        "Defcon",
+      ],
+      "gameName": "First Contact: 2035",
+      "hidePressInSidebar": true,
+      "phases": [
+        {
+          "hidden": false,
+          "length": 10,
+          "title": "Team Time",
+        },
+        {
+          "hidden": true,
+          "length": 2,
+          "title": "Action Phase 1 begins in",
+        },
+        {
+          "hidden": false,
+          "length": 20,
+          "title": "Action Phase 1",
+        },
+        {
+          "hidden": true,
+          "length": 2,
+          "title": "Action Phase 2 begins in",
+        },
+        {
+          "hidden": false,
+          "length": 10,
+          "title": "Action Phase 2",
+        },
+        {
+          "hidden": true,
+          "length": 2,
+          "title": "Action Phase 3 begins in",
+        },
+        {
+          "hidden": false,
+          "length": 5,
+          "title": "Action Phase 3",
+        },
+        {
+          "hidden": true,
+          "length": 2,
+          "title": "Press Broadcast begins in",
+        },
+        {
+          "hidden": false,
+          "length": 5,
+          "title": "Press Broadcast",
+        },
+        {
+          "hidden": true,
+          "length": 2,
+          "title": "Next turn (Team Time) begins in",
+        },
+      ],
+      "theme": "first-contact",
+    },
+  },
+  "running-hot": {
+    "components": [
+      {
+        "componentType": "RunningHotCorp",
+        "sharePrice": {
+          "ANT": 5,
+          "DTC": 13,
+          "GenEq": 10,
+          "Gordon": 13,
+          "MCM": 12,
+        },
+      },
+      {
+        "componentType": "RunningHotRunners",
+        "rep": {
+          "$0FTW4R3": {
+            "gang": "G33ks",
+            "reputation": 1,
+          },
+          "$TUX": {
+            "gang": "G33ks",
+            "reputation": 1,
+          },
+          "Ballet": {
+            "gang": "Dancers",
+            "reputation": 1,
+          },
+          "Bitter": {
+            "gang": "Gruffsters",
+            "reputation": 1,
+          },
+          "CYCL3": {
+            "gang": "G33ks",
+            "reputation": 1,
+          },
+          "Con": {
+            "gang": "Facers",
+            "reputation": 1,
+          },
+          "G1T": {
+            "gang": "G33ks",
+            "reputation": 1,
+          },
+          "Ghost": {
+            "gang": "Facers",
+            "reputation": 1,
+          },
+          "Groucho": {
+            "gang": "Gruffsters",
+            "reputation": 1,
+          },
+          "Hustle": {
+            "gang": "Dancers",
+            "reputation": 1,
+          },
+          "Next": {
+            "gang": "Facers",
+            "reputation": 1,
+          },
+          "Pale": {
+            "gang": "Gruffsters",
+            "reputation": 1,
+          },
+          "Scorer": {
+            "gang": "Gruffsters",
+            "reputation": 1,
+          },
+          "Swing": {
+            "gang": "Dancers",
+            "reputation": 1,
+          },
+          "Tap": {
+            "gang": "Dancers",
+            "reputation": 1,
+          },
+          "Vampire": {
+            "gang": "Facers",
+            "reputation": 1,
+          },
+          "Wicker": {
+            "gang": "Facers",
+            "reputation": 1,
+          },
+          "Z3R0": {
+            "gang": "G33ks",
+            "reputation": 1,
+          },
+        },
+      },
+    ],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [],
+      "gameName": "Running Hot",
+      "logo": "/RunningHot/RunningHot.webp",
+      "phases": [
+        {
+          "hidden": false,
+          "length": 15,
+          "title": "Setup Phase",
+        },
+        {
+          "hidden": false,
+          "length": 15,
+          "title": "Action Phase",
+        },
+        {
+          "hidden": false,
+          "length": 5,
+          "title": "Team Time",
+        },
+      ],
+      "press": [
+        {
+          "logo": "/RunningHot/BusinessTimes.png",
+          "name": "Business Times",
+        },
+        {
+          "logo": "/RunningHot/Th3Underground.png",
+          "name": "Th3 Undergr0und",
+        },
+      ],
+      "theme": "first-contact",
+    },
+  },
+  "touched-by-darkness": {
+    "components": [
+      {
+        "alert": {
+          "emoji": "🌑",
+          "label": "Shadow attack",
+          "text": "Shadow attack in progress",
+        },
+        "componentType": "DoWWolfAttack",
+        "inProgress": false,
+      },
+      {
+        "componentType": "LightLevel",
+        "max": 10,
+        "value": 10,
+      },
+    ],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [],
+      "gameName": "Touched By Darkness",
+      "logo": "/TouchedByDarkness/logo.png",
+      "phases": [
+        {
+          "hidden": false,
+          "length": 18,
+          "title": "Action Time",
+        },
+        {
+          "hidden": false,
+          "length": 5,
+          "title": "Faction Time",
+        },
+        {
+          "hidden": false,
+          "length": 5,
+          "title": "News Proclamation",
+        },
+        {
+          "hidden": false,
+          "length": 2,
+          "title": "Resolution",
+        },
+      ],
+      "press": {
+        "name": "The Herald",
+      },
+      "theme": "first-contact",
+    },
+  },
+  "wts-1970": {
+    "components": [],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [],
+      "gameName": "Watch the Skies: 1970",
+      "logo": "/WTS_1970__Coulee_Con.png",
+      "phases": [
+        {
+          "hidden": false,
+          "length": 10,
+          "title": "Team Time",
+        },
+        {
+          "hidden": false,
+          "length": 15,
+          "title": "Action Time",
+        },
+        {
+          "hidden": false,
+          "length": 10,
+          "title": "Diplomacy Time",
+        },
+        {
+          "hidden": false,
+          "length": 5,
+          "title": "End of turn",
+        },
+      ],
+      "theme": "first-contact",
+    },
+  },
+}
+`;

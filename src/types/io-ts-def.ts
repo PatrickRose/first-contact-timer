@@ -1,4 +1,5 @@
 import * as t from "io-ts";
+import { GAME_DEFINITIONS } from "@fc/server/game-definitions";
 
 export const SetWeatherStatusDecode = t.type({
     newWeatherMessage: t.string,
@@ -76,20 +77,9 @@ export const LoginFormValuesDecode = t.type({
     password: t.string,
 });
 
-export const GameTypeDecode = t.union([
-    t.literal("first-contact"),
-    t.literal("aftermath"),
-    t.literal("wts-1970"),
-    t.literal("dow"),
-    t.literal("dow-new-eden"),
-    t.literal("running-hot"),
-    t.literal("AYNOHYEB"),
-    t.literal("DeedsAndDestiny"),
-    t.literal("faes-anatomy"),
-    t.literal("dead-britannia"),
-    t.literal("dev-test-game"),
-    t.literal("touched-by-darkness"),
-]);
+// Derived from the game definition keys so the type list and the data cannot
+// diverge. Adding a game to `GAME_DEFINITIONS` extends this decoder for free.
+export const GameTypeDecode = t.keyof(GAME_DEFINITIONS);
 
 export const CreateGameRequestDecode = t.type({
     gameID: t.string,
@@ -140,7 +130,7 @@ export const WolfAttackDecode = t.intersection([
     }),
 ]);
 
-const CorpNamesDecode = t.union([
+export const CorpNamesDecode = t.union([
     t.literal("GenEq"),
     t.literal("MCM"),
     t.literal("Gordon"),
