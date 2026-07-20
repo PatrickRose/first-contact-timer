@@ -1,13 +1,16 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { GameType } from "@fc/types/types";
+import { Component, GameType } from "@fc/types/types";
 import { CreateGameResponseDecode } from "@fc/types/io-ts-def";
 import Link from "next/link";
+import { GAME_TYPES } from "./gameTemplates";
+import { ComponentsEditor } from "./ComponentsEditor";
 
 export function GameCreateForm() {
     const [gameID, setID] = useState<string>("");
     const [type, setType] = useState<GameType | null>(null);
+    const [components, setComponents] = useState<Component[]>([]);
     const [error, setError] = useState<string[] | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
@@ -22,7 +25,7 @@ export function GameCreateForm() {
                 "Content-Type": "application/json",
                 Accept: "application/json",
             },
-            body: JSON.stringify({ gameID, type }),
+            body: JSON.stringify({ gameID, type, components }),
         });
 
         let data: unknown;
@@ -54,6 +57,7 @@ export function GameCreateForm() {
         } else {
             setSuccess(gameID);
             setType(null);
+            setComponents([]);
             setID("");
         }
     };
@@ -143,13 +147,38 @@ export function GameCreateForm() {
                                 className="h-4 w-4 border-zinc-600 bg-zinc-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
                                 checked={key == type}
                                 value={key}
-                                onChange={() => setType(key as GameType)}
+                                onChange={() => {
+                                    setType(key as GameType);
+                                    setComponents(
+                                        structuredClone(
+                                            GAME_TYPES[key as GameType]
+                                                .components,
+                                        ),
+                                    );
+                                }}
                             />
                             {label}
                         </label>
                     ))}
                 </div>
             </fieldset>
+
+            {type !== null ? (
+                <fieldset>
+                    <legend className="text-sm font-medium text-zinc-300">
+                        Components
+                    </legend>
+                    <p className="mb-3 mt-1 text-sm text-zinc-500">
+                        These start with the defaults for the game type, but you
+                        can add, remove or tweak them before the game is
+                        created.
+                    </p>
+                    <ComponentsEditor
+                        components={components}
+                        onChange={setComponents}
+                    />
+                </fieldset>
+            ) : null}
 
             <div>
                 <button className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 font-semibold text-white transition hover:bg-indigo-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-zinc-900 sm:w-auto">
