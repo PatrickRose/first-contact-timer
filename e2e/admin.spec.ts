@@ -1,4 +1,5 @@
-import { test, expect, type Page } from "./fixtures";
+import { test, expect } from "./fixtures";
+import { type Page } from "@playwright/test";
 import { projectGameId } from "./helpers";
 import { ADMIN_USERNAME, DEFAULT_PASSWORD, games } from "./seed";
 
