@@ -31,6 +31,12 @@ export default function AdminLayout({
                             Dashboard
                         </Link>
                         <Link
+                            href="/admin/game"
+                            className="text-zinc-400 transition hover:text-zinc-100"
+                        >
+                            Games
+                        </Link>
+                        <Link
                             href="/admin/game/create"
                             className="text-zinc-400 transition hover:text-zinc-100"
                         >

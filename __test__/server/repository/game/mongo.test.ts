@@ -17,12 +17,33 @@ import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 import { Game } from "@fc/types/types";
 import { makeActiveGame } from "../../../fixtures/game";
 
+type FakeCursor = {
+    next: () => Promise<Game | null>;
+    sort: (spec: Record<string, 1 | -1>) => FakeCursor;
+    skip: (n: number) => FakeCursor;
+    limit: (n: number) => FakeCursor;
+    toArray: () => Promise<Game[]>;
+};
+
 function makeFakeMongo() {
+    // The list() cursor chain: sort/skip/limit return the cursor so they can be
+    // chained, and toArray resolves the results. The chain methods are wired to
+    // return `cursor` after construction to avoid referencing it before init.
     const cursor = {
         next: jest.fn<() => Promise<Game | null>>(async () => null),
+        sort: jest.fn<FakeCursor["sort"]>(),
+        skip: jest.fn<FakeCursor["skip"]>(),
+        limit: jest.fn<FakeCursor["limit"]>(),
+        toArray: jest.fn<() => Promise<Game[]>>(async () => []),
     };
+    cursor.sort.mockReturnValue(cursor);
+    cursor.skip.mockReturnValue(cursor);
+    cursor.limit.mockReturnValue(cursor);
     const collection = {
         find: jest.fn<(query: unknown) => typeof cursor>(() => cursor),
+        countDocuments: jest.fn<(query: unknown) => Promise<number>>(
+            async () => 0,
+        ),
         insertOne: jest.fn<(game: unknown) => Promise<object>>(
             async () => ({}),
         ),
@@ -128,6 +149,110 @@ describe("get", () => {
         expect(client.close).toHaveBeenCalled();
 
         logSpy.mockRestore();
+    });
+});
+
+describe("list", () => {
+    test("returns the paginated slice with the total and applies pagination", async () => {
+        const { cursor, collection, repository } = makeFakeMongo();
+        const games = [
+            makeActiveGame({ _id: "alpha" }),
+            makeActiveGame({ _id: "bravo" }),
+        ];
+
+        collection.countDocuments.mockResolvedValue(25);
+        cursor.toArray.mockResolvedValue(games);
+
+        const result = await repository.list({ page: 2, pageSize: 10 });
+
+        expect(result).toEqual(MakeRight({ games, total: 25, page: 2 }));
+        expect(collection.countDocuments).toHaveBeenCalledWith({});
+        expect(collection.find).toHaveBeenCalledWith({});
+        expect(cursor.sort).toHaveBeenCalledWith({ _id: 1 });
+        expect(cursor.skip).toHaveBeenCalledWith(10);
+        expect(cursor.limit).toHaveBeenCalledWith(10);
+    });
+
+    test("builds a case-insensitive regex filter from a trimmed search term", async () => {
+        const { collection, repository } = makeFakeMongo();
+
+        collection.countDocuments.mockResolvedValue(1);
+
+        await repository.list({ search: "  Alpha  ", page: 1, pageSize: 10 });
+
+        expect(collection.find).toHaveBeenCalledWith({
+            _id: { $regex: "Alpha", $options: "i" },
+        });
+    });
+
+    test("escapes regex metacharacters in the search term", async () => {
+        const { collection, repository } = makeFakeMongo();
+
+        collection.countDocuments.mockResolvedValue(0);
+
+        const result = await repository.list({
+            search: "a(b)[c].*",
+            page: 1,
+            pageSize: 10,
+        });
+
+        // Must not throw and must escape every metacharacter.
+        expect(isRight(result)).toBe(true);
+        expect(collection.find).toHaveBeenCalledWith({
+            _id: {
+                $regex: "a\\(b\\)\\[c\\]\\.\\*",
+                $options: "i",
+            },
+        });
+    });
+
+    test("treats a whitespace-only search as no filter", async () => {
+        const { collection, repository } = makeFakeMongo();
+
+        collection.countDocuments.mockResolvedValue(3);
+
+        await repository.list({ search: "   ", page: 1, pageSize: 10 });
+
+        expect(collection.find).toHaveBeenCalledWith({});
+    });
+
+    test("clamps an out-of-range page down to the last available page", async () => {
+        const { cursor, collection, repository } = makeFakeMongo();
+
+        // 5 games, 10 per page => only 1 page exists.
+        collection.countDocuments.mockResolvedValue(5);
+
+        const result = await repository.list({ page: 999, pageSize: 10 });
+
+        expect(isRight(result)).toBe(true);
+        if (isRight(result)) {
+            expect(result.right.page).toBe(1);
+        }
+        // skip is never negative and never past the results.
+        expect(cursor.skip).toHaveBeenCalledWith(0);
+    });
+
+    test("returns an empty page with page 1 when there are no games", async () => {
+        const { cursor, collection, repository } = makeFakeMongo();
+
+        collection.countDocuments.mockResolvedValue(0);
+        cursor.toArray.mockResolvedValue([]);
+
+        const result = await repository.list({ page: 3, pageSize: 10 });
+
+        expect(result).toEqual(MakeRight({ games: [], total: 0, page: 1 }));
+        expect(cursor.skip).toHaveBeenCalledWith(0);
+    });
+
+    test("returns the error message when the query fails", async () => {
+        const { collection, client, repository } = makeFakeMongo();
+
+        collection.countDocuments.mockRejectedValue(new Error("List failed"));
+
+        const result = await repository.list({ page: 1, pageSize: 10 });
+
+        expect(result).toEqual(MakeLeft("List failed"));
+        expect(client.close).toHaveBeenCalled();
     });
 });
 

@@ -81,6 +81,9 @@ export function makeInactiveGame(
 export function makeFakeGameRepo(game: Game) {
     return {
         get: jest.fn<GameRepository["get"]>(async () => MakeRight(game)),
+        list: jest.fn<GameRepository["list"]>(async () =>
+            MakeRight({ games: [game], total: 1, page: 1 }),
+        ),
         insert: jest.fn<GameRepository["insert"]>(async () =>
             MakeRight<true>(true),
         ),
