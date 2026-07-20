@@ -3,16 +3,20 @@ import { useState } from "react";
 import { GameTabSwitcher } from "../../TabSwitcher";
 import SideComponents from "./SideComponentsAftermath";
 import { SideComponentMapper } from "@fc/lib/ComponentMapper";
-import BreakingNews from "./BreakingNews";
-import { NewsFeed } from "./NewsFeed";
-import LogoBlock from "./LogoBlock";
+import BreakingNews from "../shared/BreakingNews";
+import { NewsFeed } from "../shared/NewsFeed";
 import TurnCounter from "./TurnCounter";
 import PhaseList from "./PhaseList";
-import CurrentTurn from "./CurrentTurn";
+import CurrentTurn from "../shared/CurrentTurn";
 import AlertSystemFooter from "./AlertSystemFooter";
 import { getCurrentPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
 import PhaseInformation from "@fc/components/PhaseInformation";
+import {
+    AFTERMATH_BREAKING_NEWS,
+    AFTERMATH_NEWS_FEED,
+    aftermathCurrentTurn,
+} from "./presentation";
 
 export function AftermathTheme({
     apiResponse,
@@ -39,11 +43,8 @@ export function AftermathTheme({
         >
             <div className="sticky top-0">
                 <CurrentTurn
-                    turn={apiResponse.turnNumber}
-                    phase={apiResponse.phase}
                     timestamp={apiResponse.phaseEnd}
-                    active={apiResponse.active}
-                    phaseInformation={currentPhaseInformation.right}
+                    {...aftermathCurrentTurn(currentPhaseInformation.right)}
                 />
             </div>
             <div className="flex flex-col content-between h-screen overflow-y-auto">
@@ -105,15 +106,6 @@ export function AftermathTheme({
                                     components={apiResponse.components}
                                 />
                             </div>
-                            <div
-                                className={`${
-                                    activeTab != "home" ? "hidden" : "block"
-                                } lg:hidden`}
-                            >
-                                <LogoBlock
-                                    setupInformation={game.setupInformation}
-                                />
-                            </div>
                             {childComponent ? (
                                 <div
                                     className={`${
@@ -132,6 +124,7 @@ export function AftermathTheme({
                                     <NewsFeed
                                         newsItems={apiResponse.breakingNews}
                                         press={game.setupInformation.press}
+                                        {...AFTERMATH_NEWS_FEED}
                                     />
                                 </div>
                             )}
@@ -140,6 +133,7 @@ export function AftermathTheme({
                             <BreakingNews
                                 newsItem={apiResponse.breakingNews[0]}
                                 press={game.setupInformation.press}
+                                {...AFTERMATH_BREAKING_NEWS}
                             />
                         ) : null}
                     </main>

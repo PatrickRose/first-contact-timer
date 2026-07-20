@@ -22,6 +22,7 @@ export type CreateGameResponse = t.TypeOf<
     typeof types.CreateGameResponseDecode
 >;
 export type GameType = t.TypeOf<typeof types.GameTypeDecode>;
+export type Theme = t.TypeOf<typeof types.ThemeDecode>;
 
 export type Game = t.TypeOf<typeof types.GameDecode>;
 export type SetupInformation = t.TypeOf<typeof types.SetupInformationDecode>;

@@ -3,6 +3,10 @@ import Image from "next/image";
 import VLHGLogo from "@fc/public/vlhg-logo.svg";
 import { Game } from "@fc/types/types";
 
+// Whether a theme renders a logo block is now decided by the theme shell: a
+// theme that wants no logo simply does not render this component (see the
+// aftermath shell), rather than passing a variant for this component to
+// no-op on.
 export default function LogoBlock({
     setupInformation,
 }: {
@@ -10,10 +14,8 @@ export default function LogoBlock({
 }) {
     const { gameName, logo } = setupInformation;
 
-    return null;
-
     return (
-        <div className="p-8 w-full bg-linear-to-r from-turn-counter-past-light to-turn-counter-past-dark text-white flex flex-row ">
+        <div className="p-8 w-full bg-linear-to-r from-turn-counter-past-light to-turn-counter-past-dark text-white flex flex-row">
             <h2 className="text-3xl uppercase text-left m-0 opacity-50 w-2/3">
                 {gameName}
             </h2>
