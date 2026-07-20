@@ -90,21 +90,19 @@ test.describe("admin", () => {
         ).toBeVisible();
 
         // The filler games guarantee more than one page regardless of what
-        // other (parallel) specs have upserted, so Previous is disabled (a
-        // non-link span) and Next is an available link on the first page.
-        await expect(page.getByText("← Previous")).toBeVisible();
-        await expect(
-            page.getByRole("link", { name: "← Previous" }),
-        ).toHaveCount(0);
-        const nextLink = page.getByRole("link", { name: "Next →" });
-        await expect(nextLink).toBeVisible();
+        // other (parallel) specs have upserted, so Previous is disabled and
+        // Next is enabled on the first page.
+        const prevButton = page.getByRole("button", { name: "← Previous" });
+        const nextButton = page.getByRole("button", { name: "Next →" });
+        await expect(prevButton).toBeDisabled();
+        await expect(nextButton).toBeEnabled();
 
-        await nextLink.click();
+        await nextButton.click();
         await expect(page).toHaveURL(/[?&]page=2\b/);
-        // Previous is now an active link (we left page 1).
+        // Previous is now enabled (we left page 1).
         await expect(
-            page.getByRole("link", { name: "← Previous" }),
-        ).toBeVisible();
+            page.getByRole("button", { name: "← Previous" }),
+        ).toBeEnabled();
 
         // Search by code narrows to the paused game. Its unique code can't
         // collide with filler ids or namespaced games from other specs. The

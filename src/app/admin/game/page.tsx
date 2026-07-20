@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { isLeft } from "fp-ts/Either";
 import { getGameRepo } from "@fc/server/repository/game";
 import { GameSummary, toGameSummary } from "@fc/server/turn";
 import GamesSearch from "./GamesSearch";
+import GamesPagination from "./GamesPagination";
 import GameShareModal from "./GameShareModal";
 
 const PAGE_SIZE = 20;
@@ -22,16 +22,6 @@ function statusLine(game: GameSummary): string {
     const phase = `${game.phaseName} (Phase ${game.phaseNumber})`;
     const state = game.paused ? "Paused" : "Running";
     return `Turn ${game.turnNumber} · ${phase} · ${state}`;
-}
-
-function pageHref(search: string | undefined, page: number): string {
-    const params = new URLSearchParams();
-    const trimmed = search?.trim();
-    if (trimmed) {
-        params.set("search", trimmed);
-    }
-    params.set("page", String(page));
-    return `/admin/game?${params.toString()}`;
 }
 
 export default async function GamesPage({
@@ -90,24 +80,12 @@ export default async function GamesPage({
                                 </li>
                             ))}
                         </ul>
-                        <div className="mt-6 flex items-center justify-between text-sm">
-                            <PaginationLink
-                                href={pageHref(search, page - 1)}
-                                disabled={page <= 1}
-                                label="← Previous"
-                            />
-                            <span className="text-zinc-400">
-                                Page {page} of {totalPages}
-                                {total > 0
-                                    ? ` · ${total} game${total === 1 ? "" : "s"}`
-                                    : ""}
-                            </span>
-                            <PaginationLink
-                                href={pageHref(search, page + 1)}
-                                disabled={page >= totalPages}
-                                label="Next →"
-                            />
-                        </div>
+                        <GamesPagination
+                            page={page}
+                            totalPages={totalPages}
+                            total={total}
+                            search={search}
+                        />
                     </>
                 );
         }
@@ -127,32 +105,5 @@ export default async function GamesPage({
 
             <div className="mt-6">{content}</div>
         </div>
-    );
-}
-
-function PaginationLink({
-    href,
-    disabled,
-    label,
-}: {
-    href: string;
-    disabled: boolean;
-    label: string;
-}): React.ReactElement {
-    if (disabled) {
-        return (
-            <span className="cursor-not-allowed rounded-lg border border-zinc-800 px-4 py-2 text-zinc-600">
-                {label}
-            </span>
-        );
-    }
-
-    return (
-        <Link
-            href={href}
-            className="rounded-lg border border-zinc-700 px-4 py-2 text-zinc-200 transition hover:border-indigo-500 hover:text-white"
-        >
-            {label}
-        </Link>
     );
 }
