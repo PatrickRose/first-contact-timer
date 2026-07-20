@@ -1,11 +1,19 @@
-import GameRepository from "./index";
+import GameRepository, { ListGamesOptions, ListGamesResult } from "./index";
 import { Either, isLeft } from "fp-ts/Either";
 import { ControlAction, Game } from "@fc/types/types";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
-import { MongoClient } from "mongodb";
+import { Filter, MongoClient } from "mongodb";
 import initialiseMongo, { getCollection } from "../../mongo";
 import { tickTurn } from "../../turn";
 import { isRight } from "fp-ts/lib/Either";
+
+// Escape every regex metacharacter so a game code is matched literally. Without
+// this an unbalanced `(` or `[` in the search term would make Mongo throw.
+function escapeRegex(input: string): string {
+    return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+const MAX_SEARCH_LENGTH = 64;
 
 export class MongoRepository implements GameRepository {
     constructor(private readonly mongo: MongoClient) {}
@@ -40,6 +48,50 @@ export class MongoRepository implements GameRepository {
         } catch (e) {
             console.log(e);
             return MakeLeft(false);
+        } finally {
+            await this.mongo.close();
+        }
+    }
+
+    async list({
+        search,
+        page,
+        pageSize,
+    }: ListGamesOptions): Promise<Either<string, ListGamesResult>> {
+        try {
+            await this.mongo.connect();
+
+            const database = this.mongo.db();
+
+            const games = getCollection(database, "games");
+
+            const trimmed = (search ?? "").trim().slice(0, MAX_SEARCH_LENGTH);
+            const filter: Filter<Game> =
+                trimmed.length > 0
+                    ? { _id: { $regex: escapeRegex(trimmed), $options: "i" } }
+                    : {};
+
+            const total = await games.countDocuments(filter);
+
+            // Clamp the requested page into the available range so an
+            // out-of-range/NaN page can never produce a negative skip (which
+            // Mongo rejects) or an empty page past the end of the results.
+            const totalPages = Math.max(1, Math.ceil(total / pageSize));
+            const safePage = Math.min(
+                Math.max(1, Math.floor(page) || 1),
+                totalPages,
+            );
+
+            const results = await games
+                .find(filter)
+                .sort({ _id: 1 })
+                .skip((safePage - 1) * pageSize)
+                .limit(pageSize)
+                .toArray();
+
+            return MakeRight({ games: results, total, page: safePage });
+        } catch (e) {
+            return MakeLeft((e as Error).message);
         } finally {
             await this.mongo.close();
         }
