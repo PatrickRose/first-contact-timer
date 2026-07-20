@@ -255,14 +255,13 @@ describe("list", () => {
     });
 
     test("returns the error message when the query fails", async () => {
-        const { collection, client, repository } = makeFakeMongo();
+        const { collection, repository } = makeFakeMongo();
 
         collection.countDocuments.mockRejectedValue(new Error("List failed"));
 
         const result = await repository.list({ page: 1, pageSize: 10 });
 
         expect(result).toEqual(MakeLeft("List failed"));
-        expect(client.close).toHaveBeenCalled();
     });
 });
 

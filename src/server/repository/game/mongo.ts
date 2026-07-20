@@ -55,9 +55,7 @@ export class MongoRepository implements GameRepository {
         pageSize,
     }: ListGamesOptions): Promise<Either<string, ListGamesResult>> {
         try {
-            await this.mongo.connect();
-
-            const database = this.mongo.db();
+            const database = (await this.mongo).db();
 
             const games = getCollection(database, "games");
 
@@ -88,8 +86,6 @@ export class MongoRepository implements GameRepository {
             return MakeRight({ games: results, total, page: safePage });
         } catch (e) {
             return MakeLeft((e as Error).message);
-        } finally {
-            await this.mongo.close();
         }
     }
 
