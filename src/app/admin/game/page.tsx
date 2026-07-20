@@ -83,6 +83,7 @@ export default async function GamesPage({
                         <GamesPagination
                             page={page}
                             totalPages={totalPages}
+                            pageSize={PAGE_SIZE}
                             count={summaries.length}
                             total={total}
                             search={search}

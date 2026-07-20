@@ -16,17 +16,26 @@ function targetHref(search: string | undefined, page: number): string {
 export default function GamesPagination({
     page,
     totalPages,
+    pageSize,
     count,
     total,
     search,
 }: {
     page: number;
     totalPages: number;
+    pageSize: number;
     count: number;
     total: number;
     search?: string;
 }): React.ReactElement {
     const router = useRouter();
+
+    // The 1-indexed range of items shown on this page, e.g. "11-20" (or just
+    // "5" when the page holds a single item).
+    const rangeStart = (page - 1) * pageSize + 1;
+    const rangeEnd = rangeStart + count - 1;
+    const range =
+        rangeStart === rangeEnd ? `${rangeStart}` : `${rangeStart}-${rangeEnd}`;
     // Navigate inside a transition so the current list stays visible (rather
     // than flashing the skeleton) while `isPending` drives a clear indicator
     // that a new query is running.
@@ -69,7 +78,7 @@ export default function GamesPagination({
                     <>
                         Page {page} of {totalPages}
                         {total > 0
-                            ? ` · ${count} of ${total} game${total === 1 ? "" : "s"}`
+                            ? ` · ${range} of ${total} game${total === 1 ? "" : "s"}`
                             : ""}
                     </>
                 )}
