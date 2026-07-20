@@ -82,8 +82,35 @@ const defconComponent: Game["components"][number] = {
     },
 };
 
+/**
+ * Filler games so the admin games list (page size 20) always has more than one
+ * page, regardless of how many extra documents parallel mutating specs upsert.
+ * Their ids share a prefix that no other seed/spec id contains, so a search for
+ * a specific code never accidentally matches them.
+ */
+export const LIST_FILLER_COUNT = 20;
+
+function listFillerGames(): Game[] {
+    return Array.from({ length: LIST_FILLER_COUNT }, (_unused, index) => {
+        const id = `e2e-list-fill-${String(index + 1).padStart(2, "0")}`;
+        return activeGame(
+            id,
+            {
+                gameName: `E2E List Filler ${index + 1}`,
+                theme: "first-contact",
+                breakingNewsBanner: false,
+                components: [],
+                phases: standardPhases,
+                press: false,
+            },
+            [],
+        );
+    });
+}
+
 function buildGames(): Game[] {
     return [
+        ...listFillerGames(),
         // Player display + press submit. Has a Defcon component (→ "Defcon" tab)
         // and single-press (→ "Press" tab).
         activeGame(

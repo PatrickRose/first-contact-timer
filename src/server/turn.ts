@@ -85,6 +85,46 @@ export function toApiResponse(
     };
 }
 
+// A lightweight, display-ready view of a game for the admin games list.
+export type GameSummary = {
+    code: string;
+    gameName: string;
+    turnNumber: number;
+    phaseNumber: number; // 1-indexed
+    phaseName: string;
+    totalPhases: number;
+    paused: boolean;
+};
+
+// Map a stored game to its display summary. The turn/phase shown must match
+// what the live views render, so for a paused game we read from `frozenTurn`
+// (exactly what `toApiResponse` returns when `!active`) rather than the live
+// `turnInformation`. Access is defensive because stored games are cast, not
+// decoded, so a legacy/corrupt document must degrade gracefully instead of
+// throwing and taking down the whole list.
+export function toGameSummary(game: Game): GameSummary {
+    const paused = game.active === false;
+
+    const turnNumber = paused
+        ? game.frozenTurn.turnNumber
+        : game.turnInformation.turnNumber;
+    const phaseNumber = paused
+        ? game.frozenTurn.phase
+        : game.turnInformation.currentPhase;
+
+    const phases = game.setupInformation?.phases;
+
+    return {
+        code: game._id,
+        gameName: game.setupInformation?.gameName ?? game._id,
+        turnNumber,
+        phaseNumber,
+        phaseName: phases?.[phaseNumber - 1]?.title ?? "Unknown",
+        totalPhases: phases?.length ?? 0,
+        paused,
+    };
+}
+
 export function nextPhase(phase: number, setup: SetupInformation): number {
     const newPhaseNumber = phase + 1;
 
