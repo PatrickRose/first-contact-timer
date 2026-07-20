@@ -5,7 +5,7 @@ import GamesSearch from "./GamesSearch";
 import GamesPagination from "./GamesPagination";
 import GameShareModal from "./GameShareModal";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 function ErrorBanner({ message }: { message: string }): React.ReactElement {
     return (
@@ -83,6 +83,7 @@ export default async function GamesPage({
                         <GamesPagination
                             page={page}
                             totalPages={totalPages}
+                            count={summaries.length}
                             total={total}
                             search={search}
                         />

@@ -16,11 +16,13 @@ function targetHref(search: string | undefined, page: number): string {
 export default function GamesPagination({
     page,
     totalPages,
+    count,
     total,
     search,
 }: {
     page: number;
     totalPages: number;
+    count: number;
     total: number;
     search?: string;
 }): React.ReactElement {
@@ -67,7 +69,7 @@ export default function GamesPagination({
                     <>
                         Page {page} of {totalPages}
                         {total > 0
-                            ? ` · ${total} game${total === 1 ? "" : "s"}`
+                            ? ` · ${count} of ${total} game${total === 1 ? "" : "s"}`
                             : ""}
                     </>
                 )}
