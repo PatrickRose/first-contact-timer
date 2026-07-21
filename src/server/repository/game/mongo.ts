@@ -1,4 +1,9 @@
-import GameRepository, { ListGamesOptions, ListGamesResult } from "./index";
+import GameRepository, {
+    ListGamesOptions,
+    ListGamesResult,
+    UPDATE_CONFLICT,
+    UpdateConflict,
+} from "./index";
 import { Either, isLeft } from "fp-ts/Either";
 import { ControlAction, Game } from "@fc/types/types";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
@@ -106,7 +111,7 @@ export class MongoRepository implements GameRepository {
     async #updateTurn(
         newFields: Partial<Game>,
         currentFields: Game,
-    ): Promise<Either<string, true>> {
+    ): Promise<Either<string | UpdateConflict, true>> {
         try {
             const database = (await this.mongo).db();
 
@@ -114,10 +119,25 @@ export class MongoRepository implements GameRepository {
 
             const { _id, turnInformation } = currentFields;
 
-            await gameCollection.updateOne(
+            // The compare-and-set filter is keyed on turnInformation ONLY. It
+            // guards against concurrent turn advances, but NOT against two
+            // operators editing DIFFERENT components at the same time - those
+            // still last-write-wins, because neither touches turnInformation.
+            // Closing that gap needs a monotonic `version` field on the document
+            // (plus a data migration to backfill it), which is a deliberately
+            // deferred follow-up. See #783.
+            const result = await gameCollection.updateOne(
                 { _id, turnInformation },
                 { $set: newFields },
             );
+
+            // The CAS filter on { _id, turnInformation } prevents double
+            // advances, but a 0-match means turnInformation changed between the
+            // read and this write. Surface that as a conflict rather than
+            // silently no-opping and returning success. See #783.
+            if (result.matchedCount === 0) {
+                return MakeLeft(UPDATE_CONFLICT);
+            }
 
             return MakeRight(true);
         } catch (e) {
@@ -134,7 +154,17 @@ export class MongoRepository implements GameRepository {
         );
 
         if (isLeft(updateResult)) {
-            return updateResult;
+            // A lost auto-advance means another writer already advanced the turn
+            // (typically another player's poll). From the poller's point of view
+            // that is success, so return the fresh, already-advanced state
+            // instead of falling back to the stale pre-advance turn. See #783.
+            if (updateResult.left === UPDATE_CONFLICT) {
+                const fresh = await this.get(game._id);
+
+                return isRight(fresh) ? fresh : MakeLeft("Failed to get game?");
+            }
+
+            return MakeLeft(updateResult.left);
         }
 
         const result = await this.get(game._id);
@@ -145,7 +175,7 @@ export class MongoRepository implements GameRepository {
     async runControlAction(
         currentGame: Game,
         action: ControlAction,
-    ): Promise<Either<string, Game>> {
+    ): Promise<Either<string | UpdateConflict, Game>> {
         const tickedTurn = action(currentGame);
 
         if (isLeft(tickedTurn)) {

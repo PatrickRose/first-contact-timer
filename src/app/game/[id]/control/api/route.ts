@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ApiResponse } from "@fc/types/types";
-import { isLeft } from "fp-ts/Either";
-import { getGameRepo } from "@fc/server/repository/game";
 import { ControlAPIDecode } from "@fc/types/io-ts-def";
-import { CONTROL_ACTIONS, toApiResponse } from "@fc/server/turn";
+import { CONTROL_ACTIONS, isRetrySafeAction } from "@fc/server/turn";
+import { runControlActionRoute } from "@fc/server/control-route";
 
 export async function POST(
     request: NextRequest,
@@ -21,26 +20,12 @@ export async function POST(
         );
     }
 
-    const gameRepo = getGameRepo();
-
-    if (isLeft(gameRepo)) {
-        return NextResponse.json({ error: gameRepo.left }, { status: 500 });
-    }
-
-    const game = await gameRepo.right.get(id);
-
-    if (isLeft(game)) {
-        return NextResponse.json({ error: "Game not found" }, { status: 404 });
-    }
-
-    const newGame = await gameRepo.right.runControlAction(
-        game.right,
+    // Relative turn-navigation actions must not be auto-retried on a CAS
+    // conflict (re-applying would double-advance the game); idempotent actions
+    // such as pause/play are safe to retry. See #783.
+    return runControlActionRoute(
+        id,
         CONTROL_ACTIONS[body.action],
+        isRetrySafeAction(body.action),
     );
-
-    if (isLeft(newGame)) {
-        return NextResponse.json({ error: newGame.left }, { status: 500 });
-    }
-
-    return NextResponse.json(toApiResponse(newGame.right));
 }
