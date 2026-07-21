@@ -68,6 +68,27 @@ test.describe("admin", () => {
         await expect(page.getByRole("main")).toBeVisible();
     });
 
+    test("log out returns to the login page and clears the session", async ({
+        page,
+        browserName,
+    }) => {
+        test.skip(
+            browserName === "webkit",
+            "WebKit drops Secure cookies over http://localhost",
+        );
+
+        await loginAsAdmin(page);
+
+        await page.goto("/admin");
+        await page.getByRole("button", { name: "Log out" }).click();
+        await expect(page).toHaveURL(/\/admin\/login$/);
+        await expect(page.getByLabel("Username")).toBeVisible();
+
+        // The session is gone, so a protected page bounces back to login.
+        await page.goto("/admin");
+        await expect(page).toHaveURL(/\/admin\/login$/);
+    });
+
     test("lists games with search, pagination and share links", async ({
         page,
         browserName,
