@@ -1,205 +1,57 @@
-import { NextRequest, NextResponse } from "next/server";
-import {
-    AddTracker,
-    ApiResponse,
-    DeleteTracker,
-    Game,
-    SetTracker,
-} from "@fc/types/types";
-import { isLeft } from "fp-ts/Either";
-import GameRepository, { getGameRepo } from "@fc/server/repository/game";
 import {
     AddTrackerDecode,
     DeleteTrackerDecode,
     SetTrackerDecode,
 } from "@fc/types/io-ts-def";
-import { toApiResponse } from "@fc/server/turn";
+import { componentAction, makeComponentRoute } from "@fc/server/components";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 import { isUnsafeKey } from "@fc/lib/safe-keys";
 
-async function AddTrackerAction(
-    body: AddTracker,
-    game: Game,
-    gameRepo: GameRepository,
-): Promise<NextResponse<ApiResponse | { error: string }>> {
-    const newGame = await gameRepo.runControlAction(game, (game) => {
-        const newGame = { ...game };
-
-        // Find the tracker component
-        const tracker = newGame.components.find(
-            (val) => val.componentType == "Trackers",
-        );
-
-        if (tracker?.componentType != "Trackers") {
+export const POST = makeComponentRoute("Trackers", "Trackers", [
+    componentAction("Trackers", SetTrackerDecode, (body, component, game) => {
+        if (!Object.hasOwn(component.trackers, body.tracker)) {
             return MakeLeft(
-                `No Trackers component component for game ${game._id}`,
+                `No ${body.tracker} tracker found for game ${game._id}`,
             );
         }
 
+        component.trackers[body.tracker].value = body.value;
+
+        return MakeRight(undefined);
+    }),
+    componentAction("Trackers", AddTrackerDecode, (body, component, game) => {
         if (isUnsafeKey(body.tracker)) {
             return MakeLeft(
                 `${body.tracker} is not a valid tracker name for game ${game._id}`,
             );
         }
 
-        if (Object.hasOwn(tracker.trackers, body.tracker)) {
+        if (Object.hasOwn(component.trackers, body.tracker)) {
             return MakeLeft(
                 `${body.tracker} tracker already exists for game ${game._id}`,
             );
         }
 
-        tracker.trackers = {
-            ...tracker.trackers,
+        component.trackers = {
+            ...component.trackers,
             [body.tracker]: body.trackerDefinition,
         };
 
-        if (!newGame.active) {
-            const frozenComponent = newGame.frozenTurn.components.find(
-                (val) => val.componentType == "Trackers",
-            );
-
-            if (frozenComponent?.componentType == "Trackers") {
-                frozenComponent.trackers = {
-                    ...frozenComponent.trackers,
-                    [body.tracker]: body.trackerDefinition,
-                };
+        return MakeRight(undefined);
+    }),
+    componentAction(
+        "Trackers",
+        DeleteTrackerDecode,
+        (body, component, game) => {
+            if (!Object.hasOwn(component.trackers, body.tracker)) {
+                return MakeLeft(
+                    `No ${body.tracker} tracker found for game ${game._id}`,
+                );
             }
-        }
 
-        return MakeRight(newGame);
-    });
+            delete component.trackers[body.tracker];
 
-    if (isLeft(newGame)) {
-        return NextResponse.json({ error: newGame.left }, { status: 500 });
-    }
-
-    return NextResponse.json(toApiResponse(newGame.right));
-}
-async function SetTrackerAction(
-    body: SetTracker,
-    game: Game,
-    gameRepo: GameRepository,
-): Promise<NextResponse<ApiResponse | { error: string }>> {
-    const newGame = await gameRepo.runControlAction(game, (game) => {
-        const newGame = { ...game };
-
-        // Find the tracker component
-        const tracker = newGame.components.find(
-            (val) => val.componentType == "Trackers",
-        );
-
-        if (tracker?.componentType != "Trackers") {
-            return MakeLeft(
-                `No Trackers component component for game ${game._id}`,
-            );
-        }
-
-        if (!Object.hasOwn(tracker.trackers, body.tracker)) {
-            return MakeLeft(
-                `No ${body.tracker} tracker found for game ${game._id}`,
-            );
-        }
-
-        tracker.trackers[body.tracker].value = body.value;
-
-        if (!newGame.active) {
-            const frozenComponent = newGame.frozenTurn.components.find(
-                (val) => val.componentType == "Trackers",
-            );
-
-            if (frozenComponent?.componentType == "Trackers") {
-                frozenComponent.trackers[body.tracker].value = body.value;
-            }
-        }
-
-        return MakeRight(newGame);
-    });
-
-    if (isLeft(newGame)) {
-        return NextResponse.json({ error: newGame.left }, { status: 500 });
-    }
-
-    return NextResponse.json(toApiResponse(newGame.right));
-}
-async function DeleteTrackerAction(
-    body: DeleteTracker,
-    game: Game,
-    gameRepo: GameRepository,
-): Promise<NextResponse<ApiResponse | { error: string }>> {
-    const newGame = await gameRepo.runControlAction(game, (game) => {
-        const newGame = { ...game };
-
-        // Find the tracker component
-        const tracker = newGame.components.find(
-            (val) => val.componentType == "Trackers",
-        );
-
-        if (tracker?.componentType != "Trackers") {
-            return MakeLeft(
-                `No Trackers component component for game ${game._id}`,
-            );
-        }
-
-        if (!Object.hasOwn(tracker.trackers, body.tracker)) {
-            return MakeLeft(
-                `No ${body.tracker} tracker found for game ${game._id}`,
-            );
-        }
-
-        delete tracker.trackers[body.tracker];
-
-        if (!newGame.active) {
-            const frozenComponent = newGame.frozenTurn.components.find(
-                (val) => val.componentType == "Trackers",
-            );
-
-            if (frozenComponent?.componentType == "Trackers") {
-                delete frozenComponent.trackers[body.tracker];
-            }
-        }
-
-        return MakeRight(newGame);
-    });
-
-    if (isLeft(newGame)) {
-        return NextResponse.json({ error: newGame.left }, { status: 500 });
-    }
-
-    return NextResponse.json(toApiResponse(newGame.right));
-}
-
-export async function POST(
-    request: NextRequest,
-    props: { params: Promise<{ id: string }> },
-): Promise<NextResponse<ApiResponse | { error: string }>> {
-    const params = await props.params;
-    const id = params.id;
-
-    const gameRepo = getGameRepo();
-
-    if (isLeft(gameRepo)) {
-        return NextResponse.json({ error: gameRepo.left }, { status: 500 });
-    }
-
-    const game = await gameRepo.right.get(id);
-
-    if (isLeft(game)) {
-        return NextResponse.json({ error: "Game not found" }, { status: 404 });
-    }
-
-    const body = await request.json();
-
-    if (SetTrackerDecode.is(body)) {
-        return SetTrackerAction(body, game.right, gameRepo.right);
-    }
-
-    if (AddTrackerDecode.is(body)) {
-        return AddTrackerAction(body, game.right, gameRepo.right);
-    }
-
-    if (DeleteTrackerDecode.is(body)) {
-        return DeleteTrackerAction(body, game.right, gameRepo.right);
-    }
-
-    return NextResponse.json({ error: "Incorrect request" }, { status: 400 });
-}
+            return MakeRight(undefined);
+        },
+    ),
+]);

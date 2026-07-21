@@ -24,6 +24,8 @@ export type CreateGameResponse = t.TypeOf<
 export type GameType = t.TypeOf<typeof types.GameTypeDecode>;
 
 export type Game = t.TypeOf<typeof types.GameDecode>;
+export type Component = t.TypeOf<typeof types.ComponentDecode>;
+export type ComponentType = Component["componentType"];
 export type SetupInformation = t.TypeOf<typeof types.SetupInformationDecode>;
 export type DefconComponent = t.TypeOf<typeof types.DefconComponentDecode>;
 export type DefconCountry = t.TypeOf<typeof types.DefconCountryDecode>;

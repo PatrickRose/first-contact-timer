@@ -1,79 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
-import { ApiResponse } from "@fc/types/types";
-import { isLeft } from "fp-ts/Either";
-import { getGameRepo } from "@fc/server/repository/game";
 import { DefconAPIBodyDecode } from "@fc/types/io-ts-def";
-import { toApiResponse } from "@fc/server/turn";
+import { componentAction, makeComponentRoute } from "@fc/server/components";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 
-export async function POST(
-    request: NextRequest,
-    props: { params: Promise<{ id: string }> },
-): Promise<NextResponse<ApiResponse | { error: string }>> {
-    const params = await props.params;
-    const id = params.id;
-
-    const body = await request.json();
-
-    if (!DefconAPIBodyDecode.is(body)) {
-        return NextResponse.json(
-            { error: "Incorrect request" },
-            { status: 400 },
-        );
-    }
-
-    const gameRepo = getGameRepo();
-
-    if (isLeft(gameRepo)) {
-        return NextResponse.json({ error: gameRepo.left }, { status: 500 });
-    }
-
-    const game = await gameRepo.right.get(id);
-
-    if (isLeft(game)) {
-        return NextResponse.json({ error: "Game not found" }, { status: 404 });
-    }
-
-    const newGame = await gameRepo.right.runControlAction(
-        game.right,
-        (game) => {
-            const newGame = { ...game };
-
-            // Find the defcon component
-            const defconComponent = newGame.components.find(
-                (val) => val.componentType == "Defcon",
+export const POST = makeComponentRoute("Defcon", "defcon", [
+    componentAction("Defcon", DefconAPIBodyDecode, (body, component) => {
+        if (!Object.hasOwn(component.countries, body.stateName)) {
+            return MakeLeft(
+                `Defcon component does not include ${body.stateName}`,
             );
+        }
 
-            if (defconComponent?.componentType != "Defcon") {
-                return MakeLeft(`No defcon component for game ${id}`);
-            }
+        component.countries[body.stateName].status = body.newStatus;
 
-            if (!Object.hasOwn(defconComponent.countries, body.stateName)) {
-                return MakeLeft(
-                    `Defcon component does not include ${body.stateName}`,
-                );
-            }
-
-            defconComponent.countries[body.stateName].status = body.newStatus;
-
-            if (!newGame.active) {
-                const frozenComponent = newGame.frozenTurn.components.find(
-                    (val) => val.componentType == "Defcon",
-                );
-
-                if (frozenComponent?.componentType == "Defcon") {
-                    frozenComponent.countries[body.stateName].status =
-                        body.newStatus;
-                }
-            }
-
-            return MakeRight(newGame);
-        },
-    );
-
-    if (isLeft(newGame)) {
-        return NextResponse.json({ error: newGame.left }, { status: 500 });
-    }
-
-    return NextResponse.json(toApiResponse(newGame.right));
-}
+        return MakeRight(undefined);
+    }),
+]);
