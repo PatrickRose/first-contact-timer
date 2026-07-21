@@ -181,6 +181,128 @@ exports[`game definitions data match the recorded snapshot 1`] = `
       "theme": "first-contact",
     },
   },
+  "demo": {
+    "components": [
+      {
+        "componentType": "Defcon",
+        "countries": {
+          "China": {
+            "countryName": "China",
+            "shortName": "🇨🇳",
+            "status": 3,
+          },
+          "Russia": {
+            "countryName": "Russia",
+            "shortName": "🇷🇺",
+            "status": 3,
+          },
+          "UnitedStates": {
+            "countryName": "United States",
+            "shortName": "🇺🇸",
+            "status": 3,
+          },
+        },
+      },
+      {
+        "componentType": "Weather",
+        "weatherMessage": "Clear skies over the demo zone.",
+      },
+      {
+        "alert": {
+          "emoji": "🐺",
+          "label": "Wolf attack",
+          "text": "Wolf attack in progress",
+        },
+        "componentType": "DoWWolfAttack",
+        "inProgress": false,
+      },
+      {
+        "componentType": "RunningHotCorp",
+        "sharePrice": {
+          "ANT": 5,
+          "DTC": 13,
+          "GenEq": 10,
+          "Gordon": 13,
+          "MCM": 12,
+        },
+      },
+      {
+        "componentType": "RunningHotRunners",
+        "rep": {
+          "Cipher": {
+            "gang": "G33ks",
+            "reputation": 3,
+          },
+          "Grumble": {
+            "gang": "Gruffsters",
+            "reputation": 1,
+          },
+          "Mask": {
+            "gang": "Facers",
+            "reputation": 4,
+          },
+          "Waltz": {
+            "gang": "Dancers",
+            "reputation": 2,
+          },
+        },
+      },
+      {
+        "componentType": "LightLevel",
+        "max": 10,
+        "value": 10,
+      },
+      {
+        "componentType": "Trackers",
+        "trackers": {
+          "Bar": {
+            "max": 10,
+            "type": "bar",
+            "value": 3,
+          },
+          "Circle": {
+            "max": 35,
+            "type": "circle",
+            "value": 12,
+          },
+        },
+      },
+    ],
+    "setupInformation": {
+      "breakingNewsBanner": true,
+      "components": [],
+      "gameName": "Demo (All Components)",
+      "maxTurns": 8,
+      "phases": [
+        {
+          "hidden": false,
+          "length": 15,
+          "title": "Action Phase",
+        },
+        {
+          "hidden": false,
+          "length": 10,
+          "title": "Team Phase",
+        },
+        {
+          "hidden": true,
+          "length": 5,
+          "title": "Hidden Phase",
+        },
+      ],
+      "press": [
+        {
+          "logo": "/MGC.png",
+          "name": "Demo Press",
+        },
+        {
+          "logo": "/Icon-VLHG.png",
+          "name": "Second Press",
+        },
+      ],
+      "theme": "first-contact",
+    },
+  },
   "dev-test-game": {
     "components": [
       {

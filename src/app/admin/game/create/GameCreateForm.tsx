@@ -71,6 +71,7 @@ export function GameCreateForm() {
         "dead-britannia": "Dead Britannia",
         "dev-test-game": "Dev Test Game",
         "touched-by-darkness": "Touched By Darkness",
+        demo: "Demo (All Components)",
     };
 
     return (
