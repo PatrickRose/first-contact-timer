@@ -3,6 +3,7 @@
  */
 import {
     afterAll,
+    afterEach,
     beforeAll,
     beforeEach,
     describe,
@@ -64,9 +65,7 @@ function makeFakeMongo() {
         ),
     };
     const client = {
-        connect: jest.fn(async () => undefined),
         db: jest.fn(() => db),
-        close: jest.fn(async () => undefined),
     };
 
     return {
@@ -74,15 +73,28 @@ function makeFakeMongo() {
         collection,
         db,
         client,
-        repository: new MongoRepository(client as unknown as MongoClient),
+        repository: new MongoRepository(
+            Promise.resolve(client) as unknown as Promise<MongoClient>,
+        ),
     };
 }
 
 describe("APIInstance", () => {
     const existingEnv = process.env;
+    const globalWithMongo = globalThis as typeof globalThis & {
+        _mongoClientPromise?: Promise<unknown>;
+    };
 
     beforeEach(() => {
         process.env = { ...existingEnv };
+    });
+
+    afterEach(() => {
+        // APIInstance caches a connected client on globalThis. With a bogus
+        // test host the background connection rejects, so mark it handled and
+        // reset the cache between tests.
+        globalWithMongo._mongoClientPromise?.catch(() => undefined);
+        delete globalWithMongo._mongoClientPromise;
     });
 
     afterAll(() => {
@@ -117,7 +129,7 @@ describe("APIInstance", () => {
 
 describe("get", () => {
     test("returns the user when they exist", async () => {
-        const { cursor, collection, db, client, repository } = makeFakeMongo();
+        const { cursor, collection, db, repository } = makeFakeMongo();
 
         cursor.next.mockResolvedValue(testUser);
 
@@ -126,32 +138,32 @@ describe("get", () => {
         expect(result).toEqual(MakeRight(testUser));
         expect(db.collection).toHaveBeenCalledWith("users");
         expect(collection.find).toHaveBeenCalledWith({ _id: "test-user" });
-        expect(client.close).toHaveBeenCalled();
     });
 
     test("returns a left when the user does not exist", async () => {
-        const { cursor, client, repository } = makeFakeMongo();
+        const { cursor, repository } = makeFakeMongo();
 
         cursor.next.mockResolvedValue(null);
 
         const result = await repository.get("missing-user");
 
         expect(result).toEqual(MakeLeft(false));
-        expect(client.close).toHaveBeenCalled();
     });
 
-    test("returns a left when the connection fails", async () => {
-        const { client, repository } = makeFakeMongo();
+    test("returns a left when the shared client is unavailable", async () => {
         const logSpy = jest
             .spyOn(console, "log")
             .mockImplementation(() => undefined);
 
-        client.connect.mockRejectedValue(new Error("Connection refused"));
+        const repository = new MongoRepository(
+            Promise.reject(
+                new Error("Connection refused"),
+            ) as unknown as Promise<MongoClient>,
+        );
 
         const result = await repository.get("test-user");
 
         expect(result).toEqual(MakeLeft(false));
-        expect(client.close).toHaveBeenCalled();
 
         logSpy.mockRestore();
     });
@@ -159,7 +171,7 @@ describe("get", () => {
 
 describe("insert", () => {
     test("inserts a new user with the hashed default password", async () => {
-        const { collection, client, repository } = makeFakeMongo();
+        const { collection, repository } = makeFakeMongo();
 
         const result = await repository.insert("new-user");
 
@@ -170,7 +182,6 @@ describe("insert", () => {
             password: "HASHED PASSWORD",
             passwordNeedsReset: true,
         });
-        expect(client.close).toHaveBeenCalled();
     });
 
     test("returns the error message when the insert fails", async () => {

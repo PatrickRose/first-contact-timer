@@ -9,7 +9,7 @@ import UserRepository from "./index";
 import { isLeft } from "fp-ts/Either";
 
 export class MongoRepository implements UserRepository {
-    constructor(private readonly mongo: MongoClient) {}
+    constructor(private readonly mongo: Promise<MongoClient>) {}
 
     static APIInstance(): Either<string, MongoRepository> {
         const client = initialiseMongo();
@@ -23,9 +23,7 @@ export class MongoRepository implements UserRepository {
 
     async get(id: string): Promise<Either<false, DBUser>> {
         try {
-            await this.mongo.connect();
-
-            const database = this.mongo.db();
+            const database = (await this.mongo).db();
 
             const usersCollection = database.collection<DBUser>("users");
 
@@ -41,16 +39,12 @@ export class MongoRepository implements UserRepository {
         } catch (e) {
             console.log(e);
             return MakeLeft<false>(false);
-        } finally {
-            await this.mongo.close();
         }
     }
 
     async insert(username: string): Promise<Either<string, true>> {
         try {
-            await this.mongo.connect();
-
-            const database = this.mongo.db();
+            const database = (await this.mongo).db();
 
             const userCollection = database.collection<DBUser>("users");
 
@@ -65,8 +59,6 @@ export class MongoRepository implements UserRepository {
             return MakeRight<true>(true);
         } catch (e) {
             return MakeLeft((e as Error).message);
-        } finally {
-            await this.mongo.close();
         }
     }
 
@@ -77,9 +69,7 @@ export class MongoRepository implements UserRepository {
         user: DBUser,
     ): Promise<Either<string, true>> {
         try {
-            await this.mongo.connect();
-
-            const database = this.mongo.db();
+            const database = (await this.mongo).db();
 
             const userCollection = database.collection<DBUser>(
                 this._collectionName,
@@ -101,8 +91,6 @@ export class MongoRepository implements UserRepository {
             );
         } catch (e) {
             return MakeLeft((e as Error).message);
-        } finally {
-            await this.mongo.close();
         }
     }
 }
