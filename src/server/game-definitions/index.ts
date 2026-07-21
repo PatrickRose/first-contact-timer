@@ -11,6 +11,7 @@ import { aynohyeb } from "./aynohyeb";
 import { faesAnatomy } from "./faes-anatomy";
 import { deadBritannia } from "./dead-britannia";
 import { touchedByDarkness } from "./touched-by-darkness";
+import { demo } from "./demo";
 
 /**
  * The single source of truth for the games that can be created.
@@ -35,6 +36,7 @@ export const GAME_DEFINITIONS = {
     "faes-anatomy": faesAnatomy,
     "dead-britannia": deadBritannia,
     "touched-by-darkness": touchedByDarkness,
+    demo: demo,
 } satisfies Record<string, GameDefinition>;
 
 export type DefinedGameType = keyof typeof GAME_DEFINITIONS;
