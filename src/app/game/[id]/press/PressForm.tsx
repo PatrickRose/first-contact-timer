@@ -26,7 +26,7 @@ export default function PressForm({
 
     const submit = async (ev: FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
-        setIsSubmitting(false);
+        setIsSubmitting(true);
 
         const toSend: SetBreakingNews = {
             breakingNews,
