@@ -10,51 +10,64 @@ export function GameCreateForm() {
     const [type, setType] = useState<GameType | null>(null);
     const [error, setError] = useState<string[] | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
     const submit = async (ev: FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
+
+        if (submitting) {
+            return;
+        }
+
         setError(null);
         setSuccess(null);
-
-        const response = await fetch("/admin/game/create/api", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
-            body: JSON.stringify({ gameID, type }),
-        });
-
-        let data: unknown;
+        setSubmitting(true);
 
         try {
-            data = await response.json();
-        } catch (e) {
-            console.error(e);
-            const errors = ["Server responded with bad data?"];
+            const response = await fetch("/admin/game/create/api", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({ gameID, type }),
+            });
+
+            let data: unknown;
 
             try {
-                errors.push(await response.text());
+                data = await response.json();
             } catch (e) {
                 console.error(e);
-                errors.push("Could not get response result");
+                const errors = ["Server responded with bad data?"];
+
+                try {
+                    errors.push(await response.text());
+                } catch (e) {
+                    console.error(e);
+                    errors.push("Could not get response result");
+                }
+
+                setError(errors);
+                return;
             }
 
-            setError(errors);
-            return;
-        }
+            if (!CreateGameResponseDecode.is(data)) {
+                setError([
+                    "Server did not respond with the Create Game Response",
+                ]);
+                return;
+            }
 
-        if (!CreateGameResponseDecode.is(data)) {
-            setError(["Server did not respond with the Create Game Response"]);
-            return;
-        }
-
-        if (!data.result) {
-            setError(data.errors);
-        } else {
-            setSuccess(gameID);
-            setType(null);
-            setID("");
+            if (!data.result) {
+                setError(data.errors);
+            } else {
+                setSuccess(gameID);
+                setType(null);
+                setID("");
+            }
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -153,8 +166,13 @@ export function GameCreateForm() {
             </fieldset>
 
             <div>
-                <button className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 font-semibold text-white transition hover:bg-indigo-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-zinc-900 sm:w-auto">
-                    Create Game
+                <button
+                    type="submit"
+                    disabled={submitting}
+                    aria-busy={submitting}
+                    className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 font-semibold text-white transition hover:bg-indigo-500 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-indigo-600 sm:w-auto"
+                >
+                    {submitting ? "Creating…" : "Create Game"}
                 </button>
             </div>
         </form>

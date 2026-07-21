@@ -225,7 +225,11 @@ function CreateTracker(props: ControlButtonRootProps) {
                     min={0}
                 />
             </div>
-            <button onClick={submit} className="border-2 p-4 flex-1">
+            <button
+                onClick={submit}
+                disabled={submitting}
+                className="border-2 p-4 flex-1 disabled:opacity-75"
+            >
                 {submitting ? "Submitting..." : "Submit"}
             </button>
         </div>

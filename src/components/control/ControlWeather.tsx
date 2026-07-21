@@ -22,7 +22,7 @@ export function ControlWeather({
 
     const submit = async (ev: FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
-        setIsSubmitting(false);
+        setIsSubmitting(true);
 
         const toSend: SetWeatherStatus = {
             newWeatherMessage,
