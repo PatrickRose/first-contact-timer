@@ -73,6 +73,9 @@ function makeRepo(
     const game = makeActiveGame();
     return {
         get: jest.fn<GameRepository["get"]>(async () => MakeRight(game)),
+        list: jest.fn<GameRepository["list"]>(async () =>
+            MakeRight({ games: [game], total: 1, page: 1 }),
+        ),
         insert: jest.fn<GameRepository["insert"]>(async () =>
             MakeRight<true>(true),
         ),
@@ -220,6 +223,9 @@ function makeCasRepo(): { repo: GameRepository; getStore: () => Game } {
 
     const repo: GameRepository = {
         get,
+        list: jest.fn<GameRepository["list"]>(async () =>
+            MakeRight({ games: [store], total: 1, page: 1 }),
+        ),
         insert: jest.fn<GameRepository["insert"]>(async () =>
             MakeRight<true>(true),
         ),
