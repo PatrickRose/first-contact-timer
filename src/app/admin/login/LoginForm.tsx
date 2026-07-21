@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
 import { LoginFailedDecode, UserDecode } from "@fc/types/io-ts-def";
 import useUser from "@fc/lib/useUser";
 
@@ -11,12 +10,11 @@ export default function LoginForm() {
     const [error, setError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
 
-    const router = useRouter();
-
-    const { mutateUser } = useUser({
-        redirectIfFound: true,
-        redirectTo: "/admin/",
-    });
+    // No redirect options here: the server-side proxy already bounces an
+    // already-logged-in visitor away from /admin/login, and a client-side
+    // (soft) redirect can serve a stale, logged-out entry from Next's Router
+    // Cache. We navigate on success explicitly below with a hard navigation.
+    const { mutateUser } = useUser();
 
     const submit = async (ev: FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
@@ -67,11 +65,15 @@ export default function LoginForm() {
             }
 
             // Prime the user cache with the logged-in session, then send the
-            // user to the dashboard ourselves. Relying on useUser's effect
-            // alone is racy (SWR revalidation can briefly re-report a
-            // not-logged-in user), so navigate explicitly on success.
+            // user to the dashboard with a hard navigation. A client-side
+            // router.push can be served a stale, logged-out view of /admin
+            // from Next's Router Cache (prefetched while logged out via the
+            // admin layout's nav links), which bounces the user straight back
+            // to the login page - this is why the redirect failed on mobile.
+            // A full-page navigation re-runs the middleware with the fresh
+            // session cookie and bypasses that cache.
             await mutateUser(data, { revalidate: false });
-            router.push("/admin/");
+            window.location.assign("/admin/");
         } finally {
             setSubmitting(false);
         }
