@@ -8,6 +8,7 @@ import { ApiResponseDecode } from "@fc/types/io-ts-def";
 import ControlTools from "@fc/components/ControlTools";
 import PressForm from "./press/PressForm";
 import { DEFAULT_THEME, THEME_REGISTRY } from "@fc/components/theme/registry";
+import { hardReload } from "@fc/lib/reload";
 
 const triggersAudio: (keyof ApiResponse)[] = ["active", "turnNumber", "phase"];
 
@@ -27,6 +28,14 @@ export default function GameWrapper(props: GameWrapperProps) {
     const [apiResponse, setAPIResponse] = useState<ApiResponse>(
         toApiResponse(game),
     );
+
+    // Everything in `setupInformation` - phase titles and lengths, the theme,
+    // press accounts, logos, maxTurns, timerStyles - comes from the `game` prop
+    // that was server-rendered once, and polling only ever refreshes
+    // `ApiResponse`. So an admin edit cannot reach this screen at all without a
+    // full document load. Pin the document version this render was built from; a
+    // lazy initialiser keeps it stable instead of drifting with `game`.
+    const [renderedAt] = useState<number>(() => game.lastUpdated ?? 0);
 
     const [audio, setAudio] = useState<HTMLAudioElement>();
 
@@ -65,6 +74,34 @@ export default function GameWrapper(props: GameWrapperProps) {
         1000,
         Math.round(basePollDelay * (1 + jitterFactor * 0.25)),
     );
+
+    /**
+     * Adopt a server response, unless the game has been edited underneath us - in
+     * which case reload instead and report false.
+     *
+     * Every path that takes a server `ApiResponse` goes through here: the poll,
+     * the control buttons, the seven component controls and the press form. Any
+     * of them can be the first to see an edit, and funnelling them means the
+     * child components need no changes.
+     *
+     * Strict `>`, never `>=`: after the reload `renderedAt` is re-seeded from the
+     * fresh render and equals the served stamp, so the condition goes false.
+     * `>=` would reload forever. There is deliberately no "no baseline" guard
+     * either - `lastUpdated` is read from the game document rather than the
+     * frozen snapshot, so an unedited game reports 0 on both sides consistently,
+     * and a guard would suppress the reload for the first edit of every game
+     * that predates the field.
+     */
+    const applyApiResponse = (body: ApiResponse): boolean => {
+        if (body.lastUpdated > renderedAt) {
+            hardReload();
+            return false;
+        }
+
+        setAPIResponse(body);
+        return true;
+    };
+
     useInterval(() => {
         if (fetching) {
             return;
@@ -79,7 +116,16 @@ export default function GameWrapper(props: GameWrapperProps) {
             .then((response) => response.json())
             .then((body) => {
                 if (ApiResponseDecode.is(body)) {
-                    setAPIResponse(body);
+                    if (!applyApiResponse(body)) {
+                        // Reloading. Returning here matters twice over: we must
+                        // not touch state we're about to tear down, and we must
+                        // not render a fresh `phase` against the stale phase
+                        // list, which both themes throw on when the phase is out
+                        // of range. It also stops the turn-change chime firing -
+                        // an edit response can carry a new turn number, and that
+                        // is not a turn change the players should hear.
+                        return;
+                    }
 
                     if (
                         triggersAudio.some(
@@ -120,7 +166,7 @@ export default function GameWrapper(props: GameWrapperProps) {
                 <ControlTools
                     game={game}
                     apiResponse={apiResponse}
-                    setApiResponse={setAPIResponse}
+                    setApiResponse={applyApiResponse}
                 />
             );
             manageTabTitle = "Control Tools";
@@ -130,7 +176,7 @@ export default function GameWrapper(props: GameWrapperProps) {
                 <PressForm
                     game={game}
                     apiResponse={apiResponse}
-                    setApiResponse={setAPIResponse}
+                    setApiResponse={applyApiResponse}
                     pressAccount={props.pressAccount}
                 />
             );
