@@ -5,14 +5,15 @@ import {
     SetupInformation,
 } from "@fc/types/types";
 import Icon_Game from "@fc/public/Icon-VLHG.png";
-import LogoBlock from "./theme/first-contact/LogoBlock";
+import LogoBlock from "./theme/shared/LogoBlock";
 import React, { useRef, useState } from "react";
 import { SideComponentMapper } from "@fc/lib/ComponentMapper";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import useInterval from "@fc/lib/useInterval";
-import { NewsFeed } from "@fc/components/theme/first-contact/NewsFeed";
+import { NewsFeed } from "@fc/components/theme/shared/NewsFeed";
 import TabSwitcher, { TabInfo } from "@fc/components/TabSwitcher";
 import { calculatePressTabIcon } from "@fc/lib/press";
+import { FIRST_CONTACT_NEWS_FEED } from "@fc/components/theme/first-contact/presentation";
 
 type SideComponentsToShow = {
     componentType: ApiResponse["components"][0]["componentType"];
@@ -95,6 +96,7 @@ function SideComponentsWithPress({
                         showPressFilter={false}
                         newsItems={breakingNews}
                         press={press}
+                        {...FIRST_CONTACT_NEWS_FEED}
                     />
                 )}
             </div>
@@ -146,6 +148,7 @@ export default function SideComponentWrapper({
                         showPressFilter={false}
                         newsItems={breakingNews}
                         press={setupInformation.press}
+                        {...FIRST_CONTACT_NEWS_FEED}
                     />
                 )}
             </div>
