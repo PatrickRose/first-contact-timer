@@ -1,6 +1,6 @@
 import { test, expect } from "./fixtures";
 import { games } from "./seed";
-import { isMobileLayout } from "./helpers";
+import { isMobileLayout, openTab } from "./helpers";
 
 test.describe("player display", () => {
     test("renders the current turn and phase", async ({ page }) => {
@@ -131,6 +131,46 @@ test.describe("player display", () => {
         await expect(
             page.getByText("Team Time").filter({ visible: true }).first(),
         ).toBeVisible();
+    });
+
+    test("press feed filter is a controlled select with no React warning", async ({
+        page,
+    }) => {
+        // The consolidated NewsFeed offers the press-account filter in the
+        // first-contact theme only via the mobile "Press" tab.
+        test.skip(
+            !(await isMobileLayout(page)),
+            "Press feed filter is only shown on the mobile Press tab",
+        );
+
+        // Guard against the drift bug this refactor fixed: the aftermath copy
+        // used `selected` on <option>, which makes React warn (console.error)
+        // for an otherwise-controlled <select>. The consolidated component
+        // drives the value on the <select> instead, so no such warning.
+        const consoleErrors: string[] = [];
+        page.on("console", (msg) => {
+            if (msg.type() === "error") {
+                consoleErrors.push(msg.text());
+            }
+        });
+
+        await page.goto(`/game/${games.multipress}`);
+        await openTab(page, "Press");
+
+        const filter = page.getByLabel("Filter Press Account");
+        await expect(filter).toBeVisible();
+
+        // The control is driven by the select's value, and selecting an option
+        // updates it.
+        await expect(filter).toHaveValue("NONE");
+        await filter.selectOption({ label: "The Underground" });
+        await expect(filter).toHaveValue("2");
+
+        expect(
+            consoleErrors.filter((message) =>
+                /`?selected`? on <option>|Use the `value`/i.test(message),
+            ),
+        ).toEqual([]);
     });
 
     test("paused game shows the paused banner", async ({ page }) => {

@@ -81,15 +81,29 @@ function NewsItem({ item, press }: { item: NewsItem; press: LivePress }) {
     );
 }
 
+// The theme-specific presentation for the press feed. Supplied explicitly by
+// each theme shell so the shared component never branches on the active theme.
+export interface NewsFeedPresentation {
+    // Classes on the outer wrapper (e.g. first-contact adds vertical padding).
+    outerClass: string;
+    // Classes appended to the shared feed-title classes (e.g. first-contact
+    // adds bottom margin).
+    headerAccentClass: string;
+}
+
 export function NewsFeed({
     newsItems,
     press,
-    showPressFilter,
+    showPressFilter = true,
+    outerClass,
+    headerAccentClass,
 }: {
     newsItems: NewsItem[];
     press: LivePress;
-    showPressFilter: boolean;
-}) {
+    // Whether the press-account filter is offered. Defaults to true so a theme
+    // that does not opt out keeps showing it.
+    showPressFilter?: boolean;
+} & NewsFeedPresentation) {
     const pressFeedTitle = getPressFeedTitle(press);
 
     const [filter, setFilter] = useState<number | null>(null);
@@ -113,17 +127,22 @@ export function NewsFeed({
         }
     };
 
+    const headerClass = `text-2xl mt-2 ${headerAccentClass} uppercase text-center`;
+
     return (
-        <div className="py-4">
-            <h3 className="text-2xl mt-2 mb-6 uppercase text-center">
-                {pressFeedTitle}
-            </h3>
+        <div className={outerClass}>
+            <h3 className={headerClass}>{pressFeedTitle}</h3>
             {showPressFilter && Array.isArray(press) ? (
                 <div className="flex">
                     <div className="flex-1" />
                     <label htmlFor="pressSelect" className="sr-only">
                         Filter Press Account
                     </label>
+                    {/*
+                     * Controlled select: the current filter is driven by `value`
+                     * on the <select>, not `selected` on each <option> (which
+                     * React warns about at runtime for a controlled input).
+                     */}
                     <select
                         className="text-black"
                         id="pressSelect"

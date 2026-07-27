@@ -1,9 +1,11 @@
-import { ApiResponse, Component, ComponentType, Game } from "@fc/types/types";
+import { Component, ComponentType, Game } from "@fc/types/types";
 import { Either, isLeft } from "fp-ts/Either";
 import { MakeLeft, MakeRight } from "@fc/lib/io-ts-helpers";
 import { NextRequest, NextResponse } from "next/server";
-import { getGameRepo } from "@fc/server/repository/game";
-import { toApiResponse } from "@fc/server/turn";
+import {
+    ControlRouteResponse,
+    runControlActionRoute,
+} from "@fc/server/control-route";
 
 /**
  * The concrete component variant for a given componentType discriminant.
@@ -123,7 +125,7 @@ export function componentAction<T extends ComponentType, B>(
 type ComponentRouteHandler = (
     request: NextRequest,
     props: { params: Promise<{ id: string }> },
-) => Promise<NextResponse<ApiResponse | { error: string }>>;
+) => Promise<ControlRouteResponse>;
 
 /**
  * Builds a control route handler for a component. Collapses the ~70-line
@@ -161,22 +163,7 @@ export function makeComponentRoute<T extends ComponentType>(
             );
         }
 
-        const gameRepo = getGameRepo();
-
-        if (isLeft(gameRepo)) {
-            return NextResponse.json({ error: gameRepo.left }, { status: 500 });
-        }
-
-        const game = await gameRepo.right.get(id);
-
-        if (isLeft(game)) {
-            return NextResponse.json(
-                { error: "Game not found" },
-                { status: 404 },
-            );
-        }
-
-        const newGame = await gameRepo.right.runControlAction(game.right, (g) =>
+        return runControlActionRoute(id, (g) =>
             updateComponent(
                 g,
                 componentType,
@@ -185,11 +172,5 @@ export function makeComponentRoute<T extends ComponentType>(
                 notFoundLabel,
             ),
         );
-
-        if (isLeft(newGame)) {
-            return NextResponse.json({ error: newGame.left }, { status: 500 });
-        }
-
-        return NextResponse.json(toApiResponse(newGame.right));
     };
 }

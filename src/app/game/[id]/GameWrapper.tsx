@@ -7,8 +7,7 @@ import useInterval from "@fc/lib/useInterval";
 import { ApiResponseDecode } from "@fc/types/io-ts-def";
 import ControlTools from "@fc/components/ControlTools";
 import PressForm from "./press/PressForm";
-import { FirstContactTheme } from "@fc/components/theme/first-contact/FirstContactTheme";
-import { AftermathTheme } from "@fc/components/theme/aftermath/AftermathTheme";
+import { DEFAULT_THEME, THEME_REGISTRY } from "@fc/components/theme/registry";
 
 const triggersAudio: (keyof ApiResponse)[] = ["active", "turnNumber", "phase"];
 
@@ -139,19 +138,16 @@ export default function GameWrapper(props: GameWrapperProps) {
             break;
     }
 
-    if (game.setupInformation.theme === "aftermath") {
-        return (
-            <AftermathTheme
-                game={game}
-                apiResponse={apiResponse}
-                childComponent={child}
-                manageTabTitle={manageTabTitle}
-            />
-        );
-    }
+    // A game whose persisted theme is not in the registry (e.g. a stale or
+    // hand-edited DB record) would otherwise resolve to `undefined` and crash
+    // the whole page with React's "Element type is invalid". Fall back to the
+    // default theme so the game still renders.
+    const Theme =
+        THEME_REGISTRY[game.setupInformation.theme] ??
+        THEME_REGISTRY[DEFAULT_THEME];
 
     return (
-        <FirstContactTheme
+        <Theme
             game={game}
             apiResponse={apiResponse}
             childComponent={child}

@@ -3,14 +3,19 @@ import { useState } from "react";
 import { GameTabSwitcher } from "../../TabSwitcher";
 import SideComponentWrapper from "../../SideComponents";
 import { SideComponentMapper } from "@fc/lib/ComponentMapper";
-import BreakingNews from "./BreakingNews";
-import { NewsFeed } from "./NewsFeed";
-import LogoBlock from "./LogoBlock";
+import BreakingNews from "../shared/BreakingNews";
+import { NewsFeed } from "../shared/NewsFeed";
+import LogoBlock from "../shared/LogoBlock";
 import TurnCounter from "./TurnCounter";
-import CurrentTurn from "./CurrentTurn";
+import CurrentTurn from "../shared/CurrentTurn";
 import { getCurrentPhase } from "@fc/server/turn";
 import { isLeft } from "fp-ts/Either";
 import PhaseInformation from "@fc/components/PhaseInformation";
+import {
+    FIRST_CONTACT_BREAKING_NEWS,
+    FIRST_CONTACT_NEWS_FEED,
+    firstContactCurrentTurn,
+} from "./presentation";
 
 export function FirstContactTheme({
     apiResponse,
@@ -33,11 +38,11 @@ export function FirstContactTheme({
         <div className="flex flex-col h-screen bg-black text-white flex-1">
             <div className="sticky top-0 left-0 right-0">
                 <CurrentTurn
-                    turn={apiResponse.turnNumber}
-                    phase={apiResponse.phase}
                     timestamp={apiResponse.phaseEnd}
-                    active={apiResponse.active}
-                    phaseInformation={currentPhaseInformation.right}
+                    {...firstContactCurrentTurn(
+                        apiResponse.turnNumber,
+                        currentPhaseInformation.right,
+                    )}
                 />
             </div>
             <div className="flex flex-row flex-1 max-h-full overflow-y-auto">
@@ -99,6 +104,7 @@ export function FirstContactTheme({
                                 newsItems={apiResponse.breakingNews}
                                 press={game.setupInformation.press}
                                 showPressFilter={true}
+                                {...FIRST_CONTACT_NEWS_FEED}
                             />
                         </div>
                     )}
@@ -106,6 +112,7 @@ export function FirstContactTheme({
                         <BreakingNews
                             newsItem={apiResponse.breakingNews[0]}
                             press={game.setupInformation.press}
+                            {...FIRST_CONTACT_BREAKING_NEWS}
                         />
                     ) : null}
                 </main>
