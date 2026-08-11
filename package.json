@@ -41,7 +41,7 @@
         "@testing-library/react": "^16.3.2",
         "@types/react": "19.2.18",
         "@types/react-transition-group": "^4.4.12",
-        "eslint": "^9.39.1",
+        "eslint": "^10.8.1",
         "eslint-config-next": "^16.3.0",
         "husky": "^9.1.7",
         "jest": "^30.4.2",
