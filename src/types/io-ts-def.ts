@@ -257,7 +257,16 @@ export const TurnInformationDecode = t.type({
     phaseEnd: t.string,
 });
 
-export const ApiResponseDecode = t.type({
+/**
+ * The rendered state of a game at a point in time.
+ *
+ * This is also the *persisted* shape of a paused game's `frozenTurn`, so it must
+ * contain only fields that are meaningful to freeze. Anything that is a property
+ * of the game document rather than of the snapshot belongs on
+ * {@link ApiResponseDecode} instead, or it would go stale the moment the game
+ * changed underneath a paused snapshot.
+ */
+export const FrozenTurnDecode = t.type({
     turnNumber: t.number,
     phase: t.number,
     breakingNews: t.array(NewsItemDecode),
@@ -265,6 +274,19 @@ export const ApiResponseDecode = t.type({
     phaseEnd: t.number,
     components: t.array(ComponentDecode),
 });
+
+/**
+ * The poll response: a frozen turn plus the game-document-level fields clients
+ * need. `lastUpdated` is always overlaid from the game by `toApiResponse`, never
+ * read out of a stored snapshot - see the docblock there.
+ */
+export const ApiResponseDecode = t.intersection([
+    FrozenTurnDecode,
+    t.type({
+        lastUpdated: t.number,
+    }),
+]);
+
 export const GameDecode = t.intersection([
     t.type({
         _id: t.string,
@@ -273,11 +295,25 @@ export const GameDecode = t.intersection([
         breakingNews: t.array(NewsItemDecode),
         components: t.array(ComponentDecode),
     }),
+    t.partial({
+        // Epoch milliseconds, bumped only when a game's *structure*
+        // (setupInformation / components) is edited - never by a turn tick, a
+        // control action or a press post. Clients compare it against the stamp
+        // their page was server-rendered from and hard-reload when it moves,
+        // which is the only way an edit reaches an already-open screen.
+        //
+        // Optional because stored games are cast rather than decoded (see
+        // `MongoRepository.get`), so making it required would be a type-level
+        // lie for every document written before editing existed. Readers go
+        // through `?? 0`; 0 is lower than any real stamp, so an unedited game
+        // never triggers a reload.
+        lastUpdated: t.number,
+    }),
     t.union([
         t.type({ active: t.literal(true) }),
         t.type({
             active: t.literal(false),
-            frozenTurn: ApiResponseDecode,
+            frozenTurn: FrozenTurnDecode,
         }),
     ]),
 ]);
