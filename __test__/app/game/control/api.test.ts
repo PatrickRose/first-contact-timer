@@ -132,6 +132,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 1,
                 phase: 1,
                 phaseEnd: 65,
+                lastUpdated: 0,
             });
         });
     });
@@ -155,6 +156,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 1,
                 phase: 1,
                 phaseEnd: 60,
+                lastUpdated: 0,
             });
         });
 
@@ -175,6 +177,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 1,
                 phase: 1,
                 phaseEnd: 65,
+                lastUpdated: 0,
             });
         });
     });
@@ -197,6 +200,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 1,
                 phase: 2,
                 phaseEnd: 120,
+                lastUpdated: 0,
             });
         });
 
@@ -218,6 +222,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 2,
                 phase: 1,
                 phaseEnd: 60,
+                lastUpdated: 0,
             });
         });
 
@@ -239,6 +244,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 1,
                 phase: 1,
                 phaseEnd: 60,
+                lastUpdated: 0,
             });
         });
     });
@@ -262,6 +268,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 1,
                 phase: 2,
                 phaseEnd: 120,
+                lastUpdated: 0,
             });
         });
 
@@ -284,6 +291,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 1,
                 phase: 3,
                 phaseEnd: 180,
+                lastUpdated: 0,
             });
         });
 
@@ -306,6 +314,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 1,
                 phase: 1,
                 phaseEnd: 60,
+                lastUpdated: 0,
             });
         });
     });
@@ -330,6 +339,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 2,
                 phase: 1,
                 phaseEnd: 60,
+                lastUpdated: 0,
             });
         });
 
@@ -349,6 +359,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 1,
                 phase: 1,
                 phaseEnd: 60,
+                lastUpdated: 0,
             });
         });
     });
@@ -372,6 +383,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 2,
                 phase: 1,
                 phaseEnd: 60,
+                lastUpdated: 0,
             });
         });
 
@@ -398,6 +410,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 2,
                 phase: 1,
                 phaseEnd: 60,
+                lastUpdated: 0,
             });
         });
     });
@@ -430,6 +443,7 @@ describe("POST /game/[id]/control/api", () => {
                 turnNumber: 2,
                 phase: 3,
                 phaseEnd: 65,
+                lastUpdated: 0,
             });
         });
     });

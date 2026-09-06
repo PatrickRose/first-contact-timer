@@ -3,6 +3,7 @@ import * as types from "./io-ts-def";
 import { Either } from "fp-ts/Either";
 
 export type ApiResponse = t.TypeOf<typeof types.ApiResponseDecode>;
+export type FrozenTurn = t.TypeOf<typeof types.FrozenTurnDecode>;
 export type NewsItem = t.TypeOf<typeof types.NewsItemDecode>;
 export type SetBreakingNews = t.TypeOf<typeof types.SetBreakingNewsDecode>;
 export type ControlAPI = t.TypeOf<typeof types.ControlAPIDecode>;

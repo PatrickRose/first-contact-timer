@@ -2,6 +2,7 @@ import {
     ApiResponse,
     ControlAction,
     ControlAPI,
+    FrozenTurn,
     Game,
     SetupInformation,
 } from "@fc/types/types";
@@ -48,10 +49,19 @@ export function nextDate(
     return MakeRight(date);
 }
 
-export function toApiResponse(
+/**
+ * The renderable state of a game: what a paused game has frozen, or what an
+ * active game looks like right now.
+ *
+ * This is the shape that gets *persisted* as `frozenTurn`, so it deliberately
+ * excludes anything that is a property of the game document rather than of the
+ * snapshot. Use it when building a snapshot to store; use
+ * {@link toApiResponse} when answering a client.
+ */
+export function toFrozenTurn(
     turn: Game,
     forceRefresh: boolean = false,
-): ApiResponse {
+): FrozenTurn {
     if (!turn.active && !forceRefresh) {
         return turn.frozenTurn;
     }
@@ -88,6 +98,36 @@ export function toApiResponse(
         turnNumber: turn.turnInformation.turnNumber,
         phase: turn.turnInformation.currentPhase,
         phaseEnd: secondsLeft,
+    };
+}
+
+/**
+ * Sentinel `lastUpdated` for a game written before editing existed. It must be a
+ * constant, not the current time: a game that reported "now" on every poll would
+ * always look newer than whatever stamp a client was rendered with, so every
+ * device would reload forever.
+ */
+const NEVER_EDITED = 0;
+
+/**
+ * The poll response for a game.
+ *
+ * `lastUpdated` is always read from the game document, never from the frozen
+ * snapshot. A paused game serves its stored snapshot verbatim, so a copy of the
+ * stamp inside that snapshot would be stale the moment the game was edited - and
+ * the whole point of the stamp is to tell open screens that it *was* edited.
+ *
+ * Only a structural edit bumps it. Turn ticks, control actions and press posts
+ * all flow through here too, and a stamp that moved on those would hard-reload
+ * every device in the venue at every phase boundary.
+ */
+export function toApiResponse(
+    turn: Game,
+    forceRefresh: boolean = false,
+): ApiResponse {
+    return {
+        ...toFrozenTurn(turn, forceRefresh),
+        lastUpdated: turn.lastUpdated ?? NEVER_EDITED,
     };
 }
 
@@ -227,7 +267,10 @@ export function createGame(
     return MakeRight({
         ...base,
         active: false,
-        frozenTurn: { ...toApiResponse(base), active: false },
+        // toFrozenTurn, not toApiResponse: the stamp is a property of the game
+        // document, so persisting a copy of it inside the snapshot would let the
+        // two drift.
+        frozenTurn: { ...toFrozenTurn(base), active: false },
     });
 }
 
@@ -253,8 +296,9 @@ export const CONTROL_ACTIONS: Record<ControlAPI["action"], ControlAction> = {
     pause: (game) => {
         return MakeRight({
             active: false,
-            frozenTurn: toApiResponse(
-                { ...game, active: false, frozenTurn: toApiResponse(game) },
+            // toFrozenTurn, not toApiResponse: see the comment in createGame.
+            frozenTurn: toFrozenTurn(
+                { ...game, active: false, frozenTurn: toFrozenTurn(game) },
                 true,
             ),
         });

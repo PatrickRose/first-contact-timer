@@ -84,6 +84,7 @@ describe("GET /game/[id]/api", () => {
             turnNumber: 1,
             phase: 1,
             phaseEnd: 65,
+            lastUpdated: 0,
         });
         expect(repo.nextTurn).not.toHaveBeenCalled();
     });
@@ -122,6 +123,7 @@ describe("GET /game/[id]/api", () => {
             turnNumber: 1,
             phase: 2,
             phaseEnd: 120,
+            lastUpdated: 0,
         });
     });
 
@@ -153,6 +155,7 @@ describe("GET /game/[id]/api", () => {
             turnNumber: 1,
             phase: 1,
             phaseEnd: 0,
+            lastUpdated: 0,
         });
     });
 
@@ -187,6 +190,7 @@ describe("GET /game/[id]/api", () => {
             turnNumber: 1,
             phase: 3,
             phaseEnd: 0,
+            lastUpdated: 0,
         });
     });
 
@@ -204,6 +208,7 @@ describe("GET /game/[id]/api", () => {
             turnNumber: 1,
             phase: 1,
             phaseEnd: 60,
+            lastUpdated: 0,
         });
         expect(repo.nextTurn).not.toHaveBeenCalled();
     });
