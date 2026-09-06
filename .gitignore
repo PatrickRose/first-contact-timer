@@ -18,6 +18,12 @@
 # next.js
 /.next/
 /out/
+# Generated output ("This file should not be edited"), and next dev and next
+# build disagree about whether it imports .next/dev/types/routes.d.ts or
+# .next/types/routes.d.ts - so tracking it means a diff that flips depending on
+# which command ran last. Both commands regenerate it before type checking, so
+# nothing needs the committed copy.
+/next-env.d.ts
 
 # production
 /build
