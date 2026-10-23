@@ -1,5 +1,10 @@
 import { jest } from "@jest/globals";
-import { ApiResponse, Game, SetupInformation } from "@fc/types/types";
+import {
+    ApiResponse,
+    FrozenTurn,
+    Game,
+    SetupInformation,
+} from "@fc/types/types";
 import GameRepository from "@fc/server/repository/game";
 import { isLeft } from "fp-ts/Either";
 import { MakeRight } from "@fc/lib/io-ts-helpers";
@@ -31,9 +36,13 @@ export const setupInformation: SetupInformation = {
     phases,
 };
 
+/**
+ * The persisted snapshot shape - what a paused game stores as `frozenTurn`. It
+ * deliberately has no `lastUpdated`; that lives on the game document.
+ */
 export function makeFrozenTurn(
-    overrides: Partial<ApiResponse> = {},
-): ApiResponse {
+    overrides: Partial<FrozenTurn> = {},
+): FrozenTurn {
     return {
         turnNumber: 1,
         phase: 1,
@@ -43,6 +52,18 @@ export function makeFrozenTurn(
         components: [],
         ...overrides,
     };
+}
+
+/**
+ * The wire shape - a frozen turn plus the game-level `lastUpdated` stamp. Use
+ * this for asserting on route/`toApiResponse` bodies so that adding another
+ * document-level field later is a one-line change here rather than an edit to
+ * every assertion.
+ */
+export function makeApiResponse(
+    overrides: Partial<ApiResponse> = {},
+): ApiResponse {
+    return { ...makeFrozenTurn(), lastUpdated: 0, ...overrides };
 }
 
 export function makeActiveGame(overrides: Partial<Game> = {}): Game {

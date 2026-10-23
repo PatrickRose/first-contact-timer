@@ -163,6 +163,7 @@ describe("GameWrapper poll interval", () => {
             breakingNews: [],
             active: true,
             phaseEnd: 0,
+            lastUpdated: 0,
             components: [],
         };
         (global as unknown as { fetch: unknown }).fetch = jest.fn(() =>

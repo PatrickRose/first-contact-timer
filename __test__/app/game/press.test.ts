@@ -129,6 +129,7 @@ describe("POST /game/[id]/press/api", () => {
             turnNumber: 1,
             phase: 1,
             phaseEnd: 65,
+            lastUpdated: 0,
         });
     });
 

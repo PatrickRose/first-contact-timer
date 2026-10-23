@@ -6,9 +6,14 @@ import {
     jest,
     test,
 } from "@jest/globals";
-import { ApiResponse, Game, SetupInformation } from "@fc/types/types";
+import {
+    ApiResponse,
+    FrozenTurn,
+    Game,
+    SetupInformation,
+} from "@fc/types/types";
 import { setupInformation } from "./helpers";
-import { toApiResponse } from "@fc/server/turn";
+import { toApiResponse, toFrozenTurn } from "@fc/server/turn";
 
 describe("toApiResponse", () => {
     const mockedDate = new Date(2023, 1, 2, 3, 4, 5, 0);
@@ -68,6 +73,7 @@ describe("toApiResponse", () => {
             phase: 1,
             phaseEnd: 5,
             turnNumber: 1,
+            lastUpdated: 0,
         };
 
         expect(toApiResponse(baseGame)).toEqual(expected);
@@ -84,6 +90,7 @@ describe("toApiResponse", () => {
                 phase: 1,
                 phaseEnd: seconds,
                 turnNumber: 1,
+                lastUpdated: 0,
             };
 
             expect(toApiResponse(baseGame)).toEqual(expected);
@@ -101,6 +108,7 @@ describe("toApiResponse", () => {
                 phase: 1,
                 phaseEnd: 0,
                 turnNumber: 1,
+                lastUpdated: 0,
             };
 
             expect(toApiResponse(baseGame)).toEqual(expected);
@@ -146,13 +154,14 @@ describe("toApiResponse", () => {
             phase: 1,
             phaseEnd: 5,
             turnNumber: 1,
+            lastUpdated: 0,
         };
 
         expect(toApiResponse(game)).toEqual(expected);
     });
 
     test("Inactive turns returns the frozen turn", () => {
-        const frozenTurn: ApiResponse = {
+        const frozenTurn: FrozenTurn = {
             active: false,
             breakingNews: [],
             components: [],
@@ -167,11 +176,14 @@ describe("toApiResponse", () => {
             frozenTurn,
         };
 
-        expect(toApiResponse(game)).toEqual(frozenTurn);
+        expect(toApiResponse(game)).toEqual({
+            ...frozenTurn,
+            lastUpdated: 0,
+        });
     });
 
     test("Can force a refresh of an inactive turn", () => {
-        const frozenTurn: ApiResponse = {
+        const frozenTurn: FrozenTurn = {
             active: false,
             breakingNews: [],
             components: [],
@@ -208,8 +220,115 @@ describe("toApiResponse", () => {
             phase: 1,
             phaseEnd: 5,
             turnNumber: 1,
+            lastUpdated: 0,
         };
 
         expect(toApiResponse(game, true)).toEqual(expected);
+    });
+
+    describe("lastUpdated", () => {
+        test("reports 0 for a game with no stamp", () => {
+            // Games written before editing existed have no `lastUpdated` at all.
+            // They must report a constant, and it must be lower than any real
+            // stamp: a game reporting "now" would always look newer than the
+            // stamp a client rendered with, so every device would reload forever.
+            expect(baseGame.lastUpdated).toBeUndefined();
+            expect(toApiResponse(baseGame).lastUpdated).toBe(0);
+        });
+
+        test("reports the game's stamp for an active game", () => {
+            const game: Game = { ...baseGame, lastUpdated: 1700000000000 };
+
+            expect(toApiResponse(game).lastUpdated).toBe(1700000000000);
+        });
+
+        test("overlays the game's stamp onto a paused game's stored snapshot", () => {
+            // The load-bearing case. A paused game serves `frozenTurn` verbatim,
+            // and that snapshot was written *before* the edit that changed the
+            // game - so the stamp has to come from the document, or an edit
+            // would be invisible to every paused screen.
+            const game: Game = {
+                ...baseGame,
+                active: false,
+                frozenTurn: {
+                    active: false,
+                    breakingNews: [],
+                    components: [],
+                    phase: 2,
+                    phaseEnd: 42,
+                    turnNumber: 3,
+                },
+                lastUpdated: 1700000000000,
+            };
+
+            expect(toApiResponse(game)).toEqual({
+                active: false,
+                breakingNews: [],
+                components: [],
+                phase: 2,
+                phaseEnd: 42,
+                turnNumber: 3,
+                lastUpdated: 1700000000000,
+            });
+        });
+    });
+});
+
+describe("toFrozenTurn", () => {
+    // toFrozenTurn is what gets *persisted*, so it must never carry the
+    // document-level stamp - otherwise the stored copy could drift from the
+    // document and a paused game would serve a stale one.
+    const phaseEnd = new Date(2023, 1, 2, 3, 4, 10, 0);
+
+    const baseGame: Game = {
+        _id: "test",
+        setupInformation,
+        components: [],
+        active: true,
+        breakingNews: [],
+        turnInformation: {
+            turnNumber: 1,
+            currentPhase: 1,
+            phaseEnd: phaseEnd.toString(),
+        },
+        lastUpdated: 1700000000000,
+    };
+
+    beforeEach(() => {
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(2023, 1, 2, 3, 4, 5, 0));
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
+    test("omits lastUpdated even when the game has one", () => {
+        const frozen = toFrozenTurn(baseGame);
+
+        expect(Object.hasOwn(frozen, "lastUpdated")).toBe(false);
+        expect(frozen).toEqual({
+            active: true,
+            breakingNews: [],
+            components: [],
+            phase: 1,
+            phaseEnd: 5,
+            turnNumber: 1,
+        });
+    });
+
+    test("returns the stored snapshot verbatim for a paused game", () => {
+        const frozenTurn: FrozenTurn = {
+            active: false,
+            breakingNews: [],
+            components: [],
+            phase: 0,
+            phaseEnd: 0,
+            turnNumber: 0,
+        };
+
+        const game: Game = { ...baseGame, active: false, frozenTurn };
+
+        expect(toFrozenTurn(game)).toBe(frozenTurn);
     });
 });
