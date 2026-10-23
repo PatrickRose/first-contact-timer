@@ -207,7 +207,23 @@ export const SetupInformationPhaseDecode = t.intersection([
         hidden: t.boolean,
     }),
     t.partial({
-        extraTime: t.record(t.number, t.number),
+        // The domain is `t.string`, not `t.number`, even though the keys are
+        // logically turn numbers. io-ts's `record` only builds a strict props
+        // codec when `getDomainKeys(domain)` yields keys (literals, `keyof`, or
+        // unions of those); `t.number` yields none, so it falls back to
+        // `nonEnumerableRecord`, whose check is
+        //     Object.keys(u).every(k => !domain.is(k) || codomain.is(u[k]))
+        // Object keys are always strings and `t.number.is("1")` is false, so
+        // `!domain.is(k)` was always true and the codomain was NEVER checked -
+        // `extraTime: {a: "banana"}` passed validation. That reached
+        // `lengthOfPhase` as `length += "banana"`, so `nextDate` stored
+        // `phaseEnd: "Invalid Date"`, which makes `hasFinished` permanently
+        // false and freezes the game's timer with no route to recovery.
+        //
+        // A `t.string` domain matches every key, so the value check actually
+        // runs. `extraTime?.[turn]` still type-checks because TypeScript allows
+        // numeric indexing of a string index signature.
+        extraTime: t.record(t.string, t.number),
     }),
     t.partial({
         logo: t.string,
